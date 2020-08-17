@@ -10,6 +10,15 @@ assemble an image that satisfies the following requirements:
 - features two partitions: /boot/ (fat32) and /root/ (ext4) to be writable for
   configuration files
 
+## Linux Standard Base (LSB)
+
+packages built in LFS to satisfy requirements of
+[LBS](https://refspecs.linuxfoundation.org/lsb.shtml)
+
+- Bash, Bc, Binutils, Coreutils, Diffutils, File, Findutils
+- Gawk, Grep, Gzip, M4, Man-DB, Ncurses, Procps, Psmisc
+- Sed, Shadow, Tar, Util-linux, Zlib
+
 ## Cloud init
 
 - https://blog.hypriot.com/post/cloud-init-cloud-on-hypriot-x64/
@@ -27,6 +36,7 @@ assemble an image that satisfies the following requirements:
 ## References
 
 - http://www.linuxfromscratch.org
+- http://www.linuxfromscratch.org/lfs/view/stable/
 - https://github.com/reinterpretcat/lfs
 
 ## Alternatives
