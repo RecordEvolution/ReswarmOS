@@ -41,6 +41,9 @@ packages built in LFS to satisfy requirements of
 
 ## Alternatives
 
+- https://blog.hypriot.com/about/
+- https://www.balena.io/os/
+
 - https://github.com/vmware/photon
 - https://www.inovex.de/blog/docker-a-comparison-of-minimalistic-operating-systems/
 - https://sweetcode.io/linux-distributions-optimized-hosting-docker/
