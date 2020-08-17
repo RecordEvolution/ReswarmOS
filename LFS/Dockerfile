@@ -23,6 +23,7 @@ ENV LFS=/mnt/lfs
 ENV LC_ALL=POSIX
 ENV LFS_TGT=x86_64-lfs-linux-gnu
 # or use $(uname -m)-lfs-linux-gnu
+# armv7l-lfs-linux-gnu
 
 # set number of workers for building process, e.g. $ make -j2
 ENV MAKEFLAGS="-j 1"
