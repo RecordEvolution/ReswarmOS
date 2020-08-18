@@ -5,6 +5,11 @@
   partitions:
     - {name: "boot", filesytem: vfat, size: 200000000}
     - {name: "mf.os", filesystem: ext4, size: -1}
+  root-user:
+    user: mafi
+    password: mysecretpassword
+  hostname:
+    linux-machine
   packages:
     - {name: acl, url: http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz}
     - {name: attr, url: http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz}
