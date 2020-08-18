@@ -24,6 +24,11 @@ packages built in LFS to satisfy requirements of
 - https://www.kernel.org
 - https://en.wikipedia.org/wiki/Linux_kernel
 
+## Boot Loader
+
+- Raspberry Pi Firmware
+  - https://github.com/raspberrypi/firmware/tree/master/boot
+
 ## Cloud init
 
 - https://blog.hypriot.com/post/cloud-init-cloud-on-hypriot-x64/
@@ -51,7 +56,7 @@ packages built in LFS to satisfy requirements of
   - https://github.com/reinterpretcat/lfs
 
 - General Guide for building linux
-  https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+  - https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 
 - specific for Raspberry Pi 64bit and Docker
   - https://blog.hypriot.com/post/building-a-64bit-docker-os-for-rpi3/
