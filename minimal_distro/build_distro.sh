@@ -8,6 +8,8 @@ source minimal_distro/logging.sh
 #-----------------------------------------------------------------------------#
 # Configuring the Environment
 
+section_message "Preparation and Configuration"
+
 # turn on bash hash functions
 set +h
 
@@ -30,7 +32,7 @@ export PATH=${LXOS}/cross-tools/bin:/bin:/usr/bin
 
 # create target image`s filesystem hierachy (see https://refspecs.linuxfoundation.org/fhs.shtml)
 logging_message "creating/ensuring target image's filesystem hierachy"
-mkdir -pv ${LXOS}/{bin,boot{,grub},dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
+mkdir -pv ${LXOS}/{bin,boot/{,grub},dev,{etc/,}opt,home,lib/{firmware,modules},lib64,mnt}
 mkdir -pv ${LXOS}/{proc,media/{floppy,cdrom},sbin,srv,sys}
 mkdir -pv ${LXOS}/var/{lock,log,mail,run,spool}
 mkdir -pv ${LXOS}/var/{opt,cache,lib/{misc,locate},local}
@@ -261,5 +263,53 @@ ls -lhR ${LXOS}/var/log
 
 #-----------------------------------------------------------------------------#
 # Building the Cross Compiler
+
+section_message "Build Process"
+
+# unset some environment variables (just to be sure)
+unset CFLAGS
+unset CXXFLAGS
+
+# create sources directory
+logging_message "creating sources directory"
+mkdir -pv ${LXOS}/sources
+
+# get the kernel
+kernelurl="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.1.tar.xz"
+kernelbas=$(basename ${kernelurl})
+kerneldir=$(echo ${kernelbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${kernelbas}" ]]; then
+  logging_message "Linux kernel was already downloaded to ${LXOS}/sources/${kernelbas}"
+else
+  logging_message "retrieving the Linux kernel"
+  wget ${kernelurl} -P ${LXOS}/sources
+fi
+
+# define environment variables for compilation
+logging_message "setting environment variables for build process"
+export LXOS_HOST=$(echo ${MACHTYPE} | sed 's/-[^-]*/-cross/')
+export LXOS_TARGET=x86_64-unknown-linux-gnu
+export LXOS_CPU=k8
+export LXOS_ARCH=$(echo ${LXOS_TARGET} | sed -e 's/-.*//' -e 's/i.86/i386/')
+export LXOS_ENDIAN=little
+
+# show result
+env | grep "LXOS"
+
+# extract kernel sources
+if [[ -d "${LXOS}/sources/${kerneldir}" ]]; then
+  logging_message "kernel sources were already extracted"
+else
+  logging_message "extracting kernel sources"
+  tar -xf "${LXOS}/sources/${kernelbas}" -C "${LXOS}/sources/"
+fi
+
+# start compilation of kernel
+logging_message "compiling kernel"
+pushd ${LXOS}/sources/${kerneldir}
+make mrproper
+make ARCH=${LXOS_ARCH} headers_check && make ARCH=${LXOS_ARCH} INSTALL_HDR_PATH=dest headers_install
+cp -rv dest/include/* ${LXOS}/usr/include
+popd
 
 #-----------------------------------------------------------------------------#
