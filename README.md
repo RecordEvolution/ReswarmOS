@@ -19,6 +19,11 @@ packages built in LFS to satisfy requirements of
 - Gawk, Grep, Gzip, M4, Man-DB, Ncurses, Procps, Psmisc
 - Sed, Shadow, Tar, Util-linux, Zlib
 
+## Linux Kernel
+
+- https://www.kernel.org
+- https://en.wikipedia.org/wiki/Linux_kernel
+
 ## Cloud init
 
 - https://blog.hypriot.com/post/cloud-init-cloud-on-hypriot-x64/
@@ -29,6 +34,11 @@ packages built in LFS to satisfy requirements of
 
 - https://docs.docker.com/engine/install/binaries/
 
+### Docker compatible Alternatives
+
+- https://coreos.com/rkt/
+- https://containerd.io
+
 ## How to write system directly on SD-Card (without image)
 
 - https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4
@@ -38,6 +48,15 @@ packages built in LFS to satisfy requirements of
 - http://www.linuxfromscratch.org
 - http://www.linuxfromscratch.org/lfs/view/stable/
 - https://github.com/reinterpretcat/lfs
+
+- https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+
+## Real-Time OS
+
+- cross-reference: VAGO, Beckhoff etc.
+- https://en.wikipedia.org/wiki/Comparison_of_real-time_operating_systems
+- https://www.ethercat.org/default.htm
+- http://crispaudio.de/?page_id=835
 
 ## Alternatives
 
