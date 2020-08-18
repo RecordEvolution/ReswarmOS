@@ -5,6 +5,9 @@ source minimal_distro/logging.sh
 # implementation of reference
 # https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 
+# get timestamp at start
+startts=$(date)
+
 #-----------------------------------------------------------------------------#
 # Configuring the Environment
 
@@ -264,7 +267,7 @@ ls -lhR ${LXOS}/var/log
 #-----------------------------------------------------------------------------#
 # Building the Cross Compiler
 
-section_message "Build Process"
+section_message "Building the Cross Compiler"
 
 # unset some environment variables (just to be sure)
 unset CFLAGS
@@ -304,12 +307,155 @@ else
   tar -xf "${LXOS}/sources/${kernelbas}" -C "${LXOS}/sources/"
 fi
 
-# start compilation of kernel
-logging_message "compiling kernel"
+# start compilation/preparation of kernel
+logging_message "preparing kernel"
 pushd ${LXOS}/sources/${kerneldir}
 make mrproper
 make ARCH=${LXOS_ARCH} headers_check && make ARCH=${LXOS_ARCH} INSTALL_HDR_PATH=dest headers_install
 cp -rv dest/include/* ${LXOS}/usr/include
 popd
+
+# getting the binutils
+binutilsurl="http://ftp.gnu.org/gnu/binutils/binutils-2.35.tar.xz"
+binutilsbas=$(basename ${binutilsurl})
+binutilsdir=$(echo ${binutilsbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${binutilsbas}" ]]; then
+  logging_message "Binutils were already downloaded to ${LXOS}/sources/${binutilsbas}"
+else
+  logging_message "retrieving Binutils"
+  wget ${binutilsurl} -P ${LXOS}/sources
+fi
+
+# extract binutils sources
+if [[ -d "${LXOS}/sources/${binutilsdir}" ]]; then
+  logging_message "Binutils sources were already extracted"
+else
+  logging_message "extracting Binutils sources"
+  tar -xf "${LXOS}/sources/${binutilsbas}" -C "${LXOS}/sources/"
+fi
+
+# create binutils build directory
+logging_message "building Binutils"
+mkdir -pv ${LXOS}/sources/binutils-build
+pushd ${LXOS}/sources/binutils-build
+../${binutilsdir}/configure --prefix=${LXOS}/cross-tools --target=${LXOS_TARGET} \
+                            --with-sysroot=${LXOS} --disable-nls --enable-shared \
+                            --disable-multilib
+make configure-host && make
+ln -sv lib ${LXOS}/cross-tools/lib64
+make install
+
+# copy libiberty.h header file to target filesystem
+cp -v ../${binutilsdir}/include/libiberty.h ${LXOS}/usr/include
+popd
+
+# get gcc sources
+gccurl="http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
+gccbas=$(basename ${gccurl})
+gccdir=$(echo ${gccbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${gccbas}" ]]; then
+  logging_message "gcc was already downloaded to ${LXOS}/sources/${gccbas}"
+else
+  logging_message "retrieving gcc"
+  wget ${gccurl} -P ${LXOS}/sources
+fi
+
+# extract gcc sources
+if [[ -d "${LXOS}/sources/${gccdir}" ]]; then
+  logging_message "gcc sources were already extracted"
+else
+  logging_message "extracting gcc sources"
+  tar -xf "${LXOS}/sources/${gccbas}" -C "${LXOS}/sources/"
+fi
+
+# get gmp sources (GNU Multiple Precision Arithmetic Library)
+gmpurl="http://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz"
+gmpbas=$(basename ${gmpurl})
+gmpdir=$(echo ${gmpbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${gmpbas}" ]]; then
+  logging_message "gmp was already downloaded to ${LXOS}/sources/${gmpbas}"
+else
+  logging_message "retrieving gmp"
+  wget ${gmpurl} -P ${LXOS}/sources
+fi
+
+# extract gmp sources
+if [[ -d "${LXOS}/sources/${gmpdir}" ]]; then
+  logging_message "gmp sources were already extracted"
+else
+  logging_message "extracting gmp sources"
+  tar -xf "${LXOS}/sources/${gmpbas}" -C "${LXOS}/sources/"
+fi
+
+# get mpfr sources (Multi Precision Floating Point with Rounding for C)
+mpfrurl="https://www.mpfr.org/mpfr-4.0.2/mpfr-4.0.2.tar.xz"
+mpfrbas=$(basename ${mpfrurl})
+mpfrdir=$(echo ${mpfrbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${mpfrbas}" ]]; then
+  logging_message "mpfr was already downloaded to ${LXOS}/sources/${mpfrbas}"
+else
+  logging_message "retrieving mpfr"
+  wget ${mpfrurl} -P ${LXOS}/sources
+fi
+
+# extract mpfr sources
+if [[ -d "${LXOS}/sources/${mpfrdir}" ]]; then
+  logging_message "mpfr sources were already extracted"
+else
+  logging_message "extracting mpfr sources"
+  tar -xf "${LXOS}/sources/${mpfrbas}" -C "${LXOS}/sources/"
+fi
+
+# get mpc sources (GNU MPC is a complex floating-point library )
+mpcurl="https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz"
+mpcbas=$(basename ${mpcurl})
+mpcdir=$(echo ${mpcbas} | sed 's/.tar.gz//g')
+if [[ -f "${LXOS}/sources/${mpcbas}" ]]; then
+  logging_message "mpc was already downloaded to ${LXOS}/sources/${mpcbas}"
+else
+  logging_message "retrieving mpc"
+  wget ${mpcurl} -P ${LXOS}/sources
+fi
+
+# extract mpc sources
+if [[ -d "${LXOS}/sources/${mpcdir}" ]]; then
+  logging_message "mpc sources were already extracted"
+else
+  logging_message "extracting mpc sources"
+  tar -xzf "${LXOS}/sources/${mpcbas}" -C "${LXOS}/sources/"
+fi
+
+# move helper packages gmp, mpfr and mpc into gcc directory
+cp -r "${LXOS}/sources/${gmpdir}" "${LXOS}/sources/${gccdir}/gmp/"
+cp -r "${LXOS}/sources/${mpfrdir}" "${LXOS}/sources/${gccdir}/mpfr/"
+cp -r "${LXOS}/sources/${mpcdir}" "${LXOS}/sources/${gccdir}/mpc/"
+
+# create statically compiled gcc
+mkdir -pv "${LXOS}/sources/gcc-static/"
+pushd "${LXOS}/sources/gcc-static/"
+AR=ar LDFLAGS="-Wl,-rpath,${LXOS}/cross-tools/lib" ../${gccdir}/configure \
+--prefix=${LXOS}/cross-tools --build=${LXOS_HOST} --host=${LXOS_HOST} \
+--target=${LXOS_TARGET} --with-sysroot=${LXOS}/target --disable-nls \
+--disable-shared --with-mpfr-include=$(pwd)/../${gccdir}/mpfr/src \
+--with-mpfr-lib=$(pwd)/mpfr/src/.libs --without-headers --with-newlib \
+--disable-decimal-float --disable-libgomp --disable-libmudflap --disable-libssp \
+--disable-threads --enable-languages=c,c++ --disable-multilib --with-arch=${LXOS_CPU}
+make all-gcc all-target-libgcc && make install-gcc install-target-libgcc
+ln -vs libgcc.a "${LXOS_TARGET}-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'"
+popd
+
+#-----------------------------------------------------------------------------#
+# Building the Target Image
+
+section_message "Building the Target Image"
+
+#-----------------------------------------------------------------------------#
+
+# get final timestamp
+finishts=$(date)
+
+# show timing
+echo -e "\n started: ${startts}"
+echo -e "finished: ${finishts}\n"
 
 #-----------------------------------------------------------------------------#
