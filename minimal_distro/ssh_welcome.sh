@@ -27,6 +27,7 @@
 # put out ascii art of current hostname
 cat << "EOF" > /etc/update-motd.d/99-hostname-ascii
 #!/bin/bash
+figlet -kp -c -t < /etc/hostname
 EOF
-
 chmod +x /etc/update-motd.d/99-hostname-ascii
+
