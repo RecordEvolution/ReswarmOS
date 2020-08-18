@@ -45,11 +45,17 @@ packages built in LFS to satisfy requirements of
 
 ## References
 
-- http://www.linuxfromscratch.org
-- http://www.linuxfromscratch.org/lfs/view/stable/
-- https://github.com/reinterpretcat/lfs
+- original Linux from Scratch project
+  - http://www.linuxfromscratch.org
+  - http://www.linuxfromscratch.org/lfs/view/stable/
+  - https://github.com/reinterpretcat/lfs
 
-- https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+- General Guide for building linux
+  https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+
+- specific for Raspberry Pi 64bit and Docker
+  - https://blog.hypriot.com/post/building-a-64bit-docker-os-for-rpi3/
+  - https://github.com/dieterreuter/workshop-raspberrypi-64bit-os
 
 ## Real-Time OS
 
