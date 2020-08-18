@@ -350,7 +350,8 @@ cp -v ../${binutilsdir}/include/libiberty.h ${LXOS}/usr/include
 popd
 
 # get gcc sources
-gccurl="http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
+# gccurl="http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
+gccurl="https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
 gccbas=$(basename ${gccurl})
 gccdir=$(echo ${gccbas} | sed 's/.tar.xz//g')
 if [[ -f "${LXOS}/sources/${gccbas}" ]]; then
@@ -443,6 +444,42 @@ AR=ar LDFLAGS="-Wl,-rpath,${LXOS}/cross-tools/lib" ../${gccdir}/configure \
 make all-gcc all-target-libgcc && make install-gcc install-target-libgcc
 ln -vs libgcc.a "${LXOS_TARGET}-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'"
 popd
+
+# prepare glic
+glicurl="https://ftp.gnu.org/gnu/glibc/glibc-2.32.tar.xz"
+glibcbas=$(basename ${glibcurl})
+glibcdir=$(echo ${glibcbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${glibcbas}" ]]; then
+  logging_message "glibc was already downloaded to ${LXOS}/sources/${glibcbas}"
+else
+  logging_message "retrieving glibc"
+  wget ${glibcurl} -P ${LXOS}/sources
+fi
+
+# extract glibc sources
+if [[ -d "${LXOS}/sources/${glibcdir}" ]]; then
+  logging_message "glibc sources were already extracted"
+else
+  logging_message "extracting glibc sources"
+  tar -xf "${LXOS}/sources/${glibcbas}" -C "${LXOS}/sources/"
+fi
+
+# configure and build glibc
+mkdir -pv "${LXOS}/sources/glibc-build/"
+pushd "${LXOS}/sources/glibc-build/"
+cat << "EOF" > config.cache
+libc_cv_forced_unwind=yes
+libc_cv_c_cleanup=yes
+libc_cv_ssp=no
+libc_cv_ssp_strong=no
+EOF
+BUILD_CC="gcc" CC="${LXOS_TARGET}-gcc" \
+AR="${LXOS_TARGET}-ar" \
+RANLIB="${LXOS_TARGET}-ranlib" CFLAGS="-O2" ../${glibcdir}/configure --prefix=/usr \
+--host=${LXOS_TARGET} --build=${LXOS_HOST} --disable-profile --enable-add-ons --with-tls \
+--enable-kernel=2.6.32 --with-__thread --with-binutils=${LXOS}/cross-tools/bin
+--with-headers=${LXOS}/usr/include --cache-file=config.cache
+make && make install_root=${LXOS}/ install
 
 #-----------------------------------------------------------------------------#
 # Building the Target Image
