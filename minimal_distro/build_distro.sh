@@ -6,7 +6,7 @@ source minimal_distro/logging.sh
 # https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 
 # get timestamp at start
-startts=$(date)
+startts=$(date +%Y-%m-%d %H:%M:%S)
 
 #-----------------------------------------------------------------------------#
 # Configuring the Environment
@@ -350,8 +350,8 @@ cp -v ../${binutilsdir}/include/libiberty.h ${LXOS}/usr/include
 popd
 
 # get gcc sources
-# gccurl="http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
 gccurl="https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
+       # "http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
 gccbas=$(basename ${gccurl})
 gccdir=$(echo ${gccbas} | sed 's/.tar.xz//g')
 if [[ -f "${LXOS}/sources/${gccbas}" ]]; then
@@ -389,7 +389,8 @@ else
 fi
 
 # get mpfr sources (Multi Precision Floating Point with Rounding for C)
-mpfrurl="https://www.mpfr.org/mpfr-4.0.2/mpfr-4.0.2.tar.xz"
+mpfrurl="https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.xz"
+        # "https://www.mpfr.org/mpfr-4.0.2/mpfr-4.0.2.tar.xz"
 mpfrbas=$(basename ${mpfrurl})
 mpfrdir=$(echo ${mpfrbas} | sed 's/.tar.xz//g')
 if [[ -f "${LXOS}/sources/${mpfrbas}" ]]; then
@@ -427,13 +428,17 @@ else
 fi
 
 # move helper packages gmp, mpfr and mpc into gcc directory
+logging_message "copying ${LXOS}/sources/${gmpdir} to ${LXOS}/sources/${gccdir}/gmp/"
 cp -r "${LXOS}/sources/${gmpdir}" "${LXOS}/sources/${gccdir}/gmp/"
+logging_message "copying ${LXOS}/sources/${mpfrdir} to ${LXOS}/sources/${gccdir}/mpfr/"
 cp -r "${LXOS}/sources/${mpfrdir}" "${LXOS}/sources/${gccdir}/mpfr/"
+logging_message "copying ${LXOS}/sources/${mpcdir} to ${LXOS}/sources/${gccdir}/mpc/"
 cp -r "${LXOS}/sources/${mpcdir}" "${LXOS}/sources/${gccdir}/mpc/"
 
 # create statically compiled gcc
 mkdir -pv "${LXOS}/sources/gcc-static/"
 pushd "${LXOS}/sources/gcc-static/"
+logging_message "configuring and building gcc static library"
 AR=ar LDFLAGS="-Wl,-rpath,${LXOS}/cross-tools/lib" ../${gccdir}/configure \
 --prefix=${LXOS}/cross-tools --build=${LXOS_HOST} --host=${LXOS_HOST} \
 --target=${LXOS_TARGET} --with-sysroot=${LXOS}/target --disable-nls \
@@ -445,8 +450,8 @@ make all-gcc all-target-libgcc && make install-gcc install-target-libgcc
 ln -vs libgcc.a "${LXOS_TARGET}-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'"
 popd
 
-# prepare glic
-glicurl="https://ftp.gnu.org/gnu/glibc/glibc-2.32.tar.xz"
+# prepare glibc
+glibcurl="https://ftp.gnu.org/gnu/glibc/glibc-2.32.tar.xz"
 glibcbas=$(basename ${glibcurl})
 glibcdir=$(echo ${glibcbas} | sed 's/.tar.xz//g')
 if [[ -f "${LXOS}/sources/${glibcbas}" ]]; then
@@ -489,7 +494,7 @@ section_message "Building the Target Image"
 #-----------------------------------------------------------------------------#
 
 # get final timestamp
-finishts=$(date)
+finishts=$(date +%Y-%m-%d %H:%M:%S)
 
 # show timing
 echo -e "\n started: ${startts}"
