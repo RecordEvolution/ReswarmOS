@@ -429,12 +429,18 @@ else
 fi
 
 # move helper packages gmp, mpfr and mpc into gcc directory
-logging_message "copying ${LXOS}/sources/${gmpdir} to ${LXOS}/sources/${gccdir}/gmp/"
-cp -r "${LXOS}/sources/${gmpdir}" "${LXOS}/sources/${gccdir}/gmp/"
-logging_message "copying ${LXOS}/sources/${mpfrdir} to ${LXOS}/sources/${gccdir}/mpfr/"
-cp -r "${LXOS}/sources/${mpfrdir}" "${LXOS}/sources/${gccdir}/mpfr/"
-logging_message "copying ${LXOS}/sources/${mpcdir} to ${LXOS}/sources/${gccdir}/mpc/"
-cp -r "${LXOS}/sources/${mpcdir}" "${LXOS}/sources/${gccdir}/mpc/"
+if [[ ! -d "${LXOS}/sources/${gccdir}/gmp/" ]]; then
+  logging_message "copying ${LXOS}/sources/${gmpdir} to ${LXOS}/sources/${gccdir}/gmp/"
+  cp -r "${LXOS}/sources/${gmpdir}" "${LXOS}/sources/${gccdir}/gmp/"
+fi
+if [[ ! -d "${LXOS}/sources/${gccdir}/mpfr/" ]]; then
+  logging_message "copying ${LXOS}/sources/${mpfrdir} to ${LXOS}/sources/${gccdir}/mpfr/"
+  cp -r "${LXOS}/sources/${mpfrdir}" "${LXOS}/sources/${gccdir}/mpfr/"
+fi
+if [[ ! -d "${LXOS}/sources/${gccdir}/mpc/" ]]; then
+  logging_message "copying ${LXOS}/sources/${mpcdir} to ${LXOS}/sources/${gccdir}/mpc/"
+  cp -r "${LXOS}/sources/${mpcdir}" "${LXOS}/sources/${gccdir}/mpc/"
+fi
 
 # create statically compiled gcc
 mkdir -pv "${LXOS}/sources/gcc-static/"
