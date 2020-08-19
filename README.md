@@ -1,5 +1,5 @@
 
-# Reswarm Image
+# Building a custom Linux system
 
 In order to have an individual system image for our Reswarm-Project we have to
 assemble an image that satisfies the following requirements:

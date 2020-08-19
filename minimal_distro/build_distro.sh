@@ -281,6 +281,7 @@ mkdir -pv ${LXOS}/sources
 kernelurl="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.1.tar.xz"
 kernelbas=$(basename ${kernelurl})
 kerneldir=$(echo ${kernelbas} | sed 's/.tar.xz//g')
+kernelver=$(echo $kerneldir | sed 's/.*-//g')
 if [[ -f "${LXOS}/sources/${kernelbas}" ]]; then
   logging_message "Linux kernel was already downloaded to ${LXOS}/sources/${kernelbas}"
 else
@@ -486,11 +487,132 @@ RANLIB="${LXOS_TARGET}-ranlib" CFLAGS="-O2" ../${glibcdir}/configure --prefix=/u
 --enable-kernel=2.6.32 --with-__thread --with-binutils=${LXOS}/cross-tools/bin \
 --with-headers=${LXOS}/usr/include --cache-file=config.cache
 make && make install_root=${LXOS}/ install
+popd
+
+# build final gcc cross compiler
+logging_message "build and install final gcc cross compiler"
+mkdir -pv "${LXOS}/sources/gcc-build/"
+pushd "${LXOS}/sources/gcc-build/"
+AR=ar LDFLAGS="-Wl,-rpath,${LXOS}/cross-tools/lib" ../${gccdir}/configure \
+  --prefix=${LXOS}/cross-tools --build=${LXOS_HOST} --target=${LXOS_TARGET} \
+  --host=${LXOS_HOST} --with-sysroot=${LXOS} --disable-nls --enable-shared \
+  --enable-languages=c,c++ --enable-c99 --enable-long-long \
+  --with-mpfr-include=$(pwd)/../${gccdir}/mpfr/src \
+  --with-mpfr-lib=$(pwd)/mpfr/src/.libs --disable-multilib --with-arch=${LXOS_CPU}
+make && make install
+cp -v ${LXOS}/cross-tools/${LXOS_TARGET}/lib64/libgcc_s.so.1 ${LXOS}/lib64
+popd
+
+# set cross-compiler environment variables
+logging_message "set (cross-)compiler environment variables"
+export CC="${LXOS_TARGET}-gcc"
+export CXX="${LXOS_TARGET}-g++"
+export CPP="${LXOS_TARGET}-gcc -E"
+export AR="${LXOS_TARGET}-ar"
+export AS="${LXOS_TARGET}-as"
+export LD="${LXOS_TARGET}-ld"
+export RANLIB="${LXOS_TARGET}-ranlib"
+export READELF="${LXOS_TARGET}-readelf"
+export STRIP="${LXOS_TARGET}-strip"
+env | grep ${LXOS_TARGET}
 
 #-----------------------------------------------------------------------------#
 # Building the Target Image
 
 section_message "Building the Target Image"
+
+# use BusyBox to replace most utilities
+bubourl="https://www.busybox.net/downloads/busybox-1.31.1.tar.bz2"
+bubobas=$(basename ${bubourl})
+bubodir=$(echo ${bubobas} | sed 's/.tar.bz2//g')
+if [[ -f "${LXOS}/sources/${bubobas}" ]]; then
+  logging_message "BusyBox was already downloaded to ${LXOS}/sources/${bubobas}"
+else
+  logging_message "retrieving BusyBox"
+  wget ${bubourl} -P ${LXOS}/sources
+fi
+
+# extract BusyBox sources
+if [[ -d "${LXOS}/sources/${bubodir}" ]]; then
+  logging_message "BusyBox sources were already extracted"
+else
+  logging_message "extracting BusyBox sources"
+  tar -xf "${LXOS}/sources/${bubobas}" -C "${LXOS}/sources/"
+fi
+
+# configure and build BusyBox
+logging_message "configure and build BusyBox"
+pushd ${LXOS}/sources/${bubodir}
+# configure
+make CROSS_COMPILE="${LXOS_TARGET}-" defconfig
+make CROSS_COMPILE="${LXOS_TARGET}-" menuconfig
+# build
+make CROSS_COMPILE="${LXOS_TARGET}-"
+make CROSS_COMPILE="${LXOS_TARGET}-" CONFIG_PREFIX="${LXOS}" install
+popd
+
+# install Perl script provided by BusyBox for kernel compilation
+cp -v ${LXOS}/sources/${bubodir}/examples/depmod.pl ${LXOS}/cross-tools/bin
+chmod 755 ${LXOS}/cross-tools/bin/depmod.pl
+
+# compile kernel
+logging_message "(cross-)compile Linux kernel"
+# minimal module configuration
+make ARCH=${LXOS_ARCH} CROSS_COMPILE=${LXOS_TARGET}- x86_64_defconfig
+# configuration of extra (required) modules (i.a. storage-/network-controllers)
+make ARCH=${LXOS_ARCH} CROSS_COMPILE=${LXOS_TARGET}- menuconfig
+# build and install kernel
+make ARCH=${LXOS_ARCH} CROSS_COMPILE=${LXOS_TARGET}-
+make ARCH=${LXOS_ARCH} CROSS_COMPILE=${LXOS_TARGET}- INSTALL_MOD_PATH=${LXOS} modules_install
+# copy kernel files into boot/grub directory
+cp -v arch/x86/boot/bzImage ${LXOS}/boot/vmlinuz-${kernelver}
+cp -v System.map ${LXOS}/boot/System.map-${kernelver}
+cp -v .config ${LXOS}/boot/config-${kernelver}
+# leave kernel directory
+popd
+
+# run BusyBox Perl script
+${LXOS}/cross-tools/bin/depmod.pl -F ${LXOS}/boot/System.map-${kernelver} \
+                                  -b ${LXOS}/lib/modules/${kernelver}
+
+# getting and installing the bootscripts
+logging_message "installing bootscripts"
+booturl="http://www.linuxfromscratch.org/lfs/downloads/9.1/lfs-bootscripts-20191031.tar.xz"
+bootbas=$(basename ${booturl})
+bootdir=$(echo ${bootbas} | sed 's/.tar.xz//g')
+if [[ -f "${LXOS}/sources/${bootbas}" ]]; then
+  logging_message "boot scripts were already downloaded to ${LXOS}/sources/${bootbas}"
+else
+  logging_message "retrieving boot scripts"
+  wget ${booturl} -P ${LXOS}/sources
+fi
+
+# extract boot script sources
+if [[ -d "${LXOS}/sources/${bootdir}" ]]; then
+  logging_message "boot script sources were already extracted"
+else
+  logging_message "extracting boot script sources"
+  tar -xf "${LXOS}/sources/${bootbas}" -C "${LXOS}/sources/"
+fi
+
+# edit root makefile
+# TODO
+
+# install scripts
+pushd ${LXOS}/sources/${bootbas}
+make DESTDIR=${LXOS}/ install-bootscripts
+ln -sv ../rc.d/startup ${LXOS}/etc/init.d/rcS
+popd
+
+#-----------------------------------------------------------------------------#
+# Installing the Target Image
+
+section_message "Installing the Target Image"
+
+
+# install GRUB bootloader
+# grub-install
+
 
 #-----------------------------------------------------------------------------#
 
@@ -502,7 +624,7 @@ echo -e "\ntotal disk size:  ${dsksiz}\n"
 finishts=$(date +'%Y-%m-%d %H:%M:%S.%N')
 
 # show timing
-echo -e "\n started: ${startts}"
+echo -e " started: ${startts}"
 echo -e "finished: ${finishts}\n"
 
 #-----------------------------------------------------------------------------#
