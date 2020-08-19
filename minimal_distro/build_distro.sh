@@ -6,7 +6,7 @@ source minimal_distro/logging.sh
 # https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
 
 # get timestamp at start
-startts=$(date +%Y-%m-%d %H:%M:%S)
+startts=$(date +'%Y-%m-%d %H:%M:%S.%N')
 
 #-----------------------------------------------------------------------------#
 # Configuring the Environment
@@ -350,8 +350,8 @@ cp -v ../${binutilsdir}/include/libiberty.h ${LXOS}/usr/include
 popd
 
 # get gcc sources
-gccurl="https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
-       # "http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
+gccurl="http://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz"
+       # "https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
 gccbas=$(basename ${gccurl})
 gccdir=$(echo ${gccbas} | sed 's/.tar.xz//g')
 if [[ -f "${LXOS}/sources/${gccbas}" ]]; then
@@ -447,7 +447,7 @@ AR=ar LDFLAGS="-Wl,-rpath,${LXOS}/cross-tools/lib" ../${gccdir}/configure \
 --disable-decimal-float --disable-libgomp --disable-libmudflap --disable-libssp \
 --disable-threads --enable-languages=c,c++ --disable-multilib --with-arch=${LXOS_CPU}
 make all-gcc all-target-libgcc && make install-gcc install-target-libgcc
-ln -vs libgcc.a "${LXOS_TARGET}-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'"
+ln -vs libgcc.a `${LXOS_TARGET}-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
 popd
 
 # prepare glibc
@@ -470,6 +470,7 @@ else
 fi
 
 # configure and build glibc
+logging_message "configure and build glibc"
 mkdir -pv "${LXOS}/sources/glibc-build/"
 pushd "${LXOS}/sources/glibc-build/"
 cat << "EOF" > config.cache
@@ -482,7 +483,7 @@ BUILD_CC="gcc" CC="${LXOS_TARGET}-gcc" \
 AR="${LXOS_TARGET}-ar" \
 RANLIB="${LXOS_TARGET}-ranlib" CFLAGS="-O2" ../${glibcdir}/configure --prefix=/usr \
 --host=${LXOS_TARGET} --build=${LXOS_HOST} --disable-profile --enable-add-ons --with-tls \
---enable-kernel=2.6.32 --with-__thread --with-binutils=${LXOS}/cross-tools/bin
+--enable-kernel=2.6.32 --with-__thread --with-binutils=${LXOS}/cross-tools/bin \
 --with-headers=${LXOS}/usr/include --cache-file=config.cache
 make && make install_root=${LXOS}/ install
 
@@ -493,8 +494,12 @@ section_message "Building the Target Image"
 
 #-----------------------------------------------------------------------------#
 
+# check total disk size of build directory
+dsksiz=$(du -sh $LXOS)
+echo -e "\ntotal disk size:  ${dsksiz}\n"
+
 # get final timestamp
-finishts=$(date +%Y-%m-%d %H:%M:%S)
+finishts=$(date +'%Y-%m-%d %H:%M:%S.%N')
 
 # show timing
 echo -e "\n started: ${startts}"
