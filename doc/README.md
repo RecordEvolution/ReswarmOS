@@ -33,3 +33,7 @@ The boot process in any Raspberry Pi model is set up by in two stages:
 The Raspberry Pi and its firmware need a _minimum_ of file and configuration
 that is provided on the _boot_ partition with _FAT32_ filesystem. The minimal
 set of files and configuration is:
+
+### References
+
+- https://www.gnu.org/software/grub/manual/grub/grub.html
