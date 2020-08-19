@@ -605,7 +605,7 @@ fi
 # TODO
 
 # install scripts
-pushd ${LXOS}/sources/${bootbas}
+pushd ${LXOS}/sources/${bootdir}
 make DESTDIR=${LXOS}/ install-bootscripts
 ln -sv ../rc.d/startup ${LXOS}/etc/init.d/rcS
 popd
