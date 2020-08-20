@@ -10,7 +10,7 @@ These essentials compontents are
 1. Root Filesystem
 1. OS Image
 
-In case, we build the system for an architecture differing from the host 
+In case, we build the system for an architecture differing from the host
 architecture, we have to first build a _cross-compiler_ to accomplish steps
 involving the _kernel_ and all utilies located in the _root filesystem_.
 
@@ -49,29 +49,68 @@ set of files and configuration is:
 ## OS Image
 
 In order to generate an flashable image file _.img_ of the resulting operating
-system we can conveniently use a _loopback device_. We partition and format 
-the virtual device according to our needs and image requirements. Finally, we 
+system we can conveniently use a _loopback device_. We partition and format
+the virtual device according to our needs and image requirements. Finally, we
 mount the virtual device and write all operating system files we produced on
 the appropriate partitions and locations. Let's start step by step
 
 1. decide on the sizes of the _boot/_ and _root/_ partitions of the image
-1. generate an empty file ```mf-os.img``` according to the total size (sum of 
+1. generate an empty file `mf-os.img` according to the total size (sum of
    both partitions) of the image
    ```
    dd if=/dev/zero of=mf-os.img bs=1M count=100
    ```
-1. set up a *parititoned* loopback device based on this file
-   ```
+1. set up a _parititioned_ loopback device based on this file (and check that
+   device was correctly set up by obtaining its identifier number)
+   ```Shell
    losetup -fP mf-os.img
-   # check device was correctly set up and obtain its identifier (number)
    losetup -a
    ```
-   where ```-f``` ensures the next free loopback device name is used
-1. create the partition _boot/_ and _root/_ with their required sizes on the 
+   where `-f` ensures the next free loopback device name is used
+1. create the partition _boot/_ and _root/_ with their required sizes on the
    device
+   ```Shell
+   parted /dev/loopX --script mkpart primary FAT32 1049kB 1MB
+   parted /dev/loopX --script mkpart primary ext4 1MB 100MB
    ```
-   fdisk /dev/loopX
+   with _/dev/loopX_ being the automatically assigned next free loop device number.
+   Note, that with `fdisk` we could also partition the image file without setting
+   up any loop device
+1.
+   check resulting partition table
+   ```Shell
+   parted /dev/loopX print
    ```
+1. format partitions and create appropriate filesystems
+   ```Shell
+   mkfs.fat32 -I /dev/loopXp1
+   mkfs.ext4 -I /dev/loopXp2
+   ```
+1. mount both partitions
+   ```Shell
+   mkdir /loopfsA /loopfsB
+   mount -o loop /dev/loopXp1 /loopfsA
+   mount -o loop /dev/loopXp2 /loopfsB
+   ```
+1. check devices and correct mount points by e.g. `lsblk` or `df -h`
+1. copy the _boot/_ files and _root/_ files to their respective partitions
+   of the loopback device
+   ```Shell
+    cp -r ${buildpath}/boot/ /loopfsA
+    cp -r ${buildpath}/boot/ /loopfsB
+    ```
+1. unmount the devices
+   ```
+   umount /loopfsA
+   umount /loopfsB
+   ```
+1. detach the loopback device
+   ```Shell
+   losetup -d /dev/loopX
+   ```
+
+The image file `mf-os.img` now contains both the boot partition and the
+root file system and is ready to be deployed to any flash drive.
 
 ### References
 
@@ -79,5 +118,3 @@ the appropriate partitions and locations. Let's start step by step
 - https://www.thegeekdiary.com/how-to-create-partitions-inside-loopback-images/
 
 ## Cross Compilation
-
-
