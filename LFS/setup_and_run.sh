@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source logging.sh
+source log/logging.sh
 
 logging_timestamp_message "current date/time settings $(date)"
 logging_timestamp_message "filesystem and directories: ls /"

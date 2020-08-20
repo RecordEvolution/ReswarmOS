@@ -5,8 +5,8 @@
   architecture: x86_64
   kernel: 5.8.1
   partitions:
-    - {name: "boot", filesytem: vfat, size: 200000000}
-    - {name: "ReswarmOS", filesystem: ext4, size: 1000000000 }
+    - {name: "boot", filesytem: vfat, size: 200MiB, boot: true}
+    - {name: "ReswarmOS", filesystem: ext4, size: 504, boot: false}
   root-user:
     user: revenant
     password: return
