@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 601.68 77.08" height="30px">
+  <defs>
+    <style>.cls-1{fill:#334d5c;}</style>
+  </defs>
+  <style>
+    .re { font: 80px sans-serif; fill: #334d5c; }
+    .swarm { font: bold 80px sans-serif; fill: #334d5c; }
+    .os { font: 80px sans-serif; fill: #334d5c; }
+  </style>
+  <title>logo_white_re_swarm</title>
+  <g id="logog">
+    <path id="path138" class="cls-1" d="M32.86,2l-13,7.5,0,0-.05,0v0l-.48.28c-4.27,2.46-5.68,11.38-6.06,14.75L36.2,11.33c.39-.19,7.6-3.69,13.57-3.69h.14L40.13,2a8.15,8.15,0,0,0-7.27,0" transform="translate(-2.04 -1.15)"></path><path id="path142" class="cls-1" d="M5.68,17.69A8.2,8.2,0,0,0,2,24V39.78c0,4.9,7,10.48,9.75,12.46V25.77c0-.44.6-8.55,3.65-13.72Z" transform="translate(-2.04 -1.15)"></path><path id="path146" class="cls-1" d="M12.1,54.12h0C11.74,53.88,5,49.41,2,44.24V55.38a8.2,8.2,0,0,0,3.64,6.3l13.5,7.79c4.28,2.46,12.7-.77,15.81-2.12Z" transform="translate(-2.04 -1.15)">
+    </path>
+    <path id="path150" class="cls-1" d="M36.79,68c-.4.19-7.71,3.75-13.71,3.69l9.78,5.64a8.15,8.15,0,0,0,7.27,0l13.51-7.8c4.27-2.46,5.68-11.39,6.06-14.75Z" transform="translate(-2.04 -1.15)">
+    </path>
+    <path id="path154" class="cls-1" d="M61.2,27.13V53.6c0,.44-.6,8.55-3.65,13.72l9.77-5.64A8.2,8.2,0,0,0,71,55.38V39.59c0-4.94-7-10.5-9.75-12.46" transform="translate(-2.04 -1.15)">
+    </path>
+    <path id="path158" class="cls-1" d="M67.31,17.69,53.81,9.9C49.53,7.44,41.11,10.67,38,12L60.85,25.23v0a43.43,43.43,0,0,1,5.7,4.51A24,24,0,0,1,71,35.09V24a8.2,8.2,0,0,0-3.64-6.3" transform="translate(-2.04 -1.15)">
+    </path>
+  </g>
+  <g id="label">
+    <text x="70" y="67" class="re">RE</text>
+    <text x="180" y="67" class="swarm">SWARM</text>
+    <text x="530" y="67" class="os">.OS</text>
+  </g>
+</svg>
