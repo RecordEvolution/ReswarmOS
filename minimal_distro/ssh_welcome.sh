@@ -21,7 +21,7 @@
 # add static message
 #
 # cat << "EOF" > /etc/motd
-# Welcome to mf-os!
+# Welcome to ReswarmOS!
 # EOF
 
 # put out ascii art of current hostname
@@ -30,4 +30,3 @@ cat << "EOF" > /etc/update-motd.d/99-hostname-ascii
 figlet -kp -c -t < /etc/hostname
 EOF
 chmod +x /etc/update-motd.d/99-hostname-ascii
-

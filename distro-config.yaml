@@ -1,17 +1,17 @@
 ---
-  os-name: "mf.os"
+  os-name: "ReswarmOS"
   version: 0.1
+  codename: "Average Ant"
   architecture: x86_64
   kernel: 5.8.1
-  filesystem: ext4
   partitions:
     - {name: "boot", filesytem: vfat, size: 200000000}
-    - {name: "mf.os", filesystem: ext4, size: -1}
+    - {name: "ReswarmOS", filesystem: ext4, size: 1000000000 }
   root-user:
-    user: mafi
-    password: mysecretpassword
+    user: revenant
+    password: return
   hostname:
-    linux-machine
+    reckless-reindeer
   packages:
     - {name: acl, url: http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz}
     - {name: attr, url: http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz}

@@ -20,7 +20,7 @@ set +h
 umask 022
 
 # choose and create main build directory
-export LXOS=$HOME/mf-os
+export LXOS=$HOME/reswarm-os
 
 if [[ -d "$LXOS" ]]; then
   logging_message "main build directory ${LXOS} already exists"
@@ -146,7 +146,7 @@ cat ${LXOS}/etc/hostname
 # define content for login prompt
 logging_message "set login prompt message"
 cat << "EOF" > ${LXOS}/etc/issue
-mf.os version 0.1
+reswarm.os version 0.1
 Kernel \r on an \m
 
 EOF
@@ -248,7 +248,7 @@ set timeout=5
 
 set root=(hd0,1)
 
-menuentry "mf.os version 0.1" {
+menuentry "reswarm.os version 0.1" {
         linux   /boot/vmlinuz-4.16.3 root=/dev/sda1 ro quiet
 }
 EOF
