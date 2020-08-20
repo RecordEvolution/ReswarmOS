@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source minimal_distro/logging.sh
+source log/logging.sh
 
 # implementation of reference
 # https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source

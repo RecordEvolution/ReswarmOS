@@ -1,5 +1,15 @@
 
-# Building a custom Linux system
+<p align="center">
+  <a href="https://record-evolution.de/reswarm">
+    <img
+      alt="reswarm-os-logo.svg"
+      src="assets/reswarm-os-logo.svg"
+      width="400"
+    />
+  </a>
+</p>
+
+# ReswarmOS
 
 In order to have an individual system image for our Reswarm-Project we have to
 assemble an image that satisfies the following requirements:
