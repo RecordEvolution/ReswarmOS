@@ -57,9 +57,9 @@ the appropriate partitions and locations. Let's start step by step
 1. decide on the sizes of the _boot/_ and _root/_ partitions of the image
 1. generate an empty file _mf-os.img_ according to the total size (sum of
   both partitions) of the image
-    ```Shell
-    dd if=/dev/zero of=mf-os.img bs=1M count=100
-    ```
+```Shell
+  dd if=/dev/zero of=mf-os.img bs=1M count=100
+```
 1. set up a _parititioned_ loopback device based on this file (and check that
   device was correctly set up by obtaining its identifier number)
     ```Shell
