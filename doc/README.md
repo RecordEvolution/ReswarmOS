@@ -67,16 +67,16 @@ the appropriate partitions and locations. Let's start step by step
     losetup -fP mf-os.img
     losetup -a
     ```
-  where `-f` ensures the next free loopback device name is used
+    where `-f` ensures the next free loopback device name is used
 1. create the partition _boot/_ and _root/_ with their required sizes on the
-  device
+   device
     ```
       parted /dev/loopX --script mkpart primary FAT32 1049kB 100MB
       parted /dev/loopX --script mkpart primary ext4 1MB 100MB
     ```
-  with _/dev/loopX_ being the automatically assigned next free loop device number.
-  Note, that with `fdisk` we could also partition the image file without setting
-  up any loop device
+    with _/dev/loopX_ being the automatically assigned next free loop device number.
+    Note, that with `fdisk` we could also partition the image file without setting
+    up any loop device
 1. check resulting partition table
     ```
     parted /dev/loopX print
