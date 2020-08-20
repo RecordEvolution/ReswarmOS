@@ -239,6 +239,7 @@ usbdev[0-9].[0-9]_.*    root:root 0660
 EOF
 
 # configuration for GRUB bootloader
+# TODO this configuration depends on the kernel version !! adjust it dynamically
 logging_message "creating configuration file for GRUB bootloader"
 cat << "EOF" > ${LXOS}/boot/grub/grub.cfg
 

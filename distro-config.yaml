@@ -1,7 +1,9 @@
 ---
   os-name: "mf.os"
   version: 0.1
-  filesystem: ext4,
+  architecture: x86_64
+  kernel: 5.8.1
+  filesystem: ext4
   partitions:
     - {name: "boot", filesytem: vfat, size: 200000000}
     - {name: "mf.os", filesystem: ext4, size: -1}
