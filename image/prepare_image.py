@@ -237,10 +237,13 @@ if __name__ == "__main__" :
                                         + "cp -rv " + bldpath
                                         + " " + mntpnt + "\n\n" )
 
-                # ...unmount partition
+                # ...unmount partition and remove mount point
                 shellcode = shellcode + "logging_message \"unmount partition\"\n\n"
                 shellcode = ( shellcode + "# unmount partition\n"
                                         + "umount ${devName}p" + str(pcount) + "\n\n" )
+                shellcode = shellcode + "logging_message \"remove mount-point\"\n\n"
+                shellcode = ( shellcode + "# remove mount-point\n"
+                                        + "rm -r " + mntpnt + "\n\n" )
 
         shellcode = shellcode + "\n"
     else :
