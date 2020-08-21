@@ -54,6 +54,7 @@ logging_message "unmount partition"
 
 # unmount partition
 umount ${devName}p1
+sleep 2
 
 logging_message "remove mount-point"
 
@@ -83,6 +84,7 @@ logging_message "unmount partition"
 
 # unmount partition
 umount ${devName}p2
+sleep 2
 
 logging_message "remove mount-point"
 
