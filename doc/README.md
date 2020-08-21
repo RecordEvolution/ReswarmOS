@@ -87,8 +87,8 @@ the appropriate partitions and locations. Let's start step by step
     ```
 1. format partitions and create appropriate filesystems
     ```
-    mkfs.fat32 -I /dev/loopXp1
-    mkfs.ext4 -I /dev/loopXp2
+    mkfs.fat -F 32 /dev/loopXp1
+    mkfs.ext4 /dev/loopXp2
     ```
 1. mount both partitions
     ```
@@ -101,7 +101,7 @@ the appropriate partitions and locations. Let's start step by step
    of the loopback device
     ```
     cp -r ${buildpath}/boot/ /loopfsA
-    cp -r ${buildpath}/boot/ /loopfsB
+    cp -r ${buildpath}/root/ /loopfsB
     ```
 1. unmount the devices
     ```

@@ -174,29 +174,74 @@ if __name__ == "__main__" :
     # create and format partitions
     shellcode = shellcode + "logging_message \"create partitions and filesystems\"\n\n"
     shellcode = shellcode + "# create partitions and employ required filesystems\n"
+
+    # for all required partitions
+    # ...check if any partition is defined at all
     if len(config['partitions']) :
-        # create partitions (provide start/end of partition in Bytes)
+
+        # count partitions
         pcount = 0
+
         for part in config['partitions'] :
+
             # get partition size in Byte
             partSize = convertSizeByte(part['size'])
-            # create partition
+
+            # create partition (provide fstype and start/end of partition in Bytes)
+            shellcode = ( shellcode + "logging_message \"create partition "
+                                    + str(pcount+1) + " : " + str(part['name'])
+                                    + "\"\n\n" )
             shellcode = ( shellcode + "parted ${devName} --script mkpart primary "
                                     + str(part['fstype']) + " "
                                     + str(int(offset)) + "B" + " "
-                                    + str(int(offset+partSize-1)) + "B\n" )
-            # keep track of offset
+                                    + str(int(offset+partSize-1)) + "B\n\n" )
+
+            # keep track of absolute offset
             offset = offset + partSize
+
             # count partitions
             pcount = pcount + 1
+
             # set name of partition (only works for gpt disklabels)
             # sudo parted /dev/loop7 name 2 RESWARMOS
             # format partition with required filesystem
-            # ...check for FATX filesystem and evtl. set fat-size
+
+            # check for FATX filesystem and evtl. set fat-size
             fstype = 'fat' if 'fat' in part['fstype'] else part['fstype']
             fsopt = ' -F ' + part['fstype'].replace('fat','') if fstype == 'fat' else ''
+
+            # make filesystem and format partition
+            shellcode = shellcode + "logging_message \"format partition\"\n\n"
             shellcode = ( shellcode + "mkfs." + fstype + fsopt
-                                    + " ${devName}p" + str(pcount) + "\n" )
+                                    + " ${devName}p" + str(pcount) + "\n\n" )
+
+            # for both /boot and /root partitions
+            if part['label'] == "boot" or part['label'] == "root" :
+
+                # mount partition
+                shellcode = shellcode + "logging_message \"mount partition\"\n\n"
+                # ...define mountpoint
+                mntpnt = "/mnt/" + str(part['name'])
+                # ...perform mount
+                shellcode = ( shellcode + "# mount partition\n"
+                                        + "mkdir -v " + mntpnt + "\n"
+                                        + "mount -o loop ${devName}p" + str(pcount)
+                                        + " " + mntpnt + "\n\n" )
+
+                # ...populate partition with files
+                shellcode = shellcode + "logging_message \"populate partition\"\n\n"
+                # ...path of readily built boot/, root/ partition
+                bldpath = os.path.join(buildir,part['name'])
+                # ...copy files recursively
+                shellcode = ( shellcode + "# copy files\n"
+                                        + "cp -rv " + bldpath
+                                        + " " + mntpnt + "\n\n" )
+
+                # ...unmount partition
+                shellcode = shellcode + "logging_message \"unmount partition\"\n\n"
+                shellcode = ( shellcode + "# unmount partition\n"
+                                        + "umount ${devName}p" + str(pcount) + "\n\n" )
+
         shellcode = shellcode + "\n"
     else :
         raise ValueError("configuration does not define any partitions")
@@ -207,6 +252,11 @@ if __name__ == "__main__" :
                             + "parted ${devName} print\n\n" )
     # check further into
     # sudo file /dev/loop7 -s
+
+    # detach loopback device
+    shellcode = shellcode + "logging_message \"detach loopback device\"\n\n"
+    shellcode = ( shellcode + "# detach loopback device\n"
+                            + "losetup -d ${devName}\n\n" )
 
     # dump all shell code into script
     with open(args.shellScript,'w') as fout :
