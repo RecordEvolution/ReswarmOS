@@ -240,7 +240,8 @@ if __name__ == "__main__" :
                 # ...unmount partition and remove mount point
                 shellcode = shellcode + "logging_message \"unmount partition\"\n\n"
                 shellcode = ( shellcode + "# unmount partition\n"
-                                        + "umount ${devName}p" + str(pcount) + "\n\n" )
+                                        + "umount ${devName}p" + str(pcount) + "\n"
+                                        + "sleep 2" + "\n\n" )
                 shellcode = shellcode + "logging_message \"remove mount-point\"\n\n"
                 shellcode = ( shellcode + "# remove mount-point\n"
                                         + "rm -r " + mntpnt + "\n\n" )
