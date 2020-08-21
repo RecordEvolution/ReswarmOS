@@ -31,9 +31,9 @@ parted ${devName} --script mklabel msdos
 logging_message "create partitions"
 
 # create partitions and employ required filesystems
-parted ${devName} --script mkpart primary vfat 1048577B 210763776B
-mkfs.vfat ${devName}p1
-parted ${devName} --script mkpart primary ext4 210763777B 787480576B
+parted ${devName} --script mkpart primary fat32 1048576B 210763775B
+mkfs.fat -F 32 ${devName}p1
+parted ${devName} --script mkpart primary ext4 210763776B 787480575B
 mkfs.ext4 ${devName}p2
 
 logging_message "check partitions"
