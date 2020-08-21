@@ -56,15 +56,15 @@ mount the virtual device and write all operating system files we produced on
 the appropriate partitions and locations. Let's start step by step
 
 1. decide on the sizes of the _boot/_ and _root/_ partitions of the image
-1. generate an empty file _mf-os.img_ according to the total size (sum of
+1. generate an empty file _reswarm-os.img_ according to the total size (sum of
   both partitions) of the image
     ```
-      dd if=/dev/zero of=mf-os.img bs=1M count=100
+      dd if=/dev/zero of=reswarm-os.img bs=1M count=100
     ```
 1. set up a _parititioned_ loopback device based on this file (and check that
   device was correctly set up by obtaining its identifier number)
     ```
-    losetup -fP mf-os.img
+    losetup -fP reswarm-os.img
     losetup -a
     ```
     where `-f` ensures the next free loopback device name is used
@@ -113,7 +113,7 @@ the appropriate partitions and locations. Let's start step by step
     losetup -d /dev/loopX
     ```
 
-The image file `mf-os.img` now contains both the boot partition and the
+The image file `reswarm-os.img` now contains both the boot partition and the
 root file system and is ready to be deployed to any flash drive.
 
 ### References
