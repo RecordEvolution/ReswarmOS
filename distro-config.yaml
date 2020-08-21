@@ -5,7 +5,7 @@
   architecture: x86_64
   kernel: 5.8.1
   partitions:
-    - {name: "boot", fstype: vfat, size: 200MiB, boot: true}
+    - {name: "boot", fstype: fat32, size: 200MiB, boot: true}
     - {name: "ReswarmOS", fstype: ext4, size: 550MiB, boot: false}
   alignment-offset: 1MiB
   root-user:

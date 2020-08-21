@@ -168,8 +168,11 @@ if __name__ == "__main__" :
     shellcode = ( shellcode + "# create disk label\n"
                             + "parted ${devName} --script mklabel msdos \n\n" )
 
+    # find supported fileystem by
+    # $ ls /usr/sbin/ | grep mkfs | grep '\.' | awk -F '.' '{print $2}'
+
     # create and format partitions
-    shellcode = shellcode + "logging_message \"create partitions\"\n\n"
+    shellcode = shellcode + "logging_message \"create partitions and filesystems\"\n\n"
     shellcode = shellcode + "# create partitions and employ required filesystems\n"
     if len(config['partitions']) :
         # create partitions (provide start/end of partition in Bytes)
@@ -180,8 +183,8 @@ if __name__ == "__main__" :
             # create partition
             shellcode = ( shellcode + "parted ${devName} --script mkpart primary "
                                     + str(part['fstype']) + " "
-                                    + str(int(offset+1)) + "B" + " "
-                                    + str(int(offset+partSize)) + "B\n" )
+                                    + str(int(offset)) + "B" + " "
+                                    + str(int(offset+partSize-1)) + "B\n" )
             # keep track of offset
             offset = offset + partSize
             # count partitions
@@ -189,7 +192,10 @@ if __name__ == "__main__" :
             # set name of partition (only works for gpt disklabels)
             # sudo parted /dev/loop7 name 2 RESWARMOS
             # format partition with required filesystem
-            shellcode = ( shellcode + "mkfs." + str(part['fstype'])
+            # ...check for FATX filesystem and evtl. set fat-size
+            fstype = 'fat' if 'fat' in part['fstype'] else part['fstype']
+            fsopt = ' -F ' + part['fstype'].replace('fat','') if fstype == 'fat' else ''
+            shellcode = ( shellcode + "mkfs." + fstype + fsopt
                                     + " ${devName}p" + str(pcount) + "\n" )
         shellcode = shellcode + "\n"
     else :
