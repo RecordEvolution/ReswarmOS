@@ -68,11 +68,15 @@ the appropriate partitions and locations. Let's start step by step
     losetup -a
     ```
     where `-f` ensures the next free loopback device name is used
-1. create the partition _boot/_ and _root/_ with their required sizes on the
-   device
+1. create disk label
     ```
-      parted /dev/loopX --script mkpart primary FAT32 1049kB 100MB
-      parted /dev/loopX --script mkpart primary ext4 1MB 100MB
+    parted /dev/loopX --script mklabel msdos
+    ```
+1. create the partition _boot/_ and _root/_ with their required sizes on the
+   device (use at least 1MB/4MB alignment offset for first partition!)
+    ```
+      parted /dev/loopX --script mkpart primary fat32 1MiB 100MiB
+      parted /dev/loopX --script mkpart primary ext4 100MiB 200MiB
     ```
     with _/dev/loopX_ being the automatically assigned next free loop device number.
     Note, that with `fdisk` we could also partition the image file without setting
@@ -114,7 +118,9 @@ root file system and is ready to be deployed to any flash drive.
 
 ### References
 
+- https://www.gnu.org/software/parted/manual/html_node/mkpart.html
 - https://wiki.osdev.org/Loopback_Device
 - https://www.thegeekdiary.com/how-to-create-partitions-inside-loopback-images/
+- https://rainbow.chard.org/2013/01/30/how-to-align-partitions-for-best-performance-using-parted/
 
 ## Cross Compilation

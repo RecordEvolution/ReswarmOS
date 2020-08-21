@@ -6,7 +6,7 @@
 logging_message()
 {
 	message="$1"
-	echo "$(tput setaf 2)[$(date +%Y-%m-%d_%H-%M-%S-%N)]$(tput sgr0) ${message}"
+	echo "$(tput setaf 2)[LOG $(date +%Y-%m-%d_%H-%M-%S-%N)]$(tput sgr0) ${message}"
 }
 
 section_message()
