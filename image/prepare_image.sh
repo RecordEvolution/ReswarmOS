@@ -6,7 +6,7 @@ source log/logging.sh
 logging_message "creating image file"
 
 # create image file of appropriate total size
-dd if=/dev/zero of=/home/mario/reswarm-os/ReswarmOS_0.1.img bs=1M count=750
+dd if=/dev/zero of=/home/mario/reswarm-os/ReswarmOS_0.1.img bs=1M count=751
 
 # check image path and size
 ls -lh /home/mario/reswarm-os/ReswarmOS_0.1.img
@@ -31,10 +31,10 @@ parted ${devName} --script mklabel msdos
 logging_message "create partitions"
 
 # create partitions and employ required filesystems
-parted ${devName} --script mkpart primary vfat 1048576B 210763775B
-mkfs.vfat${devName}
-parted ${devName} --script mkpart primary ext4 210763776B 787480575B
-mkfs.ext4${devName}
+parted ${devName} --script mkpart primary vfat 1048577B 210763776B
+mkfs.vfat ${devName}p1
+parted ${devName} --script mkpart primary ext4 210763777B 787480576B
+mkfs.ext4 ${devName}p2
 
 logging_message "check partitions"
 

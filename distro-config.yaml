@@ -7,6 +7,7 @@
   partitions:
     - {name: "boot", fstype: vfat, size: 200MiB, boot: true}
     - {name: "ReswarmOS", fstype: ext4, size: 550MiB, boot: false}
+  alignment-offset: 1MiB
   root-user:
     user: revenant
     password: return
