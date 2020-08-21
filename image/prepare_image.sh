@@ -55,6 +55,11 @@ logging_message "unmount partition"
 # unmount partition
 umount ${devName}p1
 
+logging_message "remove mount-point"
+
+# remove mount-point
+rm -r /mnt/boot
+
 logging_message "create partition 2 : ReswarmOS"
 
 parted ${devName} --script mkpart primary ext4 68157440B 487587839B
@@ -78,6 +83,11 @@ logging_message "unmount partition"
 
 # unmount partition
 umount ${devName}p2
+
+logging_message "remove mount-point"
+
+# remove mount-point
+rm -r /mnt/ReswarmOS
 
 logging_message "create partition 3 : share"
 
