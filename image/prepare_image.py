@@ -222,11 +222,15 @@ if __name__ == "__main__" :
                 shellcode = shellcode + "logging_message \"mount partition\"\n\n"
                 # ...define mountpoint
                 mntpnt = "/mnt/" + str(part['name'])
+                # set appropriate filesystem option
+                mntfstype = 'vfat' if 'fat' in part['fstype'] else part['fstype']
                 # ...perform mount
                 shellcode = ( shellcode + "# mount partition\n"
                                         + "mkdir -v " + mntpnt + "\n"
-                                        + "mount -o loop ${devName}p" + str(pcount)
-                                        + " " + mntpnt + "\n\n" )
+                                        + "mount -t " + mntfstype
+                                        + " ${devName}p" + str(pcount)
+                                        + " " + mntpnt + "\n"
+                                        + "sleep 2" + "\n\n" )
 
                 # ...populate partition with files
                 shellcode = shellcode + "logging_message \"populate partition\"\n\n"
@@ -234,8 +238,8 @@ if __name__ == "__main__" :
                 bldpath = os.path.join(buildir,part['name'])
                 # ...copy files recursively
                 shellcode = ( shellcode + "# copy files\n"
-                                        + "cp -rv " + bldpath
-                                        + " " + mntpnt + "\n\n" )
+                                        + "cp -rv " + bldpath + "/* "
+                                        + mntpnt + "\n\n" )
 
                 # ...unmount partition and remove mount point
                 shellcode = shellcode + "logging_message \"unmount partition\"\n\n"
