@@ -90,11 +90,12 @@ the appropriate partitions and locations. Let's start step by step
     mkfs.fat -F 32 /dev/loopXp1
     mkfs.ext4 /dev/loopXp2
     ```
-1. mount both partitions
+1. mount both partitions (for currently filesystem supported by the running kernel
+    see `cat /proc/filesystems`)
     ```
-    mkdir /loopfsA /loopfsB
-    mount -o loop /dev/loopXp1 /loopfsA
-    mount -o loop /dev/loopXp2 /loopfsB
+    mkdir /mnt/{loopfsA,loopfsB}
+    mount -t vfat /dev/loopXp1 /mnt/loopfsA
+    mount -t ext4 /dev/loopXp2 /mnt/loopfsB
     ```
 1. check devices and correct mount points by e.g. `lsblk` or `df -h`
 1. copy the _boot/_ files and _root/_ files to their respective partitions
@@ -103,10 +104,11 @@ the appropriate partitions and locations. Let's start step by step
     cp -r ${buildpath}/boot/ /loopfsA
     cp -r ${buildpath}/root/ /loopfsB
     ```
-1. unmount the devices
+1. unmount the devices and remove mountpoints
     ```
-    umount /loopfsA
-    umount /loopfsB
+    umount /dev/loopXp1
+    umount /dev/loopXp2
+    rm -r /mnt/loopfsA /mnt/loopfsB
     ```
 1. detach the loopback device
     ```

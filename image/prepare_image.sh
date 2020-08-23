@@ -43,12 +43,13 @@ logging_message "mount partition"
 
 # mount partition
 mkdir -v /mnt/boot
-mount -o loop ${devName}p1 /mnt/boot
+mount -t vfat ${devName}p1 /mnt/boot
+sleep 2
 
 logging_message "populate partition"
 
 # copy files
-cp -rv /home/mario/reswarm-os/boot /mnt/boot
+cp -rv /home/mario/reswarm-os/boot/* /mnt/boot
 
 logging_message "unmount partition"
 
@@ -73,12 +74,13 @@ logging_message "mount partition"
 
 # mount partition
 mkdir -v /mnt/ReswarmOS
-mount -o loop ${devName}p2 /mnt/ReswarmOS
+mount -t ext4 ${devName}p2 /mnt/ReswarmOS
+sleep 2
 
 logging_message "populate partition"
 
 # copy files
-cp -rv /home/mario/reswarm-os/ReswarmOS /mnt/ReswarmOS
+cp -rv /home/mario/reswarm-os/ReswarmOS/* /mnt/ReswarmOS
 
 logging_message "unmount partition"
 
