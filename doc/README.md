@@ -82,6 +82,7 @@ device instead of the official mainline Linux kernel from
 
 ### References
 
+- https://www.kernel.org/
 - https://www.raspberrypi.org/documentation/linux/kernel/building.md
 - https://github.com/umiddelb/armhf/wiki/How-To-compile-a-custom-Linux-kernel-for-your-ARM-device
 

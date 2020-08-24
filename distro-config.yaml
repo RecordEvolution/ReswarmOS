@@ -3,7 +3,7 @@
   version: 0.1
   codename: "Average Ant"
   architecture: x86_64
-  kernel: 5.8.1
+  kernel: 5.8.1 # latest
   partitions:
     - {name: "boot", fstype: fat32, size: 64MiB, label: "boot"}
     - {name: "ReswarmOS", fstype: ext4, size: 320MiB, label: "root"}
