@@ -61,7 +61,7 @@ if __name__ == "__main__" :
 
     # copy firmware BLOBS to boot/ in build directory
     shellcode = shellcode + "logging_message \"copy firmware to build directory\"\n\n"
-    # ...find name of build partition, which corresponds to build subdirectory name
+    # ...find name of '/boot' partition, which corresponds to build-subdirectory name
     bootnam = ''
     for part in config['partitions'] :
         if part['label'] == 'boot' :
@@ -75,6 +75,12 @@ if __name__ == "__main__" :
     # ...copy files
     shellcode = ( shellcode + '# copy firmware BLOBs\n'
                             + 'cp -r ' + reposub + ' ' + bootdir + '\n\n' )
+
+    # copy user/auxiliary boot configuration
+    shellcode = shellcode + "logging_message \"copy auxiliary boot configuration\"\n\n"
+    # ...copy files
+    shellcode = ( shellcode + '# copy auxiliary configuration\n'
+                            + 'cp boot/config/* ' + bootdir + '\n\n' )
 
     # dump all shell code into script
     with open(args.shellScript,'w') as fout :
