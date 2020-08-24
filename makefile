@@ -13,6 +13,13 @@ image/prepare_image.sh: image/prepare_image.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
+cross-generate: cross/prepare_crosscompiler.sh
+	sudo ./$@
+
+cross/prepare_crosscompiler.sh: cross/prepare_crosscompiler.py distro-config.yaml
+	python3 $< --shellScript $@
+	chmod u+x $@
+
 boot-generate: boot/build_boot.sh
 	sudo ./$<
 
