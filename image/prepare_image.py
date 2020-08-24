@@ -232,6 +232,8 @@ if __name__ == "__main__" :
                 fslabel = ''
                 if 'fat' in part['fstype'] :
                     fslabel = '-n ' + part['name']
+                    # eventl. add '.upper()' due to
+                    # mkfs.fat: warning - lowercase labels might not work properly with DOS or Windows
                 elif 'ext' in part['fstype'] :
                     fslabel = '-L ' + part['name']
                 else :
