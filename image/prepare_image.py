@@ -228,10 +228,20 @@ if __name__ == "__main__" :
                 fstype = 'fat' if 'fat' in part['fstype'] else part['fstype']
                 fsopt = ' -F ' + part['fstype'].replace('fat','') if fstype == 'fat' else ''
 
+                # set label/name of partition
+                fslabel = ''
+                if 'fat' in part['fstype'] :
+                    fslabel = '-n ' + part['name']
+                elif 'ext' in part['fstype'] :
+                    fslabel = '-L ' + part['name']
+                else :
+                    fslabel = ' '
+
                 # make filesystem and format partition
                 shellcode = shellcode + "logging_message \"format partition\"\n\n"
                 shellcode = ( shellcode + "mkfs." + fstype + fsopt
-                                        + " ${devName}p" + str(pcount) + "\n\n" )
+                                        + " ${devName}p" + str(pcount)
+                                        + " " + fslabel + "\n\n" )
 
                 # for both /boot and /root partitions
                 if part['label'] == "boot" or part['label'] == "root" :
