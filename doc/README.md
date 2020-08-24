@@ -40,13 +40,14 @@ that is provided on the _boot_ partition with _FAT32_ filesystem. For instance,
 for the Raspberry Pi 3 the minimal set of files and configuration is
 
 - GPU firmware :
-  - bcm2710-rpi-3-b.dtb
-  - bootcode.bin
-  - fixup.dat
-  - start.elf
+  - kernel8.img (64bit kernel for the Raspberry Pi 3)
+  - bcm2710-rpi-3-b.dtb (device tree binary Linux kernel configuration)
+  - bootcode.bin (second stage bootloader)
+  - fixup.dat ((optional) used to configure SDRAM partition between GPU and CPU)
+  - start.elf (GPU firmware)
 - configuration :
-  - cmdline.txt
-  - config.txt
+  - cmdline.txt (kernel commandline parameters)
+  - config.txt (configuration file read by the bootloader)
 
 These GPU firmware and bootloader files/BLOBS are provided in the
 [Raspberry Pi Github](https://github.com/raspberrypi/firmware/tree/master/boot)
