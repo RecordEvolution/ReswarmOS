@@ -21,14 +21,14 @@ boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
 	chmod u+x $@
 
 root-generate: root/prepare_rootfilesystem.sh
-	sudo ./$@
+	sudo ./$<
 
 root/prepare_rootfilesystem.sh: root/prepare_rootfilesystem.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
 cross-generate: cross/prepare_crosscompiler.sh
-	sudo ./$@
+	sudo ./$<
 
 cross/prepare_crosscompiler.sh: cross/prepare_crosscompiler.py distro-config.yaml
 	python3 $< --shellScript $@
