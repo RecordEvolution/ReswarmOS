@@ -82,6 +82,9 @@ if __name__ == "__main__" :
     shellcode = ( shellcode + '# copy auxiliary configuration\n'
                             + 'cp boot/config/* ' + bootdir + '\n\n' )
 
+    # customize cmdline.txt and config.txt
+    # TODO
+
     # dump all shell code into script
     with open(args.shellScript,'w') as fout :
         fout.write(shellcode)
