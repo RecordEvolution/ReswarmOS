@@ -5,10 +5,10 @@
   architecture: x86_64
   kernel: 5.8.1
   partitions:
-    - {name: "boot", fstype: fat16, size: 64MiB, label: "boot"}
-    - {name: "ReswarmOS", fstype: ext4, size: 400MiB, label: "root"}
-    - {name: "share", fstype: ext4, size: 200MiB, label: "none"}
-  alignment-offset: 1MiB
+    - {name: "boot", fstype: fat32, size: 64MiB, label: "boot"}
+    - {name: "ReswarmOS", fstype: ext4, size: 320MiB, label: "root"}
+    - {name: "share", fstype: ext4, size: 0MiB, label: "none"}
+  alignment-offset: 4MiB
   root-user:
     user: revenant
     password: return
