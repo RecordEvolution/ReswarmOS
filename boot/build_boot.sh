@@ -13,3 +13,8 @@ logging_message "copy firmware to build directory"
 # copy firmware BLOBs
 cp -r /home/mario/ReswarmOS/firmware/boot /home/mario/ReswarmOS/boot
 
+logging_message "copy auxiliary boot configuration"
+
+# copy auxiliary configuration
+cp boot/config/* /home/mario/ReswarmOS/boot
+
