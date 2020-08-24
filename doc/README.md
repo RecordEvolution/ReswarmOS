@@ -3,11 +3,11 @@
 
 To build a custom Linux image and make it production ready we have to consider
 _four building blocks_  corresponding to a four step production process.
-These essentials compontents are
+These essentials components are
 
 1. Boot Process and Bootloader
 1. Kernel
-1. Root Filesystem
+1. Root Filesystem (including packages and utilies)
 1. OS Image
 
 In case, we build the system for an architecture differing from the host
@@ -35,15 +35,54 @@ The boot process in any Raspberry Pi model is set up by in two stages:
     - the GPU firmware itself is loaded from _start.elf_ enabling the GPU to
       load user specific code for the CPU like the _kernel_
 
-The Raspberry Pi and its firmware need a _minimum_ of file and configuration
-that is provided on the _boot_ partition with _FAT32_ filesystem. The minimal
-set of files and configuration is:
+The Raspberry Pi and its firmware require a _minimum_ of files and configuration
+that is provided on the _boot_ partition with _FAT32_ filesystem. For instance,
+for the Raspberry Pi 3 the minimal set of files and configuration is
+
+- GPU firmware :
+  - bcm2710-rpi-3-b.dtb
+  - bootcode.bin
+  - fixup.dat
+  - start.elf
+- configuration :
+  - cmdline.txt
+  - config.txt
+
+These GPU firmware and bootloader files/BLOBS are provided in the
+[Raspberry Pi Github](https://github.com/raspberrypi/firmware/tree/master/boot)
+repository.
+
+For comparison, [Hypriot OS](https://blog.hypriot.com/) uses on top of the
+firmware BLOBS provided by the Raspberry Pi repository the following additional
+configuration files:
+
+- cmdline.txt
+- config.txt
+- fake-hwclock.data
+- meta-data
+- network-config
+- os-release
+- user-data
 
 ### References
 
 - https://www.gnu.org/software/grub/manual/grub/grub.html
 
 ## Kernel
+
+A ready-made up-to-date kernel for the _armv7l_ architecture and in particular
+for any Raspberry Pi model can be obtained from
+[Raspberry Pi Github Firmware](https://github.com/raspberrypi/firmware/tree/master/boot).
+However, if we go about compiling our own kernel we most probably have to rely
+on the kernel sources provided by the vendor,
+e.g. [Raspberry Pi Linux Kernel](https://github.com/raspberrypi/linux) of the
+device instead of the official mainline Linux kernel from
+[Linux Kernel](https://www.kernel.org/).
+
+### References
+
+- https://www.raspberrypi.org/documentation/linux/kernel/building.md
+- https://github.com/umiddelb/armhf/wiki/How-To-compile-a-custom-Linux-kernel-for-your-ARM-device
 
 ## Root Filesystem
 
@@ -126,3 +165,19 @@ root file system and is ready to be deployed to any flash drive.
 - https://rainbow.chard.org/2013/01/30/how-to-align-partitions-for-best-performance-using-parted/
 
 ## Cross Compilation
+
+## Cloud-init
+
+The _cloud-init_ package is the _de-facto_ standard to manage
+early-initialization of a cloud instance by customizing the system during the
+boot process and automatically sets up e.g. network configuration and connects
+the device to the preconfigured network.
+
+### References
+
+- https://cloudinit.readthedocs.io/en/18.3/
+
+
+## Concurrent Projects
+
+- https://github.com/hypriot
