@@ -179,6 +179,21 @@ if __name__ == "__main__" :
     # ...check if any partition is defined at all
     if len(config['partitions']) :
 
+        # check for finite size "/boot" and "root/" partitions
+        rootSize = 0
+        bootSize = 0
+        for part in config['partitions'] :
+            psize = convertSizeByte(part['size'])
+            if part['label'] == 'boot' and psize > 0 :
+                bootSize = psize
+            elif part['label'] == 'root' and psize > 0 :
+                rootSize = psize
+        # check result
+        if bootSize == 0 :
+            raise ValueError("please define a finite size boot partition")
+        if rootSize == 0 :
+            raise ValueError("please define a finite size root partition")
+
         # count partitions
         pcount = 0
 
@@ -187,68 +202,71 @@ if __name__ == "__main__" :
             # get partition size in Byte
             partSize = convertSizeByte(part['size'])
 
-            # create partition (provide fstype and start/end of partition in Bytes)
-            shellcode = ( shellcode + "logging_message \"create partition "
-                                    + str(pcount+1) + " : " + str(part['name'])
-                                    + "\"\n\n" )
-            shellcode = ( shellcode + "parted ${devName} --script mkpart primary "
-                                    + str(part['fstype']) + " "
-                                    + str(int(offset)) + "B" + " "
-                                    + str(int(offset+partSize-1)) + "B\n\n" )
+            # ignore partitions of zero size
+            if partSize > 0 :
 
-            # keep track of absolute offset
-            offset = offset + partSize
+                # create partition (provide fstype and start/end of partition in Bytes)
+                shellcode = ( shellcode + "logging_message \"create partition "
+                                        + str(pcount+1) + " : " + str(part['name'])
+                                        + "\"\n\n" )
+                shellcode = ( shellcode + "parted ${devName} --script mkpart primary "
+                                        + str(part['fstype']) + " "
+                                        + str(int(offset)) + "B" + " "
+                                        + str(int(offset+partSize-1)) + "B\n\n" )
 
-            # count partitions
-            pcount = pcount + 1
+                # keep track of absolute offset
+                offset = offset + partSize
 
-            # set name of partition (only works for gpt disklabels)
-            # sudo parted /dev/loop7 name 2 RESWARMOS
-            # format partition with required filesystem
+                # count partitions
+                pcount = pcount + 1
 
-            # check for FATX filesystem and evtl. set fat-size
-            fstype = 'fat' if 'fat' in part['fstype'] else part['fstype']
-            fsopt = ' -F ' + part['fstype'].replace('fat','') if fstype == 'fat' else ''
+                # set name of partition (only works for gpt disklabels)
+                # sudo parted /dev/loop7 name 2 RESWARMOS
+                # format partition with required filesystem
 
-            # make filesystem and format partition
-            shellcode = shellcode + "logging_message \"format partition\"\n\n"
-            shellcode = ( shellcode + "mkfs." + fstype + fsopt
-                                    + " ${devName}p" + str(pcount) + "\n\n" )
+                # check for FATX filesystem and evtl. set fat-size
+                fstype = 'fat' if 'fat' in part['fstype'] else part['fstype']
+                fsopt = ' -F ' + part['fstype'].replace('fat','') if fstype == 'fat' else ''
 
-            # for both /boot and /root partitions
-            if part['label'] == "boot" or part['label'] == "root" :
+                # make filesystem and format partition
+                shellcode = shellcode + "logging_message \"format partition\"\n\n"
+                shellcode = ( shellcode + "mkfs." + fstype + fsopt
+                                        + " ${devName}p" + str(pcount) + "\n\n" )
 
-                # mount partition
-                shellcode = shellcode + "logging_message \"mount partition\"\n\n"
-                # ...define mountpoint
-                mntpnt = "/mnt/" + str(part['name'])
-                # set appropriate filesystem option
-                mntfstype = 'vfat' if 'fat' in part['fstype'] else part['fstype']
-                # ...perform mount
-                shellcode = ( shellcode + "# mount partition\n"
-                                        + "mkdir -v " + mntpnt + "\n"
-                                        + "mount -t " + mntfstype
-                                        + " ${devName}p" + str(pcount)
-                                        + " " + mntpnt + "\n"
-                                        + "sleep 2" + "\n\n" )
+                # for both /boot and /root partitions
+                if part['label'] == "boot" or part['label'] == "root" :
 
-                # ...populate partition with files
-                shellcode = shellcode + "logging_message \"populate partition\"\n\n"
-                # ...path of readily built boot/, root/ partition
-                bldpath = os.path.join(buildir,part['name'])
-                # ...copy files recursively
-                shellcode = ( shellcode + "# copy files\n"
-                                        + "cp -rv " + bldpath + "/* "
-                                        + mntpnt + "\n\n" )
+                    # mount partition
+                    shellcode = shellcode + "logging_message \"mount partition\"\n\n"
+                    # ...define mountpoint
+                    mntpnt = "/mnt/" + str(part['name'])
+                    # set appropriate filesystem option
+                    mntfstype = 'vfat' if 'fat' in part['fstype'] else part['fstype']
+                    # ...perform mount
+                    shellcode = ( shellcode + "# mount partition\n"
+                                            + "mkdir -v " + mntpnt + "\n"
+                                            + "mount -t " + mntfstype
+                                            + " ${devName}p" + str(pcount)
+                                            + " " + mntpnt + "\n"
+                                            + "sleep 2" + "\n\n" )
 
-                # ...unmount partition and remove mount point
-                shellcode = shellcode + "logging_message \"unmount partition\"\n\n"
-                shellcode = ( shellcode + "# unmount partition\n"
-                                        + "umount ${devName}p" + str(pcount) + "\n"
-                                        + "sleep 2" + "\n\n" )
-                shellcode = shellcode + "logging_message \"remove mount-point\"\n\n"
-                shellcode = ( shellcode + "# remove mount-point\n"
-                                        + "rm -r " + mntpnt + "\n\n" )
+                    # ...populate partition with files
+                    shellcode = shellcode + "logging_message \"populate partition\"\n\n"
+                    # ...path of readily built boot/, root/ partition
+                    bldpath = os.path.join(buildir,part['name'])
+                    # ...copy files recursively
+                    shellcode = ( shellcode + "# copy files\n"
+                                            + "cp -rv " + bldpath + "/* "
+                                            + mntpnt + "\n\n" )
+
+                    # ...unmount partition and remove mount point
+                    shellcode = shellcode + "logging_message \"unmount partition\"\n\n"
+                    shellcode = ( shellcode + "# unmount partition\n"
+                                            + "umount ${devName}p" + str(pcount) + "\n"
+                                            + "sleep 2" + "\n\n" )
+                    shellcode = shellcode + "logging_message \"remove mount-point\"\n\n"
+                    shellcode = ( shellcode + "# remove mount-point\n"
+                                            + "rm -r " + mntpnt + "\n\n" )
 
         shellcode = shellcode + "\n"
     else :

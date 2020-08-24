@@ -6,10 +6,10 @@ source log/logging.sh
 logging_message "creating image file"
 
 # create image file of appropriate total size
-dd if=/dev/zero of=/home/mario/reswarm-os/ReswarmOS_0.1.img bs=1M count=665
+dd if=/dev/zero of=/home/mario/ReswarmOS/ReswarmOS_0.1.img bs=1M count=388
 
 # check image path and size
-ls -lh /home/mario/reswarm-os/ReswarmOS_0.1.img
+ls -lh /home/mario/ReswarmOS/ReswarmOS_0.1.img
 
 logging_message "prepare loopback device"
 
@@ -17,7 +17,7 @@ logging_message "prepare loopback device"
 devName=$(losetup -f) 
 
 # set up loopback device with image file
-losetup -fP /home/mario/reswarm-os/ReswarmOS_0.1.img
+losetup -fP /home/mario/ReswarmOS/ReswarmOS_0.1.img
 
 # check new loopback device
 losetup -a 
@@ -33,11 +33,11 @@ logging_message "create partitions and filesystems"
 # create partitions and employ required filesystems
 logging_message "create partition 1 : boot"
 
-parted ${devName} --script mkpart primary fat16 1048576B 68157439B
+parted ${devName} --script mkpart primary fat32 4194304B 71303167B
 
 logging_message "format partition"
 
-mkfs.fat -F 16 ${devName}p1
+mkfs.fat -F 32 ${devName}p1
 
 logging_message "mount partition"
 
@@ -49,7 +49,7 @@ sleep 2
 logging_message "populate partition"
 
 # copy files
-cp -rv /home/mario/reswarm-os/boot/* /mnt/boot
+cp -rv /home/mario/ReswarmOS/boot/* /mnt/boot
 
 logging_message "unmount partition"
 
@@ -64,7 +64,7 @@ rm -r /mnt/boot
 
 logging_message "create partition 2 : ReswarmOS"
 
-parted ${devName} --script mkpart primary ext4 68157440B 487587839B
+parted ${devName} --script mkpart primary ext4 71303168B 406847487B
 
 logging_message "format partition"
 
@@ -80,7 +80,7 @@ sleep 2
 logging_message "populate partition"
 
 # copy files
-cp -rv /home/mario/reswarm-os/ReswarmOS/* /mnt/ReswarmOS
+cp -rv /home/mario/ReswarmOS/ReswarmOS/* /mnt/ReswarmOS
 
 logging_message "unmount partition"
 
@@ -92,14 +92,6 @@ logging_message "remove mount-point"
 
 # remove mount-point
 rm -r /mnt/ReswarmOS
-
-logging_message "create partition 3 : share"
-
-parted ${devName} --script mkpart primary ext4 487587840B 697303039B
-
-logging_message "format partition"
-
-mkfs.ext4 ${devName}p3
 
 
 logging_message "check partitions"
