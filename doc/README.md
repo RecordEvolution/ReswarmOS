@@ -178,6 +178,41 @@ the device to the preconfigured network.
 
 - https://cloudinit.readthedocs.io/en/18.3/
 
+## Testing and Debugging
+
+The produced OS image _.img_ may be conveniently tested by making use of the
+[QEMU](https://www.qemu.org/) virtualization tool, which can be used an open
+source machine emulator. To install the tool on _Ubuntu_ run:
+
+```
+sudo apt-get install qemu-system
+```
+
+To start, let's boot up an _x86_64_ machine from an Alpine Linux image
+
+```
+qemu-system-x86_64 -drive format=raw,file=/home/mario/Downloads/alpine-standard-3.12.0-x86_64.iso
+```
+
+and specify _root_ as localhost login. The lists of currently supported machines
+and CPUs (for mcimx6ul) is shown by
+
+```
+qemu-system-arm -machine help
+qemu-system-arm -machine mcimx6ul-evk -cpu help
+```
+
+To start a machine emulation from an image use e.g.
+
+```
+qemu-system-arm -machine realview-pb-a8 -cpu cortex-a8 -drive format=raw,file=/home/mario/Downloads/hypriotos-rpi-v1.12.2.img7
+```
+
+### References
+
+- https://en.wikibooks.org/wiki/QEMU/Images
+- https://wiki.archlinux.org/index.php/QEMU
+
 
 ## Concurrent Projects
 
