@@ -6,17 +6,17 @@ image : $(RESWARMOS) image-generate
 $(RESWARMOS) :
 	mkdir -pv $@
 
-boot-generate: boot/build_boot.sh
-	./$<
+image-generate: image/prepare_image.sh boot-generate
+	sudo ./$<
 
-boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
+image/prepare_image.sh: image/prepare_image.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
-image-generate: image/prepare_image.sh boot-generate
-	./$<
+boot-generate: boot/build_boot.sh
+	sudo ./$<
 
-image/prepare_image.sh: image/prepare_image.py distro-config.yaml
+boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
