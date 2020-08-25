@@ -19,17 +19,60 @@ args = parser.parse_args()
 
 # --------------------------------------------------------------------------- #
 
-def create_root_fs(rootdir) :
+def create_root_filesystem(rootdir, subdirectories, dirdepth) :
     """
     Build up the root filesystem according to the 'Filesystem Hierarchy Standard'
-    https://refspecs.linuxfoundation.org/fhs.shtml
+    https://refspecs.linuxfoundation.org/fhs.shtml. The requirements of the FHS
+    are implemented in the configuration '.yaml' and recursively employed, here.
 
     Args:
-        rootdir (string): absolute path of build directory for root filesystem
+        rootdir (string): absolute path of current root inside of build directory
+        subdirectories (list): subdirectories to be created
+        dirdepth (integer): recursive directory depth
     Return:
-        None
+        createfs (string): shell script code for generating all subdirectories
+                           with required permissions
     """
+    # some logs
+    print('\ncreate_root_filesystem\n'
+         + 'rootdir: ' + str(rootdir) + '\n'
+         + 'subdirectories: ' + str(subdirectories) + '\n')
 
+    # initialize shellcode string
+    shellcode = ''
+
+    # set indentation
+    indent = ''*dirdepth
+
+    # iterate through all subdirectories
+    for dir in subdirectories :
+        # get absolute path of current directory
+        dirpath = os.path.join(rootdir,dir)
+        # prepend header for base directories
+        if dirdepth < 1 :
+            dirhead = '\n\n# ' + 60*'-' + ' #\n# ' + str(os.path.join(rootdir,dir)) + '\n\n'
+        else :
+            dirhead = ''
+        shellcode = shellcode + dirhead
+        # generate shell script to create directory
+        shellcode = shellcode + indent + "mkdir -pv " + str(dirpath) + "\n"
+        # evtl. adjust permissions
+        if 'permissions' in subdirectories[dir] :
+            perm = subdirectories[dir]['permissions']
+            # ignore all empty permissions
+            if perm :
+                shellcode = shellcode + indent + "chmod " + perm + " " + str(dirpath) + "\n"
+        # check for any subdirectories
+        if 'subdirectory' in subdirectories[dir] :
+            subDirs = subdirectories[dir]['subdirectory']
+            if subDirs :
+                shellcodeSub = create_root_filesystem(dirpath,subDirs,dirdepth+1)
+                # append code
+                shellcode = shellcode + shellcodeSub
+
+    # print('shellcode:\n' + str(shellcode) + "\n")
+
+    return shellcode
 
 # --------------------------------------------------------------------------- #
 
@@ -60,15 +103,33 @@ if __name__ == "__main__" :
     with open(args.rootfsConfigFile) as fin:
         rootconfig = yaml.load(fin, Loader=yaml.FullLoader)
 
-    print(str(rootconfig) + '\n' + str(len(rootconfig['root'])) + '\n')
+    print(str(rootconfig) + '\n\n'
+        + "number of root directories: " + str(len(rootconfig['root'])) + '\n')
     for dir in rootconfig['root'] :
-        dirname = list(dir.keys())[0]
-        print(str(dirname).ljust(10) + " : " + dir[dirname]['description'])
+        print(str(dir).ljust(10) + " : " + rootconfig['root'][dir]['description'])
+
+    # find name of root partition as given in configuration
+    rootName = None
+    for part in config['partitions'] :
+        if part['label'] == 'root' :
+            rootName = part['name']
+    # ...make sure this partition exists
+    if rootName == None :
+        raise ValueError('configuration does not provide a root partition')
+
+    # construct absolute path of root partition in build directory
+    buildRootDir = os.path.join(buildir,rootName)
 
     # build up the root filesystem
     shellcode = shellcode + "logging_message \"build root filesystem\"\n\n"
-    shellcode = ( shellcode + '# build basic root filesystem\n' + '\n\n' )
+    shellcode = ( shellcode + '# build basic root filesystem at '
+                            + str(buildRootDir) + '' )
+    # ...generate shell script for generating entire root subdirectory structure
+    shellcreatefs = create_root_filesystem(buildRootDir,rootconfig['root'],0)
+    # ...append to previous script
+    shellcode = shellcode + shellcreatefs
 
+    print('\n')
 
     # dump all shell code into script
     with open(args.shellScript,'w') as fout :
