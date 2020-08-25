@@ -1,0 +1,51 @@
+---
+description: "Filesystem Hierarchy Standard:
+              list of directories to be found in '/' of the root filesystem"
+urlreference: "https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s02.html"
+root:
+  - "bin":
+      description: "Essential command binaries"
+      permissions: ""
+  - "boot":
+      description: "Static files of the boot loader"
+      permissions: ""
+  - "dev":
+      description: "Device files"
+      permissions: ""
+  - "etc":
+      description: "Host-specific system configuration"
+      permissions: ""
+  - "home":
+      description: "User home directories (optional)"
+      permissions: ""
+  - "lib":
+      description: "Essential shared libraries and kernel modules"
+      permissions: ""
+  - "media":
+      description: "Mount point for removable media"
+      permissions: ""
+  - "mnt":
+      description: "Mount point for mounting a filesystem temporarily"
+      permissions: ""
+  - "opt":
+      description: "Add-on application software packages"
+      permissions: ""
+  - "run":
+      description: "Data relevant to running processes"
+      permissions: ""
+  - "sbin":
+      description: "Essential system binaries"
+      permissions: ""
+  - "srv":
+      description: "Data for services provided by this system"
+      permissions: ""
+  - "tmp":
+      description: "Temporary files"
+      permissions: ""
+  - "usr":
+      description: "Secondary hierarchy"
+      permissions: ""
+  - "var":
+      description: "Variable data"
+      permissions: ""
+...
