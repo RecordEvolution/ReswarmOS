@@ -20,25 +20,25 @@ boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
-root-generate: root/prepare_rootfilesystem.sh
+root-generate: root/prepare_root.sh
 	sudo ./$<
 
-root/prepare_rootfilesystem.sh: root/prepare_rootfilesystem.py distro-config.yaml
+root/prepare_root.sh: root/prepare_root.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
-cross-generate: cross/prepare_crosscompiler.sh
+cross-generate: cross/prepare_cross.sh
 	sudo ./$<
 
-cross/prepare_crosscompiler.sh: cross/prepare_crosscompiler.py distro-config.yaml
+cross/prepare_cross.sh: cross/prepare_cross.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
 clean :
 	rm -f image/prepare_image.sh
 	rm -f boot/build_boot.sh
-	rm -f root/prepare_rootfilesystem.sh
-	rm -f cross/prepare_crosscompiler.sh
+	rm -f root/prepare_root.sh
+	rm -f cross/prepare_cross.sh
 
 clean-build :
 	sudo rm -r $(RESWARMOS)
