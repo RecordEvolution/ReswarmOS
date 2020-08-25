@@ -17,6 +17,17 @@ args = parser.parse_args()
 
 # --------------------------------------------------------------------------- #
 
+def create_root_fs(rootdir) :
+    """
+    Build up the root filesystem according to the 'Filesystem Hierarchy Standard'
+    https://refspecs.linuxfoundation.org/fhs.shtml
+
+    Args:
+        rootdir (string): absolute path of build directory for root filesystem
+    Return:
+        None
+    """
+
 
 # --------------------------------------------------------------------------- #
 
