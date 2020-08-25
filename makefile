@@ -23,7 +23,7 @@ boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
 root-generate: root/prepare_root.sh
 	sudo ./$<
 
-root/prepare_root.sh: root/prepare_root.py distro-config.yaml
+root/prepare_root.sh: root/prepare_root.py distro-config.yaml root/root_filesystem.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
