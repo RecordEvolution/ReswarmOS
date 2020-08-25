@@ -109,7 +109,8 @@ root:
       permissions: "1777"
       subdirectory:
   - "usr":
-      description: "Secondary hierarchy: second major section of the filesystem"
+      description: "Secondary hierarchy"
+      details: "second major section of the filesystem"
       requirements:
         - "Directory is shareable, read-only data"
         - "Directory should be shareable between various FHS-compliant hosts and must not be written to"
@@ -119,15 +120,18 @@ root:
           requirements:
             - "There must be no subdirectories"
         - "include":
-          description: "This is where all of the system's general-use include files for the C programming language should be placed"
+          description:
+          details: "This is where all of the system's general-use include files for the C programming language should be placed"
         - "lib":
           description: "includes object files and libraries"
           requirements:
             - "Applications may use a single subdirectory under /usr/lib"
         - "local":
-          description: "The /usr/local hierarchy is for use by the system administrator when installing software locally"
+          description:
+          details: "The /usr/local hierarchy is for use by the system administrator when installing software locally"
           requirements:
             - "It needs to be safe from being overwritten when the system software is updated"
+          permissions: ""
           subdirectory:
             - "bin"
             - "etc"
@@ -142,12 +146,71 @@ root:
           requirements:
             -"There must be no subdirectories"
         - "share":
-          description: "The /usr/share hierarchy is for all read-only architecture independent data files"
+          description:
+          details: "The /usr/share hierarchy is for all read-only architecture independent data files"
+          permissions: ""
           subdirectory:
-            - "man"
-            - "misc"
+            - "man":
+              description:
+              details: "Contains manual information for commands and data under the / and /usr filesystems"
+              subdirectory:
+                - "man1":
+                  description: "User programs (optional)"
+                - "man2":
+                  description: "System calls (optional)"
+                - "man3":
+                  description: "Library calls (optional)"
+                - "man4":
+                  description: "Special files (optional)"
+                - "man5":
+                  description: "File formats (optional)"
+                - "man6":
+                  description: "Games (optional)"
+                - "man7":
+                  description: "Miscellaneous (optional)"
+                - "man8":
+                  description: "System administration (optional)"
+            - "misc":
+              description: "Contains miscellaneous architecture-independent files which don't require a separate subdirectory under /usr/share"
+              subdirectory:
   - "var":
       description: "Variable data"
+      details: "/var contains variable data files. This includes spool directories and files, administrative and logging data, and transient and temporary files"
+      requirements: "Several directories must not be used arbitrarily by some new application: backups, cron, msgs, preserve"
       permissions: ""
       subdirectory:
+        - "cache":
+          description: "Application cache data"
+          details: "intended for cached data from applications"
+        - "lib":
+          description: "Variable state information"
+          details: "This hierarchy holds state information pertaining to an application or the system"
+          permissions: ""
+          subdirectory:
+            - "misc"
+        - "local":
+          description: "Variable data for /usr/local"
+        - "lock":
+          description: "Lock files"
+          details: "Lock files should be stored within the /var/lock directory structure"
+          permissions: ""
+        - "log":
+          description: "Log files and directories"
+          details: "This directory contains miscellaneous log files. Most logs must be written to this directory or an appropriate subdirectory"
+          permissions: ""
+        - "opt":
+          description: "Variable data for /opt"
+          details: "Variable data of the packages in /opt must be installed in /var/opt/<subdir>, where <subdir> is the name of the subtree in /opt"
+          permissions: ""
+        - "run":
+          description: "Data relevant to running processes"
+        - "spool":
+          description: "Application spool data"
+          details: "/var/spool contains data which is awaiting some kind of later processing"
+          permissions: ""
+        - "tmp":
+          description: "Temporary files preserved between system reboots"
+          details: "The /var/tmp directory is made available for programs that require temporary files or directories that are preserved between system reboots"
+          requirements: "Files and directories located in /var/tmp must not be deleted when the system is booted"
+          permissions: "1777"
 ...
