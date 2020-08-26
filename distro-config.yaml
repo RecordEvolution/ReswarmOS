@@ -3,6 +3,8 @@
   version: 0.1
   codename: "Average Ant"
   architecture: x86_64
+  # choose a system among {raspberry-pi-zero,raspberry-pi-1,...,raspberry-pi-4,all}
+  system: raspberry-pi-4
   kernel: 5.8.1 # latest
   partitions:
     - {name: "boot", fstype: fat32, size: 64MiB, label: "boot"}

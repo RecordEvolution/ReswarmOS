@@ -1,0 +1,34 @@
+---
+  # ("BIOS") configuration file
+  config.txt:
+    memory:
+      gpu_mem:
+    codec:
+    display:
+      hdmi_safe: 1
+      config_hdmi_boost:
+      hdmi_group: 1
+      hdmi_mode: 1
+      hdmi_force_mode:
+      test_mode:
+    audio:
+    camera:
+    boot:
+      cmdline: cmdline.txt
+      kernel:
+      arm_64bit:
+      kernel_address:
+      boot_delay:
+    device:
+    gpio:
+    overclocking:
+    filters:
+    misc:
+  # Kernel command line
+  cmdline.txt:
+    console: ["serial0,115200","tty1"]
+    root:
+    rootfstype:
+    splash:
+
+...

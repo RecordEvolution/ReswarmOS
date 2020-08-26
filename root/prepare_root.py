@@ -9,8 +9,8 @@ import math
 parser = argparse.ArgumentParser(description='Produce shell script for building the root filesystem')
 parser.add_argument('--configFile',type=str,help='name and path of configuration file',
                     default='./distro-config.yaml')
-parser.add_argument('--rootfsConfigFile',type=str,help='name and path of configuration file',
-                    default='./root/root_filesystem.yaml')
+parser.add_argument('--rootfsConfigFile',type=str,help='name and path of root filesystem configuration file',
+                    default='./root/root-config.yaml')
 parser.add_argument('--shellScript',type=str,help='name and path of shell script to be written',
                     default='boot/prepare_root_filesystem.sh')
 parser.add_argument('--shellType',type=str,help='name and path of shell to be used',

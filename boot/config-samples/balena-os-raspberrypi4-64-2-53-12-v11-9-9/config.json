@@ -1,0 +1,5 @@
+{
+  "deviceType": "raspberrypi4-64",
+  "localMode": true,
+  "persistentLogging": false
+}
