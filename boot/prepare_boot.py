@@ -11,6 +11,8 @@ parser.add_argument('--configFile',type=str,help='name and path of configuration
                     default='./distro-config.yaml')
 parser.add_argument('--firmwareRepo',type=str,help='url of firmware repository',
                     default='https://github.com/raspberrypi/firmware.git')
+parser.add_argument('--bootConfigFile',type=str,help='name and path of boot partition configuration file',
+                    default='./boot/boot-config.yaml')
 parser.add_argument('--shellScript',type=str,help='name and path of shell script to be written',
                     default='boot/build_boot.sh')
 parser.add_argument('--shellType',type=str,help='name and path of shell to be used',

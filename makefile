@@ -16,14 +16,14 @@ image/prepare_image.sh: image/prepare_image.py distro-config.yaml
 boot-generate: boot/build_boot.sh $(RESWARMOS)
 	sudo ./$<
 
-boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
+boot/build_boot.sh : boot/prepare_boot.py distro-config.yaml boot/boot-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
 root-generate: root/prepare_root.sh $(RESWARMOS)
 	sudo ./$<
 
-root/prepare_root.sh: root/prepare_root.py distro-config.yaml root/root_filesystem.yaml
+root/prepare_root.sh: root/prepare_root.py distro-config.yaml root/root-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 

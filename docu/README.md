@@ -72,7 +72,8 @@ and
 [config.txt](https://www.raspberrypi.org/documentation/configuration/config-txt/README.md).
 
 Further configuration documentation for any Raspberry Pi model is provided at
-[Configuration](https://www.raspberrypi.org/documentation/configuration/) 
+[Configuration](https://www.raspberrypi.org/documentation/configuration/) and
+[elinux.org](https://elinux.org/RPiconfig)
 
 ### References
 
@@ -186,7 +187,9 @@ the device to the preconfigured network.
 
 ### References
 
+- https://cloud-init.io
 - https://cloudinit.readthedocs.io/en/18.3/
+- https://github.com/canonical/cloud-init
 
 ## Testing and Debugging
 
