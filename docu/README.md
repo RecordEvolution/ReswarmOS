@@ -65,6 +65,15 @@ configuration files:
 - os-release
 - user-data
 
+The configuration details of the _cmdline.txt_ and _config.txt_ are explained
+in the Raspberry Pi documentation at
+[Kernel Command Line](https://www.raspberrypi.org/documentation/configuration/cmdline-txt.md)
+and
+[config.txt](https://www.raspberrypi.org/documentation/configuration/config-txt/README.md).
+
+Further configuration documentation for any Raspberry Pi model is provided at
+[Configuration](https://www.raspberrypi.org/documentation/configuration/) 
+
 ### References
 
 - https://www.gnu.org/software/grub/manual/grub/grub.html
