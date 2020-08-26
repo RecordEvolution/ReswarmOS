@@ -288,8 +288,10 @@ if __name__ == "__main__" :
     shellcode = shellcode + "logging_message \"check partitions\"\n\n"
     shellcode = ( shellcode + "# check partitions\n"
                             + "parted ${devName} print\n\n" )
-    # check further into
-    # sudo file /dev/loop7 -s
+    # check further info
+    shellcode = shellcode + "logging_message \"check partition properties\"\n\n"
+    shellcode = ( shellcode + "lsblk -lo name,path,type,fstype,size,alignment,"
+                                      + "phy-sec,label,uuid | grep ${devName} \n\n" )
 
     # detach loopback device
     shellcode = shellcode + "logging_message \"detach loopback device\"\n\n"
