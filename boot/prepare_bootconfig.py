@@ -72,9 +72,12 @@ if __name__ == "__main__" :
     bootdir = os.path.join(buildir,bootnam)
     # ...subdirectory only from git repo
     reposub = os.path.join(repodir,'boot')
+    # ...create subdirectory for boot partition in build directory
+    shellcode = ( shellcode + '# create boot partition directory\n'
+                            + 'mkdir -pv ' + bootdir + '\n\n')
     # ...copy files
     shellcode = ( shellcode + '# copy firmware BLOBs\n'
-                            + 'cp -r ' + reposub + ' ' + bootdir + '\n\n' )
+                            + 'cp -r ' + reposub + '/* ' + bootdir + '\n\n' )
 
     # copy user/auxiliary boot configuration
     shellcode = shellcode + "logging_message \"copy auxiliary boot configuration\"\n\n"

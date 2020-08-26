@@ -1,33 +1,33 @@
 
 # main target to build OS-image
-image : $(RESWARMOS) image-generate
+build-image : image-generate
 
-# make build directory
+# create build directory
 $(RESWARMOS) :
 	mkdir -pv $@
 
-image-generate: image/prepare_image.sh boot-generate root-generate
-	sudo ./$<
+image-generate: $(RESWARMOS) boot-generate root-generate image/prepare_image.sh
+	sudo ./image/prepare_image.sh
 
 image/prepare_image.sh: image/prepare_image.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
-boot-generate: boot/build_boot.sh
+boot-generate: boot/build_boot.sh $(RESWARMOS)
 	sudo ./$<
 
 boot/build_boot.sh : boot/prepare_bootconfig.py distro-config.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
-root-generate: root/prepare_root.sh
+root-generate: root/prepare_root.sh $(RESWARMOS)
 	sudo ./$<
 
 root/prepare_root.sh: root/prepare_root.py distro-config.yaml root/root_filesystem.yaml
 	python3 $< --shellScript $@
 	chmod u+x $@
 
-cross-generate: cross/prepare_cross.sh
+cross-generate: cross/prepare_cross.sh $(RESWARMOS)
 	sudo ./$<
 
 cross/prepare_cross.sh: cross/prepare_cross.py distro-config.yaml
