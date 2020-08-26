@@ -229,4 +229,6 @@ qemu-system-arm -machine realview-pb-a8 -cpu cortex-a8 -drive format=raw,file=/h
 
 ## Concurrent Projects
 
+- https://github.com/RPi-Distro/pi-gen
 - https://github.com/hypriot
+- https://www.yoctoproject.org
