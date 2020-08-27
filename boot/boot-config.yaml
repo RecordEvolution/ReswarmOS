@@ -6,6 +6,7 @@
     codec:
     display:
       hdmi_safe: 1
+      hdmi_force_hotplug:
       config_hdmi_boost:
       hdmi_group: 1
       hdmi_mode: 1
