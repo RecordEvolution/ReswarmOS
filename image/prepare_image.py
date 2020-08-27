@@ -114,6 +114,7 @@ if __name__ == "__main__" :
 
     # get alignment offset of first partition (1MiB/4MiB are recommended)
     offset = convertSizeByte(config['alignment-offset'])
+    print("using alignment-offset " + str(offset) + " Bytes")
 
     # get total size of image ( = sum of all partitions defined in config)
     print(config['partitions'])
@@ -128,7 +129,7 @@ if __name__ == "__main__" :
     print("totalsize in Bytes: " + str(totalsize))
 
     # convert to MiB representation
-    totalsizeMiB = int(float(totalsize)/(1024.**2))
+    totalsizeMiB = math.ceil(float(totalsize)/(1024.**2))
 
     # check overall image size
     if totalsizeMiB > 5000.0 :
