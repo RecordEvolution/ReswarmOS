@@ -1,5 +1,6 @@
 ---
   # ("BIOS") configuration file
+  # https://www.raspberrypi.org/documentation/configuration/config-txt/
   config.txt:
     memory:
       gpu_mem:
@@ -25,7 +26,10 @@
     overclocking:
     filters:
     misc:
+      # https://www.raspberrypi.org/documentation/configuration/uart.md
+      enable_uart: 1
   # Kernel command line
+  # https://www.raspberrypi.org/documentation/configuration/cmdline-txt.md
   cmdline.txt:
     console: ["serial0,115200","tty1"]
     root:

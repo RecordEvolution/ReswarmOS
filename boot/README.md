@@ -67,7 +67,8 @@ Raspberry Pi 4 specific firmware files are:
 ### Linker Files
 
 These are linker files and are matched pairs with the start*.elf files listed
-in the previous section.
+in the previous section. These files are optional used to configure the SDRAM
+partition between GPU and CPU.
 
 ### Configuration Files
 
@@ -128,6 +129,7 @@ per the example above, or as a pre-encrypted 32 byte hexadecimal number.
 ### References
 
 - https://www.raspberrypi.org/documentation/configuration/boot_folder.md
+- https://github.com/DieterReuter/workshop-raspberrypi-64bit-os/blob/master/part1-bootloader.md
 
 ## Device Tree and Overlays
 

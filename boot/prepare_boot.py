@@ -29,7 +29,7 @@ if __name__ == "__main__" :
     # show list of arguments
     print("\n" + __file__ + "\n" + str(args) + "\n")
 
-    # open and read configuration
+    # open and read global configuration
     with open(args.configFile) as fin:
         config = yaml.load(fin, Loader=yaml.FullLoader)
 
@@ -78,14 +78,18 @@ if __name__ == "__main__" :
     shellcode = ( shellcode + '# create boot partition directory\n'
                             + 'mkdir -pv ' + bootdir + '\n\n')
     # ...copy files
-    shellcode = ( shellcode + '# copy firmware BLOBs\n'
+    shellcode = ( shellcode + '# copy bootloader, kernel, firmware BLOBs etc.\n'
                             + 'cp -r ' + reposub + '/* ' + bootdir + '\n\n' )
 
+    # open and read boot configuration
+    # with open(args.configFile) as fin:
+    #     config = yaml.load(fin, Loader=yaml.FullLoader)
+
     # copy user/auxiliary boot configuration
-    shellcode = shellcode + "logging_message \"copy auxiliary boot configuration\"\n\n"
-    # ...copy files
-    shellcode = ( shellcode + '# copy auxiliary configuration\n'
-                            + 'cp boot/config/* ' + bootdir + '\n\n' )
+    # shellcode = shellcode + "logging_message \"copy auxiliary boot configuration\"\n\n"
+    # # ...copy files
+    # shellcode = ( shellcode + '# copy auxiliary configuration\n'
+    #                         + 'cp boot/config/* ' + bootdir + '\n\n' )
 
     # customize cmdline.txt and config.txt
     # TODO
