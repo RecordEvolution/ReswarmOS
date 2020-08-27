@@ -1,6 +1,30 @@
 
 # Boot configuration
 
+The VideoCore GPU is responsible for booting the Broadcom BCM283x system on a
+chip (SoC), contained on the Raspberry Pi. The SoC will boot up with its main
+ARM processor held in reset.
+
+The VideoCore GPU loads the first stage bootloader from a ROM embedded within
+the SoC. This extremely simple first stage bootloader is designed to load the
+second stage bootloader from a FAT32 or FAT16 filesystem located on the SD Card.
+
+The second stage bootloader – _bootcode.bin_ – is executed on the VideoCore GPU
+and loads the third stage bootloader – _start.elf_ . Both these bootloaders are
+closed firmware, available as binary blobs from Broadcom.
+
+The third stage bootloader – _start.elf_ – is where all the action happens. It
+starts by reading _config.txt_, a text file containing configuration parameters
+for both the VideoCore (Video/HDMI modes, memory, console frame buffers etc) and
+the Linux Kernel (load addresses, device tree, UART/console baud rates etc).
+
+Once the _config.txt_ file has been parsed, the third stage bootloader will load
+_cmdline.txt_ – a file containing the kernel command line parameters to be
+passed to the kernel and _kernel.img_ – the Linux kernel.  Both are loaded into
+shared memory allocated to the ARM processor. Once complete, the third stage
+bootloader will release the ARM processor from reset. Your kernel should now
+start booting.
+
 ## Boot partition
 
 The _boot_ partition of an operating system image to be run on a Raspberry Pi
@@ -10,9 +34,9 @@ is supposed to contain the following kinds of files
 - bootloader (.bin, i.e. bootcode.bin, loaded by the SOC)
 - firmware binary blobs (.elf, i.a. start.elf,start4cd.elf)
 - linker files (.dat, i.a. fixup.dat, fixup4cd.txt)
+- configuration files (.txt = config.txt, cmdline.txt, issue.txt, ssh.txt)
 - device tree blobs (.dtb, e.g. bcm2708-rpi-b.dtb) + _overlays_ folder
 - kernel files (.img, i.a. kernel.img,kernel7l.img)
-- configuration files (.txt = config.txt, cmdline.txt, issue.txt, ssh.txt)
 - wireless network settings (.conf, i.e. wpa_supplicant.conf)
 
 ### Bootloader
@@ -45,6 +69,15 @@ Raspberry Pi 4 specific firmware files are:
 These are linker files and are matched pairs with the start*.elf files listed
 in the previous section.
 
+### Configuration Files
+
+The kernel command line _cmdline.txt_ passed in to the kernel when it boots and
+further configuration parameters in _config.txt_ using entires selecting overlays.
+When _ssh_ or _ssh.txt_ is present, SSH will be enabled on boot. The contents
+don't matter, it can be empty. SSH is otherwise disabled by default.
+With _config.txt_ we can choose particular overlays and also the actual kernel
+to be loaded!
+
 ### Device Tree Blobs
 
 Raspberry Pi kernels and its firmware use a _Device Tree (DT)_ to describe the
@@ -55,17 +88,20 @@ _hardware present_ in the Pi. See the next section for detailed explanation.
 This is the actual _Linux kernel_, while the boot folder will usually contain
 various kernel image files, used for the different Raspberry Pi models:
 
-- kernel.img   : BCM2835          : Pi Zero, Pi 1    :
-- kernel7.img  : BCM2836, BCM2837 : Pi 2, Pi 3 	     : Later Pi 2 uses the BCM2837
-- kernel7l.img : BCM2711 	        : Pi 4 	           : Large Physical Address Extension (LPAE)
-- kernel8.img  : BCM2837, BCM2711 : Pi 2, Pi 3, Pi 4 : Beta 64 bit kernel1. Earlier Pi 2 with BCM2836 do not support 64-bit.
+| Raspberry Pi Model          | Processor        | Kernel      | Notes    |
+| --------------------------- | ---------------- | ----------- | -------- |
+| Raspberry PI Model 1 A      |	BCM2835          | kernel.img  |
+| Raspberry PI Model 1 A+     |	BCM2835          | kernel.img  |
+| Raspberry PI Model 1 B+     |	BCM2835          | kernel.img  |
+| Raspberry PI Compute Module | BCM2835          |             |
+| Raspberry PI Zero           | BCM2835          | kernel.img  |
+| Raspberry PI Zero W         | BCM2835          | kernel.img  |
+| Raspberry PI 1              | BCM2835          | kernel.img  |
+| Raspberry PI 2 Model B      | BCM2836          | kernel7.img | Later Pi 2 uses the BCM2837 |
+| Raspberry PI 3 Model B      |	BCM2837          | kernel7.img |
+| Raspberry PI 3 Model B+     |	BCM2837B0        | kernel7.img |
+| Raspberry PI 4              |	BCM2837, BCM2711 | kernel8.img | Large Physical Address Extension (LPAE) |
 
-### Configuration Files
-
-The kernel command line _cmdline.txt_ passed in to the kernel when it boots and
-further configuration parameters in _config.txt_ using entires selecting overlays.
-When _ssh_ or _ssh.txt_ is present, SSH will be enabled on boot. The contents
-don't matter, it can be empty. SSH is otherwise disabled by default.
 
 ### Wireless network settings
 
@@ -163,3 +199,11 @@ bcm2710-rpi-3-b-plus.dtb, etc._
 
 - https://www.raspberrypi.org/documentation/configuration/
 - https://www.raspberrypi.org/documentation/configuration/boot_folder.md
+- https://www.beyondlogic.org/compiling-u-boot-with-device-tree-support-for-the-raspberry-pi/
+
+## Further References
+
+### Using the Universal Boot Loader (U-Boot)
+
+- https://www.denx.de/wiki/U-Boot
+- https://www.golem.de/news/raspberry-pi-der-mit-dem-64-bit-kernel-tanzt-1611-124475-4.html
