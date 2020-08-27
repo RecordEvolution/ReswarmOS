@@ -8,7 +8,7 @@
   kernel: 5.8.1 # latest
   partitions:
     - {name: "boot", fstype: fat32, size: 64MiB, label: "boot"}
-    - {name: "ReswarmOS", fstype: ext4, size: 1.8GiB, label: "root"}
+    - {name: "ReswarmOS", fstype: ext4, size: 0.4GiB, label: "root"} # adjust to size of root build folder
     - {name: "share", fstype: ext4, size: 0MiB, label: "none"}
   alignment-offset: 4MiB
   root-user:
