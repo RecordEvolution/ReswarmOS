@@ -266,9 +266,9 @@ if __name__ == "__main__" :
                     shellcode = shellcode + "logging_message \"populate partition\"\n\n"
                     # ...path of readily built boot/, root/ partition
                     bldpath = os.path.join(buildir,part['name'])
-                    # ...copy files recursively
+                    # ...copy files recursively (make sure to preserve mode of files!)
                     shellcode = ( shellcode + "# copy files\n"
-                                            + "cp -rv " + bldpath + "/* "
+                                            + "cp -rvp " + bldpath + "/* "
                                             + mntpnt + "\n\n" )
 
                     # ...unmount partition and remove mount point
