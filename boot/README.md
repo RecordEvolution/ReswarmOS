@@ -79,6 +79,16 @@ don't matter, it can be empty. SSH is otherwise disabled by default.
 With _config.txt_ we can choose particular overlays and also the actual kernel
 to be loaded!
 
+#### cmdline.txt
+
+for RaspiOS apparently have to use _PARTUUID_
+
+```
+root=PARTUUID=907af7d0-02 rootfstype=ext4
+```
+
+instead of _LABEL_ and name of partition!
+
 ### Device Tree Blobs
 
 Raspberry Pi kernels and its firmware use a _Device Tree (DT)_ to describe the
