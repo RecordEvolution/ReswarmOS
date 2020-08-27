@@ -77,9 +77,9 @@ if __name__ == "__main__" :
     # ...create subdirectory for boot partition in build directory
     shellcode = ( shellcode + '# create boot partition directory\n'
                             + 'mkdir -pv ' + bootdir + '\n\n')
-    # ...copy files
+    # ...copy files and take care of keeping the mode of files
     shellcode = ( shellcode + '# copy bootloader, kernel, firmware BLOBs etc.\n'
-                            + 'cp -r ' + reposub + '/* ' + bootdir + '\n\n' )
+                            + 'cp -prv ' + reposub + '/* ' + bootdir + '\n\n' )
 
     # open and read boot configuration
     # with open(args.configFile) as fin:
