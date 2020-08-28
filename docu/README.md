@@ -232,4 +232,22 @@ qemu-system-arm -machine realview-pb-a8 -cpu cortex-a8 -drive format=raw,file=/h
 - https://github.com/RPi-Distro/pi-gen
 - https://github.com/hypriot
 - https://www.yoctoproject.org
+
+### BuildRoot
+
+_Buildroot_ is an project providing support for a variety of different
+architectures and platform and offers a huge list of
+[packages](https://github.com/buildroot/buildroot/tree/master/package).
+
 - https://buildroot.org
+- https://github.com/buildroot/buildroot
+- https://docs.google.com/viewerng/viewer?url=http://bootlin.com/doc/training/buildroot/buildroot-slides.pdf
+- https://www.thirtythreeforty.net/posts/2020/01/mastering-embedded-linux-part-3-buildroot/
+
+#### BuildRoot in Docker
+
+- http://wiki.t-firefly.com/en/ROC-RK3308-CC/buildroot-builder.html
+
+### BuildRoot as Docker host
+
+- https://embeddedbits.org/using-containers-on-embedded-linux/
