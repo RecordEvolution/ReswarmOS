@@ -251,3 +251,8 @@ architectures and platform and offers a huge list of
 ### BuildRoot as Docker host
 
 - https://embeddedbits.org/using-containers-on-embedded-linux/
+
+### Buildroot vs. Yocto
+
+- https://blog.3mdeb.com/2019/2019-06-26-smallest-embedded-system-yocto-vs-buildroot/
+- https://www.ginzinger.com/de/techtalk/artikel/yocto-vs-buildroot-141/
