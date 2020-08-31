@@ -77,6 +77,7 @@ Further configuration documentation for any Raspberry Pi model is provided at
 
 ### References
 
+- https://github.com/raspberrypi
 - https://www.gnu.org/software/grub/manual/grub/grub.html
 
 ## Kernel
@@ -178,7 +179,10 @@ root file system and is ready to be deployed to any flash drive.
 
 ## Cross Compilation
 
-## Cloud-init
+For detailed description of how to cross-compiling the kernel and operation
+system utilities, see [Cross-Compilation](cross/README.md).
+
+## System initialization, systemd and cloud-init
 
 The _cloud-init_ package is the _de-facto_ standard to manage
 early-initialization of a cloud instance by customizing the system during the
@@ -187,6 +191,10 @@ the device to the preconfigured network.
 
 ### References
 
+- https://de.wikipedia.org/wiki/Init
+- https://www.linux-magazin.de/ausgaben/2008/07/kraftvolle-schnellstarter/
+- https://www.pks.mpg.de/~mueller/docs/suse10.0/suselinux-manual_de/manual/sec.boot.init.html
+- https://systemd.io/
 - https://cloud-init.io
 - https://cloudinit.readthedocs.io/en/18.3/
 - https://github.com/canonical/cloud-init
