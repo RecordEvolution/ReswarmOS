@@ -14,6 +14,12 @@ wget https://buildroot.org/downloads/buildroot-2020.08.tar.gz -P $HOME/Downloads
 cd $HOME/Downloads && tar -xvzf builroot-2020.08.tar.gz
 ```
 
+or clone the master branch from github
+
+```
+git clone --single-branch --depth=1 https://github.com/buildroot/buildroot
+```
+
 Enter the buildroot directory and check out the available commands
 
 ```
@@ -49,6 +55,7 @@ To employ one of the default configurations simply do, e.g.
 make raspberrypi4_defconfig
 ```
 
+To further customize this configuration you may want to use `make menuconfig`.
 The current configuration is by default saved in _.config/_. To start building
 the image simply type
 
@@ -60,15 +67,73 @@ Depending on the setup and host this may take about 30-60 minutes.
 The actual OS-image should then be located in _output/images/_ including the
 image `output/images/sdcard.img`.
 
+### Setting up WIFI
+
+Use `make menuconfig` to add and select required system components, i.a.
+
+```
+Networking applications -> wpa_supplicant
+Networking applications -> wpa_supplicant - Enable 80211 support
+Networking applications -> dropbear
+Networking applications -> openssh
+```
+
+Add file `board/raspberrypi/interfaces` with
+
+```
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+    pre-up /etc/network/nfs_check
+    wait-delay 15
+
+auto wlan0
+iface wlan0 inet dhcp
+    pre-up wpa_supplicant -D nl80211 -i wlan0 -c /etc/wpa_supplicant.conf -B
+    post-down killall -q wpa_supplicant
+    wait-delay 15
+
+iface default inet dhcp
+```
+
+and `board/raspberrypi/wpa_supplicant.conf` with
+
+```
+ctrl_interface=/var/run/wpa_supplicant
+ap_scan=1
+
+network={
+   ssid="EDIT_THIS"
+   psk="EDIT_THIS"
+}
+```
+
+In order to make _buildroot_ copy the files above in the root filesystem append
+
+```
+cp package/busybox/S10mdev ${TARGET_DIR}/etc/init.d/S10mdev
+chmod 755 ${TARGET_DIR}/etc/init.d/S10mdev
+cp package/busybox/mdev.conf ${TARGET_DIR}/etc/mdev.conf
+
+cp board/raspberrypi/interfaces ${TARGET_DIR}/etc/network/interfaces
+cp board/raspberrypi/wpa_supplicant.conf ${TARGET_DIR}/etc/wpa_supplicant.conf
+cp board/raspberrypi/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
+```
+
+to `board/raspberrypi/post-build.sh`.
+
+- https://armphibian.wordpress.com/2019/10/01/how-to-build-raspberry-pi-zero-w-buildroot-image/
+- https://blog.crysys.hu/2018/06/enabling-wifi-and-converting-the-raspberry-pi-into-a-wifi-ap/
+- https://unix.stackexchange.com/questions/396151/buildroot-zero-w-wireless
+
 ### References
 
+- https://buildroot.org/downloads/manual/manual.html#_buildroot_quick_start
 - https://ltekieli.com/buildroot-with-raspberry-pi-what-where-and-how/
 - https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa817
 - http://oa.upm.es/53063/1/RPIembeddedLinuxSystems_raspberry.pdf
-
-#### Setting up WIFI
-
-- https://blog.crysys.hu/2018/06/enabling-wifi-and-converting-the-raspberry-pi-into-a-wifi-ap/
 
 ## Yocto
 
