@@ -89,6 +89,19 @@ root=PARTUUID=907af7d0-02 rootfstype=ext4
 
 instead of _LABEL_ and name of partition!
 
+##### System Initialization
+
+`cmdline.txt` provides the possibility to use your own script to initialize
+and setup the system by setting `init=/sbin/initos.sh`, e.g.
+
+```
+init=/bin/bash -c "mount -t proc proc /proc; mount -t sysfs sys /sys; mount /boot; source /boot/unattended"
+```
+
+- https://raspberrypi.stackexchange.com/questions/33817/use-boot-cmdline-txt-for-creating-first-boot-script
+- https://gitlab.com/JimDanner/pi-boot-script
+- https://github.com/nmcclain/raspberian-firstboot
+
 ### Device Tree Blobs
 
 Raspberry Pi kernels and its firmware use a _Device Tree (DT)_ to describe the
