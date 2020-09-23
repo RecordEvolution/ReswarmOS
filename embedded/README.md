@@ -128,6 +128,14 @@ to `board/raspberrypi/post-build.sh`.
 - https://blog.crysys.hu/2018/06/enabling-wifi-and-converting-the-raspberry-pi-into-a-wifi-ap/
 - https://unix.stackexchange.com/questions/396151/buildroot-zero-w-wireless
 
+Very Helpful:
+
+- https://rohitsw.wordpress.com/2016/12/17/building-a-linux-filesystem-on-raspberry-pi-3/
+- https://www.raspberrypi.org/forums/viewtopic.php?t=159034
+- http://lists.busybox.net/pipermail/buildroot/2016-April/159688.html
+- https://github.com/OpenELEC/wlan-firmware
+- http://lists.busybox.net/pipermail/buildroot/2017-May/191324.html
+
 ### References
 
 - https://buildroot.org/downloads/manual/manual.html#_buildroot_quick_start
