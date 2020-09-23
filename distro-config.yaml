@@ -3,12 +3,12 @@
   version: 0.1
   codename: "Average Ant"
   architecture: x86_64
-  # choose a system among {raspberry-pi-zero,raspberry-pi-1,...,raspberry-pi-4,all}
-  system: raspberry-pi-4
+  # choose a model from { raspberry-pi-zero,raspberry-pi-1,...,raspberry-pi-4,all}
+  model: all
   kernel: 5.8.1 # latest
   partitions:
     - {name: "boot", fstype: fat32, size: 64MiB, label: "boot"}
-    - {name: "ReswarmOS", fstype: ext4, size: 0.4GiB, label: "root"} # adjust to size of root build folder
+    - {name: "ReswarmOS", fstype: ext4, size: 50MiB, label: "root"} # TODO adjust to size of root build folder
     - {name: "share", fstype: ext4, size: 0MiB, label: "none"}
   alignment-offset: 4MiB
   root-user:
@@ -17,6 +17,7 @@
   hostname:
     reckless-reindeer
   packages:
+    - {name: bash, web: https://www.gnu.org/software/bash/, url: https://ftp.halifax.rwth-aachen.de/gnu/bash/bash-5.1-beta.tar.gz}
     - {name: acl, url: http://download.savannah.gnu.org/releases/acl/acl-2.2.53.tar.gz}
     - {name: attr, url: http://download.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz}
     - {name: autoconf, url: http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz}

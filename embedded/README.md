@@ -136,6 +136,12 @@ Very Helpful:
 - https://github.com/OpenELEC/wlan-firmware
 - http://lists.busybox.net/pipermail/buildroot/2017-May/191324.html
 
+Kernel error while loading wifi module:
+
+`Direct firmware load for brcm/brcmfmac43455-sdio.bin failed with error -2`
+
+- http://lists.buildroot.org/pipermail/buildroot/2016-July/166287.html
+
 ### References
 
 - https://buildroot.org/downloads/manual/manual.html#_buildroot_quick_start
