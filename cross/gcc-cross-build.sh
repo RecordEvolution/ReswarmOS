@@ -8,24 +8,41 @@
 #
 # --------------------------------------------------------------------------- #
 
+# check required tools
+./prerequisites-check.sh
+
 gcc --version
 ld --version
 
-# check required tools
-bison --version
-flex --version
-
 # dependencies: Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+
-sudo apt-get install -y libgmp-dev libmpfr-dev libmpc-dev
+echo -e "\ninstalling GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+"
+apt-get install -y libgmp-dev libmpfr-dev libmpc-dev
+echo -e "\n\n"
+
+# set directory for build and installation
+#gccAll="${HOME}/Downloads/"
+gccAll="/gcc-build/"
 
 # source directory
-gccsrc="$HOME/Downloads/gcc"
+gccsrc="${gccAll}/gcc"
+if [[ ! -d ${gccsrc} ]]; then
+	mkdir -pv ${gccsrc}
+fi
 
 # build directory
-gccbld="$HOME/Downloads/gcc-build"
+gccbld="${gccAll}/gcc-build"
+if [[ ! -d ${gccbld} ]]; then
+	mkdir -pv ${gccbld}
+fi
 
 # installation directory
-gccint="$HOME/Downloads/gcc-install"
+gccint="${gccAll}/gcc-install"
+if [[ ! -d ${gccint} ]]; then
+	mkdir -pv ${gccint}
+fi
+
+ls -lh /
+ls -lh ${gccAll}
 
 # git repository URL (check list of available tags, i.e. releases)
 gccgit="https://gcc.gnu.org/git/gcc.git"
@@ -54,7 +71,7 @@ fi
 # check git sources
 pushd ${gccsrc}
 git branch
-git log
+git log | head -n 20
 git status
 
 # find supported languages
@@ -88,8 +105,14 @@ ${gccsrc}/configure \
   --enable-threads \
   --enable-languages=c,c++ \
   --disable-multilib
-  # start build process with n threads
-  make -j1
-  # install package
-  make install
+ 
+# start build process with n threads
+make -j2
+  
+# install package
+make install
+
 popd
+
+echo -e "\nfinished gcc cross-build\n"
+
