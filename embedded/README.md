@@ -76,6 +76,9 @@ Networking applications -> wpa_supplicant
 Networking applications -> wpa_supplicant - Enable 80211 support
 Networking applications -> dropbear
 Networking applications -> openssh
+# most importantly
+# (see e.g. https://www.thirtythreeforty.net/posts/2020/03/mastering-embedded-linux-part-4-adding-features/) !!
+Target packages -> Hardware handling -> Firmware -> rpi-wifi-firmware
 ```
 
 Add file `board/raspberrypi/interfaces` with
@@ -130,6 +133,7 @@ to `board/raspberrypi/post-build.sh`.
 
 Very Helpful:
 
+- https://www.thirtythreeforty.net/posts/2020/03/mastering-embedded-linux-part-4-adding-features/
 - https://rohitsw.wordpress.com/2016/12/17/building-a-linux-filesystem-on-raspberry-pi-3/
 - https://www.raspberrypi.org/forums/viewtopic.php?t=159034
 - http://lists.busybox.net/pipermail/buildroot/2016-April/159688.html
@@ -141,6 +145,17 @@ Kernel error while loading wifi module:
 `Direct firmware load for brcm/brcmfmac43455-sdio.bin failed with error -2`
 
 - http://lists.buildroot.org/pipermail/buildroot/2016-July/166287.html
+
+### RPI Wifi Firmware module loaded
+
+- WIFI network listing with `iwlist wlan0 scan`
+- set up/tear down WIFI interface
+
+```
+ip link set wlan0 up/down
+# or
+ifup wlan0
+```
 
 ### References
 
