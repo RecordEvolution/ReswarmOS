@@ -80,4 +80,19 @@ There are basically three possiblities to configure the WIFI module:
   ifup wlan0
   ```
 1. using the package `wpa_supplicant`
+
+  ```
+  wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf
+  ```
+  where `wpa_supplicant.conf` contains the desired WIFI's SSID and password
+	
 1. configuration via `systemd`
+
+### Checking network interfaces 
+
+```
+iwconfig
+#
+ifconfig
+```
+
