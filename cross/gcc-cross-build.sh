@@ -47,15 +47,26 @@ ls -lh ${gccAll}
 # git repository URL (check list of available tags, i.e. releases)
 gccgit="https://gcc.gnu.org/git/gcc.git"
 
-# host and build
-echo "host/build $MACHTYPE"
+# ./gcc/configure --help
+#
+# System types:
+#  --build=BUILD     configure for building on BUILD [guessed]
+#  --host=HOST       cross-compile to build programs to run on HOST [BUILD]
+#  --target=TARGET   configure for building compilers for TARGET [HOST]
+#
+# build
 bld=$(gcc -dumpmachine)
-echo ${bld}
+# host 
+hst="aarch64-pc-linux-gnu" # "aarch64-linux-gnu"  # "aarch64-unknown-linux-gnu"
+# specifc target architecture
+tgt="${bld}"
 
-# specifc target architecture, i.e. target triplet (use host architecture by default)
-tgt="aarch64-linux-gnu"  # "aarch64-unknown-linux-gnu"
-
-echo "Target Triplet ${tgt}"
+echo ""
+echo "machtype: $MACHTYPE"
+echo "build:  ${bld}"
+echo "host:   ${hst}"
+echo "target: ${tgt}"
+echo ""
 
 # choose release
 btag="releases/gcc-10.2.0"
