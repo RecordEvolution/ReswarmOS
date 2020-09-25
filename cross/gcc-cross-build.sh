@@ -47,10 +47,15 @@ ls -lh ${gccAll}
 # git repository URL (check list of available tags, i.e. releases)
 gccgit="https://gcc.gnu.org/git/gcc.git"
 
-# specifc target architecture, i.e. target triplet (use host architecture by default)
-tgt=$(gcc -dumpmachine)
+# host and build
+echo "host/build $MACHTYPE"
+bld=$(gcc -dumpmachine)
+echo ${bld}
 
-echo "Target Triplet $(echo $MACHTYPE)"
+# specifc target architecture, i.e. target triplet (use host architecture by default)
+tgt="aarch64-linux-gnu"  # "aarch64-unknown-linux-gnu"
+
+echo "Target Triplet ${tgt}"
 
 # choose release
 btag="releases/gcc-10.2.0"
@@ -93,9 +98,9 @@ pushd ${gccbld}
 # $ configure --help
 # do configuration
 ${gccsrc}/configure \
-  --with-pkgversion="gcc mafi 2020-09-24" \
-  --build=${tgt} \
-  --host=${tgt} \
+  --with-pkgversion="ReswarmOS gcc 2020-09-25" \
+  --build=${bld} \
+  --host=${bld} \
   --target=${tgt} \
   --prefix=${gccint} \
   --with-local-prefix=${gccint} \
