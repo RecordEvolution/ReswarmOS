@@ -74,8 +74,10 @@ Use `make menuconfig` to add and select required system components, i.a.
 ```
 Networking applications -> wpa_supplicant
 Networking applications -> wpa_supplicant - Enable 80211 support
+Networking applications -> wpa_supplicant - Install wpa_passphrase binary
 Networking applications -> dropbear
 Networking applications -> openssh
+Networking applications -> iw
 # most importantly
 # (see e.g. https://www.thirtythreeforty.net/posts/2020/03/mastering-embedded-linux-part-4-adding-features/) !!
 Target packages -> Hardware handling -> Firmware -> rpi-wifi-firmware
