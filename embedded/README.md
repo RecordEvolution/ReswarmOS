@@ -159,6 +159,26 @@ ip link set wlan0 up/down
 ifup wlan0
 ```
 
+Check connection with
+
+```
+iw wlan0 link
+```
+
+Disable power management of interface
+
+```
+iwconfig wlan0
+# shows i.a. : "Power Management: on"
+iwconfig wlan0 power off
+```
+
+### Debug wpa_supplicant
+
+```
+wpa_supplicant -D nl80211 -i wlan0 -c /etc/wpa_supplicant.conf -d
+```
+
 ### References
 
 - https://buildroot.org/downloads/manual/manual.html#_buildroot_quick_start
