@@ -1,6 +1,10 @@
 
 # System Initialization
 
+# Kernel
+
+- https://s-matyukevich.github.io/raspberry-pi-os/
+
 ## sbin/init
 
 The usual script or binary in _sbin/init_ triggers the first process started during
