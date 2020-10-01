@@ -85,10 +85,10 @@ There are basically three possiblities to configure the WIFI module:
   wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf
   ```
   where `wpa_supplicant.conf` contains the desired WIFI's SSID and password
-	
+
 1. configuration via `systemd`
 
-### Checking network interfaces 
+### Checking network interfaces
 
 ```
 iwconfig
@@ -96,3 +96,6 @@ iwconfig
 ifconfig
 ```
 
+## References
+
+- https://linuxcommando.blogspot.com/2013/10/how-to-connect-to-wpawpa2-wifi-network.html
