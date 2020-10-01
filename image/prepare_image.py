@@ -292,7 +292,7 @@ if __name__ == "__main__" :
     # check further info
     shellcode = shellcode + "logging_message \"check partition properties\"\n\n"
     shellcode = ( shellcode + "lsblk -lo name,path,type,fstype,size,alignment,"
-                                      + "phy-sec,label,uuid | grep ${devName} \n\n" )
+                                      + "phy-sec,label,uuid,partuuid | grep ${devName} \n\n" )
 
     # detach loopback device
     shellcode = shellcode + "logging_message \"detach loopback device\"\n\n"

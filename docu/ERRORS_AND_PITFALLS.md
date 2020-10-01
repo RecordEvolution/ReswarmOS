@@ -29,4 +29,8 @@ sudo apt-get install autoconf-archive
 
 https://packages.debian.org/unstable/crda
 
-=> add 'crda' in buildroot config
+=> add 'crda' in buildroot config by
+
+```
+Target packages -> Network Applications -> crda
+```
