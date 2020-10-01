@@ -1,54 +1,25 @@
 
 # System Initialization
 
-## Testing
+## sbin/init
 
-## QEMU
+The usual script or binary in _sbin/init_ triggers the first process started during
+booting of the system. However, in the boot configuration of the Raspberry Pi
+we can set any script/binary to be executed during startup by means of the
+`init=` configuration in `cmdline.txt`.
 
-Install the _QEMU_ emulator on Ubuntu with
+## initramfs
 
-```
-sudo apt-get install qemu
-```
-
-while you can also choose among a variety of machines and architectures. These
-may be listed by
-
-```
-qemu-system-aarch64 -machine help
-qemu-system-aarch64 -machine raspi3 -cpu help
-qemu-system-aarch64 -machine raspi3 -cpu cortex-a72
-```
-### References
-
-- https://www.qemu.org
-- https://www.qemu.org/docs/master/system/index.html
-- https://wiki.qemu.org/Main_Page
-- https://wiki.archlinux.org/index.php/QEMU
-
-## Virtual Machine
-
-_Buildroot_ supports the use of a virtual machine (_qemu_) to test the generated
-root file system:
-
-```
-output/host/bin/qemu-system-x86_64
-  -M pc
-  -kernel output/images/bzImage
-  -drive file=output/images/rootfs.ext2,if=virtio,format=raw
-  -append "rootwait root=/dev/vda"
-  -net nic,model=virtio
-  -net user
-```
-
-### References
-
-- https://wiki.archlinux.org/index.php/QEMU
-- https://www.thirtythreeforty.net/posts/2020/01/mastering-embedded-linux-part-3-buildroot/
-- https://ts-soft.info/post/buildroot-arm-qemu/
+The default Raspberry Pi kernel does not use any _initramfs_ [5].
+Hence, in general, we are off fine by not adding any _initramfs_ [6].
 
 ## References
 
-- https://de.wikipedia.org/wiki/Initramfs
-- https://en.wikipedia.org/wiki/Init#SysV-style
-- https://www.thirtythreeforty.net/posts/2020/03/mastering-embedded-linux-part-4-adding-features/
+1. https://en.wikipedia.org/wiki/Init
+1. https://raspberrypi.stackexchange.com/questions/41965/error-on-boot-no-working-init-found
+
+1. https://de.wikipedia.org/wiki/Initramfs
+1. https://en.wikipedia.org/wiki/Init#SysV-style
+1. https://www.thirtythreeforty.net/posts/2020/03/mastering-embedded-linux-part-4-adding-features/
+1. https://raspberrypi.stackexchange.com/questions/89909/custom-initramfs
+1. http://www.linuxfromscratch.org/blfs/view/svn/postlfs/initramfs.html
