@@ -24,3 +24,9 @@ https://github.com/advancetoolchain/advance-toolchain/issues/521
 ```
 sudo apt-get install autoconf-archive
 ```
+
+## direct firmware load for regulatory.db failed with error -2
+
+https://packages.debian.org/unstable/crda
+
+=> add 'crda' in buildroot config
