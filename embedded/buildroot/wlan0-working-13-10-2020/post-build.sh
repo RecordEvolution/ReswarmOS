@@ -15,5 +15,5 @@ fi
 cp board/raspberrypi/wpa_supplicant.conf ${TARGET_DIR}/etc/wpa_supplicant.conf
 
 # allow for ssh root login
-echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+cp sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 
