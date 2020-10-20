@@ -13,8 +13,12 @@ To use ReswarmOS as a docker host we need three components:
 make menuconfig
 ```
 
-Target Packages -> System Tools -> docker-cli
-Target Packages -> System Tools -> docker-compose
+1. Toolchain -> glibc (most important!!)
+1. Target Packages -> System Tools -> docker-cli
+1. Target Packages -> System Tools -> docker-compose
+1. Target Package -> System Tools -> <all further docker compontents>...
+
+## Obsolete
 
 Add remaining packages by hand by appending to _.config_ (check
 list of packages [Buildroot packages](https://github.com/buildroot/buildroot/tree/master/package)
