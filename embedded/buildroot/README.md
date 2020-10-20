@@ -32,3 +32,6 @@ failed to start daemon: devices cgroup is not mounded
 ```
 
 - https://gist.github.com/hayderimran7/d2e40534016f7f07da44
+- https://packages.debian.org/de/jessie/cgroupfs-mount
+- https://github.com/docker/cli/issues/2104
+
