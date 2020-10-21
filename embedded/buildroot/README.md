@@ -41,6 +41,18 @@ For reference, check
 
 - https://cdcvs.fnal.gov/redmine/projects/ees-buildroot/wiki/Buildroot_Package_How-to
 
+## Resize RootFS
+
+To resize the root filesystem we have to 
+
+1. increase the root partition
+2. adjust the ext4 filesystem to occupy all space in the partition
+
+To this end we need the tools `parted` and `resize2fs` that are included in the packages
+`parted` and `e2fsprogs`, which can be found in the _buildroot_ repository.
+
+- https://github.com/Squonk42/buildroot-licheepi-zero-old/wiki/Fresh-image-–-Expand-the-root-partition-and-filesystem
+
 ## Obsolete
 
 Add remaining packages by hand by appending to _.config_ (check
