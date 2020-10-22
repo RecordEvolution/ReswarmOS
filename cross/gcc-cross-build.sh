@@ -54,12 +54,14 @@ gccgit="https://gcc.gnu.org/git/gcc.git"
 #  --host=HOST       cross-compile to build programs to run on HOST [BUILD]
 #  --target=TARGET   configure for building compilers for TARGET [HOST]
 #
+# specify foreign architecture
+armarch="aarch64-pc-linux-gnu" # "aarch64-linux-gnu"  # "aarch64-unknown-linux-gnu"
 # build
 bld=$(gcc -dumpmachine)
 # host 
-hst="aarch64-pc-linux-gnu" # "aarch64-linux-gnu"  # "aarch64-unknown-linux-gnu"
+hst="${bld}"
 # specifc target architecture
-tgt="${bld}"
+tgt="${armarch}"
 
 echo ""
 echo "machtype: $MACHTYPE"
@@ -111,7 +113,7 @@ pushd ${gccbld}
 ${gccsrc}/configure \
   --with-pkgversion="ReswarmOS gcc 2020-09-25" \
   --build=${bld} \
-  --host=${bld} \
+  --host=${hst} \
   --target=${tgt} \
   --prefix=${gccint} \
   --with-local-prefix=${gccint} \
