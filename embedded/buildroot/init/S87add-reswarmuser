@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# - https://unix.stackexchange.com/questions/79909/how-to-add-a-unix-linux-user-in-a-bash-script
+# - https://askubuntu.com/questions/94060/run-adduser-non-interactively
+
+case "$1" in
+	start)
+		echo -n "Adding Reswarm User as System User: "
+		USERNAME="reswarmuser"
+		# TODO insert hashed password instead of clear text password!!
+		PASSWD="secretpassword"
+		# keep in mind: using Busybox's adduser!!
+		adduser --disabled-password --gecos "" --home "/home/${USERNAME}" ${USERNAME}
+		echo "${USERNAME}:${PASSWD}" | chpasswd
+		# add user to sudo group
+		adduser ${USERNAME} sudo
+#		if [ ! -d "/home/${USERNAME}" ]; then
+#			mkdir -p "/home/${USERNAME}"
+#			chmod ${USERNAME}:${USERNAME} -R "/home/${USERNAME}"
+#		fi
+		echo "done"
+		rm -f /etc/init.d/S87add-reswarmuser
+		exit 2
+		;;
+	*)
+		echo "Usage: $0 start" >&2
+		exit 1
+		;;
+esac
