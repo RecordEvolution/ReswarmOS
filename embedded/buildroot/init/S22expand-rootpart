@@ -1,0 +1,36 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		echo -n "Expanding the root partition: "
+		BLOCK_DEV="/dev/mmcblk0"
+		PART_NUM="2"
+		PART_START="$(parted -ms "${BLOCK_DEV}" unit s p 2>/dev/null | \
+			grep "^${PART_NUM}:" | cut -d : -f 2 | sed 's/s$//')"
+		if [ -z "${PART_START}" ]; then
+			echo "failed"
+		else
+			fdisk "${BLOCK_DEV}" <<-EOF &>/dev/null
+				d
+				$PART_NUM
+				n
+				p
+				$PART_NUM
+				$PART_START
+
+				w
+			EOF
+			echo "done"
+		fi
+		rm -f /etc/init.d/S22expand-rootpart
+		if [ "${PART_START}" ]; then
+			reboot -f
+			while true; do :; done
+		fi
+		exit 2
+		;;
+	*)
+		echo "Usage: $0 start" >&2
+		exit 1
+		;;
+esac

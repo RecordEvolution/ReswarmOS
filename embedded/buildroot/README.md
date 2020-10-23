@@ -1,6 +1,13 @@
 
 # buildroot
 
+## Expand Root Filesystem
+
+- http://lists.busybox.net/pipermail/buildroot/2015-August/138324.html
+- http://lists.busybox.net/pipermail/buildroot/2015-August/138033.html
+- https://patchwork.ozlabs.org/project/buildroot/patch/1440273688-92868-4-git-send-email-benoit@wsystem.com/
+- http://www.chip-community.org/index.php/Startup_Program_with_Buildroot
+
 ## Configure for docker
 
 To use ReswarmOS as a docker host we need three components:
