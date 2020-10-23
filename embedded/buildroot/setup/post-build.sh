@@ -17,3 +17,9 @@ cp board/raspberrypi/wpa_supplicant.conf ${TARGET_DIR}/etc/wpa_supplicant.conf
 # allow for ssh root login
 cp board/raspberrypi/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 
+# resizing of root filesystem during first boot
+cp board/raspberrypi/S22expand-rootpart ${TARGET_DIR}/etc/init.d/S22expand-rootpart
+chmod 755 ${TARGET_DIR}/etc/init.d/S22expand-rootpart
+cp board/raspberrypi/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
+chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
+
