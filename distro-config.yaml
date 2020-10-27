@@ -10,6 +10,7 @@
   #   - all 
   # }
   model: raspberry-pi-4
+  config: config_v0.1 
   root-user:
     user: revenant
     password: return
