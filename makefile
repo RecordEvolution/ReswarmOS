@@ -3,7 +3,7 @@ OUT = output-build/
 CDR = $(shell pwd)
 
 setup: Dockerfile $(OUT)
-	docker build . --tag=reswarmos-builder:latest
+	docker build ./ --tag=reswarmos-builder:latest
 
 $(OUT):
 	mkdir -pv $(OUT)
