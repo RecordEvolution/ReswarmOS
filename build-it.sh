@@ -62,12 +62,16 @@ echo "chosen configuration corresponds to buildroot commit ${comcfg}"
 #git reset --hard ${reqcom}
 #popd
 
-# get the archive of specific commit
+# get archive of specific commit
 logging_message "obtaining buildroot respository of commit ${comcfg}"
 
 wget https://github.com/buildroot/buildroot/archive/${comcfg}.zip
-mkdir -v ./reswarmos-build/buildroot/
-unzip "${comcfg}.zip" -d ./reswarmos-build/buildroot/
+unzip -q "${comcfg}.zip" -d ./reswarmos-build/
+mv ./reswarmos-build/buildroot-* ./reswarmos-build/buildroot
+
+ls -lhd ./
+ls -lh ./
+ls -lh reswarmos-build/
 
 # copy configuration file to buildroot directory
 logging_message "copy required configuration file"
@@ -86,6 +90,7 @@ fi
 
 logging_message "listing buildroot directory"
 
+ls -lhd ./reswarmos-build/buildroot/
 ls -lha ./reswarmos-build/buildroot/
 
 # --------------------------------------------------------------------------- #
@@ -96,7 +101,7 @@ logging_message "initializing build process"
 startts=$(date)
 
 pushd ./reswarmos-build/buildroot
-make
+#make
 popd
 
 # show produced image file
