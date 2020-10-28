@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # build environment including packages required by buildroot
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-    git make \
+    git make python3 \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
     wget cpio unzip rsync bc
 

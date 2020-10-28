@@ -49,7 +49,11 @@ confg=$(cat distro-config.yaml | grep "^ *config" | awk -F ':' '{print $2}' | tr
 cfgfile="configs/${model}/${confg}"
 
 if [[ -f ${cfgfile} ]]; then
-  cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
+  if [[ -f ./reswarmos-build/buildroot/.config ]]; then
+    echo "buildroot configuration .config already present: remove it to employ a new one"
+  else
+    cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
+  fi
 else
   echo "sorry, the required config file '${cfgfile}' does not exist!" >&2
   exit 1
@@ -67,12 +71,12 @@ logging_message "initializing build process"
 startts=$(date)
 
 pushd ./reswarmos-build/buildroot
-#make
+make
 popd
 
 # show produced image file
 logging_message "image file"
-if [[ -d reswarmos-build/buildroot/output/ ]]; then
+if [[ -f "./reswarmos-build/buildroot/output/images/sdcard.img" ]]; then
   ls -lh reswarmos-build/buildroot/output/images/
   cp -v reswarmos-build/buildroot/output/images/sdcard.img ./reswarmos-build/${imgname}
   ls -lhd ./reswarmos-build/
