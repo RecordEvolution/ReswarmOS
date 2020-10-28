@@ -81,3 +81,8 @@ make build
 where the last step may take about up to one to two hours to finish 
 depending on your machine.
 
+### References
+
+- https://buildroot.org/downloads/manual/manual.html
+- https://elinux.org/images/2/2a/Using-buildroot-real-project.pdf
+
