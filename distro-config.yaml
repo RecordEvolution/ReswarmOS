@@ -1,8 +1,7 @@
 ---
   os-name: "ReswarmOS"
-  version: 0.1
+  version: 0.0.1
   codename: "Average Ant"
-  architecture: x86_64
   # choose a model from {
   #   - raspberry-pi-zero
   #   - raspberry-pi-1,...

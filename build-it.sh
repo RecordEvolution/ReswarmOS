@@ -27,10 +27,14 @@ logging_message "ReswarmOS configuration"
 
 cat distro-config.yaml
 
+# find required configuration file
+model=$(cat distro-config.yaml | grep "^ *model" | awk -F ':' '{print $2}' | tr -d ' ')
+confg=$(cat distro-config.yaml | grep "^ *config" | awk -F ':' '{print $2}' | tr -d ' ')
+
 # construct image file name
-osname=$(cat distro-config.yaml | grep "os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
-osversion=$(cat distro-config.yaml | grep "version" | awk -F ':' '{print $2}' | tr -d "\" ")
-imgname=$(echo "${osname}-${osversion}.img")
+osname=$(cat distro-config.yaml | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
+osversion=$(cat distro-config.yaml | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\" ")
+imgname=$(echo "${osname}-${osversion}-${model}.img")
 
 # --------------------------------------------------------------------------- #
 
@@ -44,8 +48,7 @@ fi
 
 logging_message "copy required configuration file"
 
-model=$(cat distro-config.yaml | grep "^ *model" | awk -F ':' '{print $2}' | tr -d ' ')
-confg=$(cat distro-config.yaml | grep "^ *config" | awk -F ':' '{print $2}' | tr -d ' ')
+# path of configuration (derived from distro-config.yaml)
 cfgfile="configs/${model}/${confg}"
 
 if [[ -f ${cfgfile} ]]; then
