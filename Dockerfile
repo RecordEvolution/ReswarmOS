@@ -17,6 +17,8 @@ COPY ./build-it.sh /home/build-it.sh
 COPY ./logging.sh /home/logging.sh
 RUN chmod 755 /home/build-it.sh
 RUN chmod 755 /home/logging.sh
+
+# copy configuration
 COPY distro-config.yaml /home/distro-config.yaml
 COPY configs /home/configs
 

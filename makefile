@@ -10,7 +10,7 @@ $(OUT):
 
 build:
 	#docker run -it --rm --name reswarmos-builder reswarmos-builder:latest
-	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/buildroot reswarmos-builder:latest
+	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
 
 clean-output:
 	rm -r $(OUT)
