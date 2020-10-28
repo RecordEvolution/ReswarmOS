@@ -24,6 +24,11 @@ logging_message "ReswarmOS configuration"
 
 cat distro-config.yaml
 
+# construct image file name
+osname=$(cat distro-config.yaml | grep "os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
+osversion=$(cat distro-config.yaml | grep "version" | awk -F ':' '{print $2}' | tr -d "\" ")
+imgname=$(echo "${osname}-${osversion}")
+
 # --------------------------------------------------------------------------- #
 
 logging_message "clone buildroot repository"
@@ -65,7 +70,10 @@ popd
 # show produced image file
 logging_message "image file"
 if [[ -d buildroot/output/ ]]; then
-  ls -lh buildroot/output/images
+  ls -lh buildroot/output/images/
+  cp -v buildroot/output/images/sdcard.img ./${imgname}
+  ls -lhd ./
+  ls -lh ./${imgname}
 else
   echo "build incomplete: no image file produced"
 fi
