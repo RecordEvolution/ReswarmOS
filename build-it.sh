@@ -30,7 +30,7 @@ cat distro-config.yaml
 # construct image file name
 osname=$(cat distro-config.yaml | grep "os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
 osversion=$(cat distro-config.yaml | grep "version" | awk -F ':' '{print $2}' | tr -d "\" ")
-imgname=$(echo "${osname}-${osversion}")
+imgname=$(echo "${osname}-${osversion}.img")
 
 # --------------------------------------------------------------------------- #
 
