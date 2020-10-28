@@ -36,21 +36,43 @@ osname=$(cat distro-config.yaml | grep "^ *os-name" | awk -F ':' '{print $2}' | 
 osversion=$(cat distro-config.yaml | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\" ")
 imgname=$(echo "${osname}-${osversion}-${model}.img")
 
-# --------------------------------------------------------------------------- #
-
-logging_message "clone buildroot repository"
-
-if [[ -d reswarmos-build/buildroot ]]; then
-  echo "buildroot directory already exists: please remove to get a fresh clone"
-else
-  git clone https://github.com/buildroot/buildroot --single-branch --depth=1 ./reswarmos-build/buildroot
-fi
-
-logging_message "copy required configuration file"
-
 # path of configuration (derived from distro-config.yaml)
 cfgfile="configs/${model}/${confg}"
 
+# --------------------------------------------------------------------------- #
+
+#logging_message "clone buildroot repository"
+#
+#if [[ -d reswarmos-build/buildroot ]]; then
+#  echo "buildroot directory already exists: please remove to get a fresh clone"
+#else
+#  git clone https://github.com/buildroot/buildroot --single-branch --depth=1 ./reswarmos-build/buildroot
+#fi
+
+# extract required commit (note, that any buildroot configuration corresponds to specific commit)
+logging_message "extracting required commit from buildroot configuration"
+comcfg=$(cat ${cfgfile} | grep "^# Buildroot -g.*Configuration" | awk -F ' ' '{print $3}' | sed 's/-g//g' | tr -d ' ')
+echo "chosen configuration corresponds to buildroot commit ${comcfg}"
+
+#logging_message "checking out the required commit"
+#
+#pushd ./reswarmos-build/buildroot/
+#reqcom=$(git log --pretty=short | grep commit | awk '{print $2}' | tr -d ' ' | grep "^${comcfg}")
+#echo "given configuration corresponds to commit ${comcfg} -> ${reqcom}"
+#git reset --hard ${reqcom}
+#popd
+
+# get the archive of specific commit
+logging_message "obtaining buildroot respository of commit ${comcfg}"
+
+wget https://github.com/buildroot/buildroot/archive/${comcfg}.zip
+mkdir -v ./reswarmos-build/buildroot/
+unzip "${comcfg}.zip" -d ./reswarmos-build/buildroot/
+
+# copy configuration file to buildroot directory
+logging_message "copy required configuration file"
+
+# copy configuration file
 if [[ -f ${cfgfile} ]]; then
   if [[ -f ./reswarmos-build/buildroot/.config ]]; then
     echo "buildroot configuration .config already present: remove it to employ a new one"
