@@ -101,7 +101,7 @@ logging_message "initializing build process"
 startts=$(date)
 
 pushd ./reswarmos-build/buildroot
-#make
+make
 popd
 
 # show produced image file
