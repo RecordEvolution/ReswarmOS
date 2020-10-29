@@ -4,7 +4,7 @@
   codename: "Average Ant"
   board: raspberrypi
   model: raspberry-pi-4
-  config: config_v0.1 
+  config: config_v0.1
   root-user:
     username: revenent
     password: reverb
