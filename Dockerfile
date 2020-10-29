@@ -19,7 +19,7 @@ RUN chmod 755 /home/build-it.sh
 RUN chmod 755 /home/logging.sh
 
 # copy configuration
-COPY distro-config.yaml /home/distro-config.yaml
+COPY distro-setup/distro-config.yaml /home/distro-config.yaml
 COPY configs /home/configs
 
 # start in /home directory

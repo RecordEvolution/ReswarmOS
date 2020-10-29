@@ -1,0 +1,15 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		echo -n "Launching the Reswarm management agent: "
+		
+                # TODO....
+
+		exit 1
+		;;
+	*)
+		echo "Usage: $0 start" >&2
+		exit 1
+		;;
+esac
