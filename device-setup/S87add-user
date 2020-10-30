@@ -4,9 +4,12 @@
 # - https://askubuntu.com/questions/94060/run-adduser-non-interactively
 
 case "$1" in
-	start)
-		echo -n "Adding Reswarm User as System User: "
-		USERNAME="reswarmuser"
+  
+  start)
+    
+    echo "adding required user... "
+		
+    USERNAME="reswarmuser"
 		# TODO insert hashed password instead of clear text password!!
 		PASSWD="secretpassword"
 		# keep in mind: using Busybox's adduser!!
