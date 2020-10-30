@@ -3,30 +3,48 @@
 # - https://unix.stackexchange.com/questions/79909/how-to-add-a-unix-linux-user-in-a-bash-script
 # - https://askubuntu.com/questions/94060/run-adduser-non-interactively
 
+# define filename/path of device configuration
+CNFG="/etc/device-config.ini"
+
+if [ ! -f ${CNFG} ]; then
+  echo "device configuration file ${CNFG} is missing" >&2
+  exit 1
+fi
+
+# extract [user] section and access credentials device configuration
+usersection=$(cat ${CNFG} | grep -v "^#" | grep "\[user\]" -A20 | grep "^$" -B20 -m1)
+usrname=$(echo "$usersection" | grep "USERNAME"  | awk -F '=' '{print $2}' | tr -d '" ')
+passwd=$(echo "$usersection" | grep "PASSWD"  | awk -F '=' '{print $2}' | tr -d '" ')
+homedir=$(echo "$usersection" | grep "HOME"  | awk -F '=' '{print $2}' | tr -d '" ')
+
+
 case "$1" in
   
   start)
     
     echo "adding required user... "
-		
-    USERNAME="reswarmuser"
-		# TODO insert hashed password instead of clear text password!!
-		PASSWD="secretpassword"
-		# keep in mind: using Busybox's adduser!!
-		adduser --disabled-password --gecos "" --home "/home/${USERNAME}" ${USERNAME}
-		echo "${USERNAME}:${PASSWD}" | chpasswd
-		# add user to sudo group
-		adduser ${USERNAME} sudo
-#		if [ ! -d "/home/${USERNAME}" ]; then
-#			mkdir -p "/home/${USERNAME}"
-#			chmod ${USERNAME}:${USERNAME} -R "/home/${USERNAME}"
-#		fi
-		echo "done"
-		rm -f /etc/init.d/S87add-reswarmuser
-		exit 2
-		;;
-	*)
-		echo "Usage: $0 start" >&2
-		exit 1
-		;;
+    echo -n "${usersection}"
+
+    # create user's home directory
+    mkdir -pv ${homedir}
+
+    # keep in mind: we're using Busybox's adduser!!
+    adduser --disabled-password --gecos "" --home ${homedir} ${usrname}
+   
+    # set user's password 
+    passwd 
+
+    # add user to sudo group
+    #adduser ${USERNAME} sudo
+   
+    # remove script itself 
+    rm -vf $0
+    ;;
+  
+  *)
+    
+    echo "Usage: $0 start"
+    exit 1
+    ;;
+
 esac
