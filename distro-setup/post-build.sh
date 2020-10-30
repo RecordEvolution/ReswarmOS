@@ -22,3 +22,6 @@ chmod 755 ${TARGET_DIR}/etc/init.d/S22expand-rootpart
 cp /home/distro-setup/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 
+# add (default) dynamic/device configuration file
+cp /home/device-setup/device-config.ini ${TARGET_DIR}/etc/device-config.ini
+
