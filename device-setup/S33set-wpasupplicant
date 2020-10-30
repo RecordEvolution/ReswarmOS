@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# define filename/path of device configuration
+CNFG="/etc/device-config.ini"
+
+if [[ -z ${CNFG} ]]; then
+  echo "device configuration file ${CNFG} is missing" >&2
+  exit 1
+fi
+
+# extract [wifi] section and access credentials device configuration
+wifisection=$(cat /etc/device-config.ini | grep "\[wifi\]" -A20 | grep "^$" -B20 -m1)
+ssid=$(echo "$wifisection" | grep SSID | awk -F '=' '{print $2}' | tr -d '" ')
+passwd=$(echo "$wifisection" | grep PASSWD | awk -F '=' '{print $2}' | tr -d '" ')
+
+# define wpa_supplicant.conf with given credentials
+wpaconf=$(cat << EOF
+ctrl_interface=/var/run/wpa_supplicant
+ap_scan=1
+
+network={
+  ssid="${ssid}"
+  psk="${passwd}"
+}
+EOF
+)
+
+
+case "$1" in
+
+  start)
+
+    echo "setting up wpa_supplicant.conf for immediate network access..."
+    echo -e "reading the configuration file /etc/device-config.ini..."
+    echo -e "${wifisection}\n ...ssid=${ssid}\n...passwd=${passwd}"
+    echo -e "writing to /etc/wpa_supplicant.conf"
+    echo "${wpaconf}" > /etc/wpa_supplicant.conf
+    ;;
+
+  *)
+
+    echo "Usage: $0 start"
+    exit 1
+
+esac
+
