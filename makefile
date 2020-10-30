@@ -11,10 +11,12 @@ $(OUT):
 
 build:
 	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
+	ls -lhd $(OUT)
+	ls -lh $(OUT)ReswarmOS*
 
 compress:
 	tar --xz -cf $(IMG).xz $(IMG) --checkpoint=5000
-
+	
 clean-output:
 	rm -r $(OUT)
 

@@ -11,21 +11,24 @@ tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/ini
 fi
 
 # add static/distro configuration
+DSTCNF="/home/distro-setup"
 
 # configure wlan0 and dhcp
-cp /home/distro-setup/interfaces ${TARGET_DIR}/etc/network/interfaces
-cp /home/distro-setup/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
+cp ${DSTCNF}/interfaces ${TARGET_DIR}/etc/network/interfaces
+cp ${DSTCNF}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
 
 # resizing of root filesystem during first boot
-cp /home/distro-setup/S22expand-rootpart ${TARGET_DIR}/etc/init.d/S22expand-rootpart
+cp ${DSTCNF}/S22expand-rootpart ${TARGET_DIR}/etc/init.d/S22expand-rootpart
 chmod 755 ${TARGET_DIR}/etc/init.d/S22expand-rootpart
-cp /home/distro-setup/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
+cp ${DSTCNF}/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 
 # add (default) dynamic/device configuration file and device-config init.d scripts
-cp /home/device-setup/device-config.ini ${TARGET_DIR}/etc/device-config.ini
-cp /home/device-setup/device-setup/S18-set-hostname ${TARGET_DIR}/etc/init.d/S18-set-hostname
-cp /home/device-setup/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
-cp /home/device-setup/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
+DEVCNF="/home/device-setup"
+cp ${DEVCNF}/device-config.ini ${TARGET_DIR}/etc/device-config.ini
+cp ${DEVCNF}/S18set-hostname ${TARGET_DIR}/etc/init.d/S18set-hostname
+cp ${DEVCNF}/S33set-wpasupplicant ${TARGET_DIR}/etc/init.d/S33set-wpasupplicant
+cp ${DEVCNF}/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
+cp ${DEVCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
 chmod 755 ${TARGET_DIR}/etc/init.d/S*
 
