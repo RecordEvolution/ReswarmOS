@@ -22,6 +22,8 @@ chmod 755 ${TARGET_DIR}/etc/init.d/S22expand-rootpart
 cp /home/distro-setup/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 
-# add (default) dynamic/device configuration file
+# add (default) dynamic/device configuration file and device-config init.d scripts
 cp /home/device-setup/device-config.ini ${TARGET_DIR}/etc/device-config.ini
+cp /home/device-setup/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
+cp /home/device-setup/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
 

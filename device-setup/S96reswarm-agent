@@ -1,15 +1,19 @@
 #!/bin/sh
 
 case "$1" in
-	start)
-		echo -n "Launching the Reswarm management agent: "
-		
-                # TODO....
+  
+  start)
+    
+    echo "lauching Reswarm management agent..."
+    
+    # docker run --detach management-agent:latest TODO
+    ;;
+  
+  *)
+    
+    echo "Usage: $0 start"
+    exit 1
+    ;;
 
-		exit 1
-		;;
-	*)
-		echo "Usage: $0 start" >&2
-		exit 1
-		;;
 esac
+
