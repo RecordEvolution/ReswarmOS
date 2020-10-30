@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# define filename/path of device configuration
+CNFG="/etc/device-config.ini"
+WCFG="/etc/hostname"
+
+if [ ! -f ${CNFG} ]; then
+  echo "device configuration file ${CNFG} is missing" >&2
+  exit 1
+fi
+
+# extract [device] section and access credentials device configuration
+devicesection=$(cat ${CNFG} | grep "\[device\]" -A20 | grep "^$" -B20 -m1)
+hstname=$(echo "$devicesection" | grep HOSTNAME | awk -F '=' '{print $2}' | tr -d '" ')
+
+# define wpa_supplicant.conf with given credentials
+hstnamconf=$(cat << EOF
+${hstname}
+}
+EOF
+)
+
+
+case "$1" in
+
+  start)
+
+    echo "setting hostname for device.."
+    echo -n "reading the configuration file ${CNFG}..."
+    echo -n "${devicesection}\nhostname=${hstname}\n"
+    echo "writing to ${WCFG}"
+    echo "${hstnameconf}" > ${WCFG}
+    rm -vf $0
+    ;;
+
+  *)
+
+    echo "Usage: $0 start"
+    exit 1
+    ;;
+
+esac
+

@@ -111,22 +111,22 @@ ls -lha ./reswarmos-build/buildroot/
 
 # --------------------------------------------------------------------------- #
 
-logging_message "performing distribution configuration"
-
-# perform distribution configuration (buildroot directory must already exist!!)
-python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/
-
-# obtain path of post-build.sh script
-pstbldscr="./reswarmos-build/buildroot/$(cat ${cfgfile} | grep "BR2_ROOTFS_POST_BUILD_SCRIPT" | awk -F '=' '{print $2}' | tr -d '" ')"
-echo "appending post-build actions to ${pstbldscr}"
-
-# append required configuration operations to post-build.sh
-#cat ./distro-setup/post-build-add.sh | tee -a ${pstbldscr}
-cp ./distro-setup/post-build.sh ${pstbldscr}
-
-# show final post-build.sh
-echo "final post-build.sh"
-cat ${pstbldscr}
+#logging_message "performing distribution configuration"
+#
+## perform distribution configuration (buildroot directory must already exist!!)
+#python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/
+#
+## obtain path of post-build.sh script
+#pstbldscr="./reswarmos-build/buildroot/$(cat ${cfgfile} | grep "BR2_ROOTFS_POST_BUILD_SCRIPT" | awk -F '=' '{print $2}' | tr -d '" ')"
+#echo "appending post-build actions to ${pstbldscr}"
+#
+## append required configuration operations to post-build.sh
+##cat ./distro-setup/post-build-add.sh | tee -a ${pstbldscr}
+#cp ./distro-setup/post-build.sh ${pstbldscr}
+#
+## show final post-build.sh
+#echo "final post-build.sh"
+#cat ${pstbldscr}
 
 # --------------------------------------------------------------------------- #
 
