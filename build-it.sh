@@ -72,18 +72,22 @@ fi
 logging_message "obtaining buildroot respository of commit ${comcfg}"
 
 if [[ -d ./reswarmos-build/buildroot ]]; then
+
   echo "buildroot repository already exists: please remove it to update it!"
+
 else
+
   archiveurl="https://github.com/buildroot/buildroot/archive/${comcfg}.zip"
   wget ${archiveurl}
-  unzip -q "${comcfg}.zip" -d ./reswarmos-build/
 
-  if [[ -f ./reswarmos-build/${comcfg}.zip ]]; then
+  if [[ -f ${comcfg}.zip ]]; then
+    unzip -q "${comcfg}.zip" -d ./reswarmos-build/
     mv ./reswarmos-build/buildroot-* ./reswarmos-build/buildroot
   else
     echo "failed to download ${archiveurl}" >&2
     exit 1
   fi
+
 fi
 
 ls -lhd ./
