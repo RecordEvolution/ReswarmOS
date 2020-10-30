@@ -10,10 +10,11 @@ if [ -e ${TARGET_DIR}/etc/inittab ]; then
 tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/inittab
 fi
 
-# add static configuration
+# add static/distro configuration
 
-# configure wlan0
+# configure wlan0 and dhcp
 cp /home/distro-setup/interfaces ${TARGET_DIR}/etc/network/interfaces
+cp /home/distro-setup/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
 
 # resizing of root filesystem during first boot
 cp /home/distro-setup/S22expand-rootpart ${TARGET_DIR}/etc/init.d/S22expand-rootpart
