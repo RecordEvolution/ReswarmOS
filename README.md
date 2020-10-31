@@ -3,7 +3,7 @@
   <a href="https://record-evolution.de/reswarm">
     <img
       alt="reswarm-os.svg"
-      src="assets/reswarm-os-3.svg"
+      src="assets/reswarm-os.svg"
       width="400"
     />
   </a>
