@@ -17,6 +17,18 @@ usrname=$(echo "$usersection" | grep "USERNAME"  | awk -F '=' '{print $2}' | tr 
 passwd=$(echo "$usersection" | grep "PASSWD"  | awk -F '=' '{print $2}' | tr -d '" ')
 homedir=$(echo "$usersection" | grep "HOME"  | awk -F '=' '{print $2}' | tr -d '" ')
 
+if [ -z ${usrname} ]; then
+  echo "username is empty: invalid user configuration" >&2
+  exit 1
+fi
+if [ -z ${passwd} ]; then
+  echo "password is empty: invalid user configuration" >&2
+  exit 1
+fi
+if [ -z ${usrname} ]; then
+  echo "no home directory given: invalid user configuration" >&2
+  exit 1
+fi
 
 case "$1" in
   
@@ -29,13 +41,10 @@ case "$1" in
     mkdir -pv ${homedir}
 
     # keep in mind: we're using Busybox's adduser!!
-    adduser --disabled-password --gecos "" --home ${homedir} ${usrname}
-   
-    # set user's password 
-    passwd 
-
-    # add user to sudo group
-    #adduser ${USERNAME} sudo
+    adduser -h ${homedir} -g "" -s /bin/bash -G sudo ${usrname} << EOF
+${passwd}
+${passwd}
+EOF
    
     # remove script itself 
     rm -vf $0
