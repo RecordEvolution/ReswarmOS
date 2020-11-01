@@ -37,16 +37,18 @@ _ReswarmOS_ may be used in two different ways:
 ### Independent OS
 
 Just download the latest release, grab the SD card for your device and flash it
-using the [Reflasher](https://github.com/RecordEvolution/Reflasher). After 
-booting up the device it will show up with its _hostname_ as `reckless-reindeer` 
-on the local network. ReswarmOS provides _one_ default user login as
+using the [Reflasher](https://github.com/RecordEvolution/Reflasher). After the 
+flash process is successfully finished, open up the _root filesystem_ and the 
+file _/etc/device-config.ini_. Here, you may enter all configuration parameters
+for your device like i.a. your prefered _username_ and corresponding login _password_.
+To be able to immediately connect to the device via WIFI you have to enter the 
+_SSID_ and _Password_ of your local wireless network. Booting up the device, it will 
+show up with its _hostname_ (you provided in _device-config.ini)_ on the local network.
+Hence, you can connect to it via _ssh_ by
 
 ```
-user: revenant
-password: return
+ssh <your-username>@<device-hostname> 
 ```
-
-which is specified along with the _hostname_ in _distro-config.yaml_.
 
 ### Reswarm IoT devices
 
