@@ -29,7 +29,7 @@ bannerA=$(cat << EOF
    cpu:       $(cat /proc/cpuinfo | grep "model name" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    subnet ip: $(subnetip)
-   public ip: $(dig +short myip.opendns.com @resolver1.opendns.com)
+   public ip: $(wget -qO- http://ipinfo.io/ip)
 EOF
 )
 
