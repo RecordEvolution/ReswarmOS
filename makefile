@@ -2,6 +2,7 @@
 OUT = output-build/
 CDR = $(shell pwd)
 IMG = $(shell ls $(OUT)*.img | head -n1)
+NAM = $(shell basename $(IMG))
 
 setup: Dockerfile $(OUT)
 	docker build ./ --tag=reswarmos-builder:latest
@@ -11,12 +12,13 @@ $(OUT):
 
 build:
 	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
-	ls -lhd $(OUT)
-	ls -lh $(OUT)ReswarmOS*
 
 compress:
-	tar --xz -cf $(IMG).xz $(IMG) --checkpoint=5000
-	
+	mv $(IMG) ./
+	tar --xz -cf $(NAM).xz $(NAM) --checkpoint=5000
+	mv $(NAM) $(OUT)
+	mv $(NAM).xz $(OUT)
+
 clean-output:
 	rm -r $(OUT)
 
