@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# place it in /etc/profile.d/
+# place it in /etc/profile.d/ and set $ chmod 644
 
 # acquire subnet ip including its mask
 subnetip()
