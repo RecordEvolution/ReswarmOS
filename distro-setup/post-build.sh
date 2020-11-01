@@ -32,3 +32,10 @@ cp ${DEVCNF}/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
 cp ${DEVCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
 chmod 755 ${TARGET_DIR}/etc/init.d/S*
 
+# configuration for interactive access to ReswarmOS
+ASSCNF="/home/assets"
+cp ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
+chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
+cp ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
+chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
+
