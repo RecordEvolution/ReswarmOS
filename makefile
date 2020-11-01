@@ -19,6 +19,9 @@ compress:
 	mv $(NAM) $(OUT)
 	mv $(NAM).xz $(OUT)
 
+uncompress:
+	tar -xJf $(OUT)$(NAM).xz
+
 clean-output:
 	rm -r $(OUT)
 
