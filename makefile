@@ -13,13 +13,19 @@ $(OUT):
 build:
 	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
 
-compress:
+compress-zip:
+	mv $(IMG) ./
+	zip $(NAM).zip $(NAM)
+	mv $(NAM) $(OUT)
+	mv $(NAM).zip $(OUT)
+
+compress-xz:
 	mv $(IMG) ./
 	tar --xz -cf $(NAM).xz $(NAM) --checkpoint=5000
 	mv $(NAM) $(OUT)
 	mv $(NAM).xz $(OUT)
 
-uncompress:
+uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
 clean-output:
