@@ -13,6 +13,12 @@ $(OUT):
 build:
 	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
 
+build-daemon:
+	docker run -it -d --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
+
+build-logs:
+	docker logs reswarmos-builder
+
 compress-zip:
 	mv $(IMG) ./
 	zip $(NAM).zip $(NAM)
