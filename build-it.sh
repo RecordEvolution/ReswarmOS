@@ -127,6 +127,9 @@ cp -v ./distro-setup/post-build.sh ${pstbldscr}
 ## perform distribution configuration (buildroot directory must already exist!!)
 #python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/
 
+# employ genimage configuration for partitions and image
+cp -v ./configs/${model}/genimage-rasberrypi.cfg ./reswarmos-build/buildroot/board/${model}/
+
 # show final post-build.sh
 echo "final post-build.sh"
 cat ${pstbldscr}
