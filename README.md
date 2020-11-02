@@ -94,4 +94,4 @@ depending on your machine.
 
 - https://github.com/pengutronix/genimage
 - https://books.google.de/books/about/Instant_Buildroot.html?id=dZL9AAAAQBAJ&redir_esc=y
-
+- http://lists.busybox.net/pipermail/buildroot/2016-April/160030.html
