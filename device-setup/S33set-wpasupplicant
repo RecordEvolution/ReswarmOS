@@ -13,8 +13,8 @@ fi
 
 # extract [wifi] section and access credentials device configuration
 wifisection=$(cat ${CNFG} | grep "\[wifi\]" -A20 | grep "^$" -B20 -m1)
-ssid=$(echo "$wifisection" | grep SSID | awk -F '=' '{print $2}' | tr -d '" ')
-passwd=$(echo "$wifisection" | grep PASSWD | awk -F '=' '{print $2}' | tr -d '" ')
+ssid=$(echo "$wifisection" | grep SSID | awk -F '=' '{print $2}' | sed 's/^ *"//g' | sed 's/" *$//g')
+passwd=$(echo "$wifisection" | grep PASSWD | awk -F '=' '{print $2}' | sed 's/^ *"//g' | sed 's/" *$//g')
 
 # define wpa_supplicant.conf with given credentials
 wpaconf=$(cat << EOF
