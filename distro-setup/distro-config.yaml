@@ -1,13 +1,7 @@
 ---
   os-name: "ReswarmOS"
-  version: 0.0.1
-  codename: "Average Ant"
+  version: 0.0.2
   board: raspberrypi
   model: raspberry-pi-4
-  config: config_v0.0.2
-  root-user:
-    username: revenent
-    password: reverb
-  hostname:
-    reckless-reindeer
+  config: config_v0.0.3
 ...
