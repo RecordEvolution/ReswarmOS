@@ -23,9 +23,13 @@ chmod 755 ${TARGET_DIR}/etc/init.d/S22expand-rootpart
 cp ${DSTCNF}/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 
+# mount boot partition
+mkdir -p ${TARGET_DIR}/boot
+echo "/dev/mmcblk0p1  /boot           vfat    defaults        0       2" >> ${TARGET_DIR}/etc/fstab
+
 # add (default) dynamic/device configuration file and device-config init.d scripts
 DEVCNF="/home/device-setup"
-cp ${DEVCNF}/device-config.ini ${TARGET_DIR}/etc/device-config.ini
+#cp ${DEVCNF}/device-config.ini ${TARGET_DIR}/etc/device-config.ini
 cp ${DEVCNF}/S18set-hostname ${TARGET_DIR}/etc/init.d/S18set-hostname
 cp ${DEVCNF}/S33set-wpasupplicant ${TARGET_DIR}/etc/init.d/S33set-wpasupplicant
 cp ${DEVCNF}/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
@@ -38,4 +42,7 @@ cp ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
 cp ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
+
+# copy default device to boot partition
+cp ${DEVCNF}/device-config.ini ${BINARIES_DIR}/device-config.ini
 

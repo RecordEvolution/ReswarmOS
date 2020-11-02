@@ -4,7 +4,7 @@
 # - https://askubuntu.com/questions/94060/run-adduser-non-interactively
 
 # define filename/path of device configuration
-CNFG="/etc/device-config.ini"
+CNFG="/boot/device-config.ini"
 
 if [ ! -f ${CNFG} ]; then
   echo "device configuration file ${CNFG} is missing" >&2

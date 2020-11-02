@@ -1,10 +1,8 @@
 #!/bin/sh
 
 # define filename/path of device configuration
-CNFG="/etc/device-config.ini"
-#CNFG="device-config.ini"
+CNFG="/boot/device-config.ini"
 WCFG="/etc/wpa_supplicant.conf"
-#WCFG="wpa_supplicant.conf"
 
 if [ ! -f ${CNFG} ]; then
   echo "device configuration file ${CNFG} is missing" >&2
