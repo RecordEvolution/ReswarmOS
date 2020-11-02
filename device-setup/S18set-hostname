@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # define filename/path of device configuration
-CNFG="/etc/device-config.ini"
+CNFG="/boot/device-config.ini"
 WCFG="/etc/hostname"
 HCFG="/etc/hosts"
 
