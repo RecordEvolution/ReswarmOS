@@ -26,8 +26,9 @@ case "$1" in
   start)
 
     echo "setting hostname for device.."
-    echo -n "reading the configuration file ${CNFG}..."
-    echo -n "${devicesection}\nhostname=${hstname}\n"
+    echo "reading the configuration file ${CNFG}..."
+    echo "${devicesection}"
+    echo "hostname=${hstname}"
 
     echo "employ hostname"
     hostname ${hstname}
@@ -37,7 +38,7 @@ case "$1" in
     sed -i "s/${hstsln}/127.0.1.1\t${hstname}/g" /etc/hosts
 
     echo "writing to ${WCFG}"
-    echo "${hstnameconf}" > ${WCFG}
+    echo "${hstnamconf}" > ${WCFG}
 
     rm -vf $0
     ;;
