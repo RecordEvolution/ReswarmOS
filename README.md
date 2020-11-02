@@ -85,6 +85,13 @@ depending on your machine.
 
 ### References
 
+#### Buildroot
+
 - https://buildroot.org/downloads/manual/manual.html
 - https://elinux.org/images/2/2a/Using-buildroot-real-project.pdf
+
+#### Image
+
+- https://github.com/pengutronix/genimage
+- https://books.google.de/books/about/Instant_Buildroot.html?id=dZL9AAAAQBAJ&redir_esc=y
 
