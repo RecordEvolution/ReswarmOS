@@ -128,7 +128,7 @@ cp -v ./distro-setup/post-build.sh ${pstbldscr}
 #python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/
 
 # employ genimage configuration for partitions and image
-cp -v ./configs/${model}/genimage-rasberrypi.cfg ./reswarmos-build/buildroot/board/${model}/
+cp -v "./configs/${model}/genimage.cfg" "./reswarmos-build/buildroot/board/${model}/genimage-${model}.cfg"
 
 # show final post-build.sh
 echo "final post-build.sh"
