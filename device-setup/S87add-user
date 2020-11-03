@@ -3,6 +3,8 @@
 # - https://unix.stackexchange.com/questions/79909/how-to-add-a-unix-linux-user-in-a-bash-script
 # - https://askubuntu.com/questions/94060/run-adduser-non-interactively
 
+source /usr/bin/read-ini.sh
+
 # define filename/path of device configuration
 CNFG="/boot/device-config.ini"
 
@@ -12,10 +14,9 @@ if [ ! -f ${CNFG} ]; then
 fi
 
 # extract [user] section and access credentials device configuration
-usersection=$(cat ${CNFG} | grep -v "^#" | grep "\[user\]" -A20 | grep "^$" -B20 -m1)
-usrname=$(echo "$usersection" | grep "USERNAME"  | awk -F '=' '{print $2}' | tr -d '" ')
-passwd=$(echo "$usersection" | grep "PASSWD"  | awk -F '=' '{print $2}' | tr -d '" ')
-homedir=$(echo "$usersection" | grep "HOME"  | awk -F '=' '{print $2}' | tr -d '" ')
+usrname=$(read-config-ini ${CNFG} user USERNAME)
+passwd=$(read-config-ini ${CNFG} user PASSWD)
+homedir=$(read-config-ini ${CNFG} user HOME)
 
 if [ -z ${usrname} ]; then
   echo "username is empty: invalid user configuration" >&2

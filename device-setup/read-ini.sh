@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#set -e
+#set -u
+
 helpuse=$(cat << 'EOF'
 	Usage: ./read-ini.sh <filename.ini> <section> <keyword>
 EOF

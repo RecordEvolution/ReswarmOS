@@ -117,12 +117,12 @@ ls -lha ./reswarmos-build/buildroot/
 
 logging_message "performing distribution configuration"
 
-# obtain path of post-build.sh script
+# obtain required path of post-build.sh script in buildroot config
 pstbldscr="./reswarmos-build/buildroot/$(cat ${cfgfile} | grep "BR2_ROOTFS_POST_BUILD_SCRIPT" | awk -F '=' '{print $2}' | tr -d '" ')"
 echo "setting post-build actions in ${pstbldscr}"
 
 # copy post-build.sh of distribution to buildroot subdirectory
-cp -v ./distro-setup/post-build.sh ${pstbldscr}
+cp -v ./configs/${model}/post-build.sh ${pstbldscr}
 
 ## perform distribution configuration (buildroot directory must already exist!!)
 #python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/

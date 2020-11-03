@@ -29,20 +29,21 @@ echo "/dev/mmcblk0p1  /boot           vfat    defaults        0       2" >> ${TA
 
 # add (default) dynamic/device configuration file and device-config init.d scripts
 DEVCNF="/home/device-setup"
-#cp ${DEVCNF}/device-config.ini ${TARGET_DIR}/etc/device-config.ini
-cp ${DEVCNF}/S18set-hostname ${TARGET_DIR}/etc/init.d/S18set-hostname
-cp ${DEVCNF}/S33set-wpasupplicant ${TARGET_DIR}/etc/init.d/S33set-wpasupplicant
-cp ${DEVCNF}/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
-cp ${DEVCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
+cp -v ${DEVCNF}/read-ini.sh ${TARGET_DIR}/usr/bin/read-ini.sh
+chmod 755 ${TARGET_DIR}/usr/bin/read-ini.sh
+cp -v ${DEVCNF}/S18set-hostname ${TARGET_DIR}/etc/init.d/S18set-hostname
+cp -v ${DEVCNF}/S33set-wpasupplicant ${TARGET_DIR}/etc/init.d/S33set-wpasupplicant
+cp -v ${DEVCNF}/S87add-user ${TARGET_DIR}/etc/init.d/S87add-user
+cp -v ${DEVCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
 chmod 755 ${TARGET_DIR}/etc/init.d/S*
 
-# configuration for interactive access to ReswarmOS
+# configuration of interactive (ssh) access to ReswarmOS
 ASSCNF="/home/assets"
-cp ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
+cp -v ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
-cp ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
+cp -v ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 
 # copy default device to boot partition
-cp ${DEVCNF}/device-config.ini ${BINARIES_DIR}/device-config.ini
+cp -v ${DEVCNF}/device-config.ini ${BINARIES_DIR}/device-config.ini
 
