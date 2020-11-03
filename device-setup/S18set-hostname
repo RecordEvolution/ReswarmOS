@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source /usr/bin/read-ini.sh
+
 # define filename/path of device configuration
 CNFG="/boot/device-config.ini"
 WCFG="/etc/hostname"
@@ -10,9 +12,8 @@ if [ ! -f ${CNFG} ]; then
   exit 1
 fi
 
-# extract [device] section and access credentials device configuration
-devicesection=$(cat ${CNFG} | grep "\[device\]" -A20 | grep "^$" -B20 -m1)
-hstname=$(echo "$devicesection" | grep HOSTNAME | awk -F '=' '{print $2}' | tr -d '" ')
+# extract HOSTNAME from [device] section in device configuration
+hstname=$(read-config-ini ${CNFG} device HOSTNAME)
 
 # define wpa_supplicant.conf with given credentials
 hstnamconf=$(cat << EOF
@@ -26,8 +27,6 @@ case "$1" in
   start)
 
     echo "setting hostname for device.."
-    echo "reading the configuration file ${CNFG}..."
-    echo "${devicesection}"
     echo "hostname=${hstname}"
 
     echo "employ hostname"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source /usr/bin/read-ini.sh
+
 # define filename/path of device configuration
 CNFG="/boot/device-config.ini"
 WCFG="/etc/wpa_supplicant.conf"
@@ -10,9 +12,8 @@ if [ ! -f ${CNFG} ]; then
 fi
 
 # extract [wifi] section and access credentials device configuration
-wifisection=$(cat ${CNFG} | grep "\[wifi\]" -A20 | grep "^$" -B20 -m1)
-ssid=$(echo "$wifisection" | grep SSID | awk -F '=' '{print $2}' | sed 's/^ *"//g' | sed 's/" *$//g')
-passwd=$(echo "$wifisection" | grep PASSWD | awk -F '=' '{print $2}' | sed 's/^ *"//g' | sed 's/" *$//g')
+ssid=$(read-config-ini ${CNFG} wifi SSID)
+passwd=$(read-config-ini ${CNFG} wifi PASSWD)
 
 # define wpa_supplicant.conf with given credentials
 wpaconf=$(cat << EOF
@@ -32,10 +33,10 @@ case "$1" in
   start)
 
     echo "setting up wpa_supplicant.conf for immediate network access..."
-    echo -n "reading the configuration file ${CNFG}..."
-    echo -n "${wifisection}\nssid=${ssid}\npasswd=${passwd}\n"
+    
     echo "writing to ${WCFG}"
     echo "${wpaconf}" > ${WCFG}
+    
     rm -vf $0
     ;;
 
