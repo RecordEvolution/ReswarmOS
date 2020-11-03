@@ -98,11 +98,11 @@ ls -lh reswarmos-build/
 logging_message "copy required configuration file"
 
 if [[ -f ${cfgfile} ]]; then
-  if [[ -f ./reswarmos-build/buildroot/.config ]]; then
-    echo "buildroot configuration .config already present: remove it to employ a new one"
-  else
-    cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
-  fi
+#  if [[ -f ./reswarmos-build/buildroot/.config ]]; then
+#    echo "buildroot configuration .config already present: remove it to employ a new one"
+#  else
+  cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
+#  fi
 else
   echo "sorry, the required config file '${cfgfile}' does not exist!" >&2
   exit 1
