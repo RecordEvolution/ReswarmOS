@@ -8,7 +8,7 @@ helpuse=$(cat << 'EOF'
 EOF
 )
 
-read-config-ini()
+readini()
 {
 	inifile="$1"
 	section="$2"

@@ -43,6 +43,8 @@ cp -v ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
 cp -v ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
+# evtl. allow root login
+echo "PermitRootLogin yes" >> ${TARGET_DIR}/etc/ssh/ssh_config
 
 # copy default device to boot partition
 cp -v ${DEVCNF}/device-config.ini ${BINARIES_DIR}/device-config.ini
