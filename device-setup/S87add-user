@@ -3,7 +3,8 @@
 # - https://unix.stackexchange.com/questions/79909/how-to-add-a-unix-linux-user-in-a-bash-script
 # - https://askubuntu.com/questions/94060/run-adduser-non-interactively
 
-source /usr/bin/read-ini.sh
+# source the configuration parser
+. /usr/bin/read-ini.sh
 
 # define filename/path of device configuration
 CNFG="/boot/device-config.ini"
