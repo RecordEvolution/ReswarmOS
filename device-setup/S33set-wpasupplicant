@@ -13,8 +13,8 @@ if [ ! -f ${CNFG} ]; then
 fi
 
 # extract [wifi] section and access credentials device configuration
-ssid=$(read-config-ini ${CNFG} wifi SSID)
-passwd=$(read-config-ini ${CNFG} wifi PASSWD)
+ssid=$(readini ${CNFG} wifi SSID)
+passwd=$(readini ${CNFG} wifi PASSWD)
 
 # define wpa_supplicant.conf with given credentials
 wpaconf=$(cat << EOF

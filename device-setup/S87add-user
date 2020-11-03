@@ -15,9 +15,9 @@ if [ ! -f ${CNFG} ]; then
 fi
 
 # extract [user] section and access credentials device configuration
-usrname=$(read-config-ini ${CNFG} user USERNAME)
-passwd=$(read-config-ini ${CNFG} user PASSWD)
-homedir=$(read-config-ini ${CNFG} user HOME)
+usrname=$(readini ${CNFG} user USERNAME)
+passwd=$(readini ${CNFG} user PASSWD)
+homedir=$(readini ${CNFG} user HOME)
 
 if [ -z ${usrname} ]; then
   echo "username is empty: invalid user configuration" >&2

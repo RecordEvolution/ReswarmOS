@@ -14,7 +14,7 @@ if [ ! -f ${CNFG} ]; then
 fi
 
 # extract HOSTNAME from [device] section in device configuration
-hstname=$(read-config-ini ${CNFG} device HOSTNAME)
+hstname=$(readini ${CNFG} device HOSTNAME)
 
 # define wpa_supplicant.conf with given credentials
 hstnamconf=$(cat << EOF

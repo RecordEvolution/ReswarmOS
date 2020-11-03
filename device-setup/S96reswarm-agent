@@ -2,6 +2,7 @@
 
 # source the configuration parser
 . /usr/bin/read-ini.sh
+# Usage: $ readini <config-file.ini> <section-name> <key-name>
 
 case "$1" in
   
