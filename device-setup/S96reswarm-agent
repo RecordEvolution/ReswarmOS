@@ -1,6 +1,7 @@
 #!/bin/sh
 
-source /usr/bin/read-ini.sh
+# source the configuration parser
+. /usr/bin/read-ini.sh
 
 case "$1" in
   
