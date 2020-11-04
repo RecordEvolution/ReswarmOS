@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html
+
 parsejsonclean()
 {
   cfg="$1"
@@ -225,7 +227,17 @@ parsejsongetkey()
   # extract value of key
   keyful=$(echo "${cfgcl}" | grep -oP "\" *${key} *\"")
   keyval=$(echo "${cfgcl}" | grep -oP "\" *${key} *\" *: *(\"[^\"]*\"|[0-9]*)" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
-  
+ 
+  # consider nested object values
+  if [ -z "${keyval}" ]; then
+    keyval=$(echo "${cfgcl}" | grep -oP "\" *${key} *\" *: *{[^{}]*}" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+    if [ -z "${keyval}" ]; then
+      echo "parsejsonkey -> parsing of json object featuring more then two levels of nesting are not supported" >&2
+      return 1
+    fi
+  fi
+
   echo "${keyval}"
+
 }
 
