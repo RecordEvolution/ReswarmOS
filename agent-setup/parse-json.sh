@@ -1,5 +1,31 @@
 #!/bin/sh
 
+parsejsonclean()
+{
+  cfg="$1"
+  redarg="$2"
+
+  if [ -z ${cfg} ]; then
+    echo "parsejsonclean -> missing argument: please provide a .reswarm file" >&2
+    echo 1
+    return 1
+  fi
+  
+  if [ ! -z ${redarg} ]; then
+    echo "parsejsonclean -> takes only 1 argument" >&2
+    echo 1
+    return 1
+  fi
+
+  # remove any redundant spaces and linebreaks from object
+  cfgcl=$(cat ${cfg} | tr -d "\n" | grep -v "^ *$" | sed 's/^ *{/{/g' | sed 's/} *$/}/g' \
+                                                   | sed 's/, *\"/,\"/g' | sed 's/\" *,/\",/g' \
+                                                   | sed 's/\" *: */\":/g' \
+                                                   | sed 's/\" *: *{ *\"/\":{\"/g' \
+                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g')
+  echo "${cfgcl}"
+}
+
 parsejsonvalid()
 {
   cfg="$1"
@@ -13,6 +39,16 @@ parsejsonvalid()
   
   if [ ! -z ${redarg} ]; then
     echo "parsejsonvalid -> takes only 1 argument" >&2
+    echo 1
+    return 1
+  fi
+
+  # check invalid key character sequences
+  #-------------------------------------------------------#
+
+  invalseq=$(cat "${cfg}" | tr -d "\n" | grep "{ *,\|, *{\|, *{\|, *:\|: *,\|{ *:\|} *:\|: *}\|{ *{\|} *}")
+  if [ ! -z "${invalseq}" ]; then
+    echo "parsejsonvalid -> invalid json: invalid character sequence of set [{},:]" >&2
     echo 1
     return 1
   fi
@@ -81,11 +117,12 @@ parsejsonvalid()
   #-------------------------------------------------------#
 
   # remove any redundant spaces and linebreaks from object
-  cfgcl=$(cat ${cfg} | tr -d "\n" | grep -v "^ *$" | sed 's/^ *{/{/g' | sed 's/} *$/}/g' \
-                                                   | sed 's/, *\"/,\"/g' | sed 's/\" *,/\",/g' \
-                                                   | sed 's/\" *: */\":/g' \
-                                                   | sed 's/\" *: *{ *\"/\":{\"/g' \
-                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g')
+  cfgcl=$(parsejsonclean "${cfg}")
+#  cfgcl=$(cat ${cfg} | tr -d "\n" | grep -v "^ *$" | sed 's/^ *{/{/g' | sed 's/} *$/}/g' \
+#                                                   | sed 's/, *\"/,\"/g' | sed 's/\" *,/\",/g' \
+#                                                   | sed 's/\" *: */\":/g' \
+#                                                   | sed 's/\" *: *{ *\"/\":{\"/g' \
+#                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g')
 
   # extract all regex patterns of key-value match
   elements=$(echo "${cfgcl}" | grep -Po "\"[^,:{}]*\" *: *[\"]?[^,\"{}]*[\"]?")
@@ -102,39 +139,19 @@ parsejsonvalid()
   # sum up remaining and matching characters (consider final linebreak of entire object)
   remmatchsum=$((matchcount + remchars + 1))
 
-  echo "matchcount: ${matchcount}"
-  echo "remchars:   ${remchars}"
-  echo "totchars:   ${totchars}"
-  echo "sum:        ${remmatchsum}"
+#  echo "${cfgcl}"
+#  echo "${elements}"
+#
+#  echo "matchcount: ${matchcount}"
+#  echo "remchars:   ${remchars}"
+#  echo "totchars:   ${totchars}"
+#  echo "sum:        ${remmatchsum}"
 
   if [ "${totchars}" != "${remmatchsum}" ]; then
     echo "parsejsonvalid -> invalid json: inconsistent key-value syntax" >&2
     echo 1
     return 1
   fi
-
-#  # substitute all linebreaks by special sequence
-#  elements=$(echo "${elements}" | sed 's/\\n/$%$/g')
-#  
-#  object=$(cat ${cfg})
-#  echo "all elements:"
-#  echo "${elements}"
-#  echo ""
-#  while read el; do
-#    echo "next element:"
-#    echo ""
-#    echo "${el}"
-#    echo ""
-#    # escape any slashes and substitue all linebreaks
-#    elescp=$(echo "${el}" | sed 's/\//\\\//g')
-#    echo "${elescp}"
-#    echo ""
-#    # remove entire key-value from object
-#    object=$(echo "${object}" | sed "s/${elescp}//g")
-#    echo "object:"
-#    echo "${object}"
-#    echo ""
-#  done < <(echo "${elements}")
 
 }
 
@@ -188,7 +205,11 @@ parsejsongetkey()
   fi
 
   # check validity of json file
-  parsejsonvalid ${cfg}
+  valret=$(parsejsonvalid ${cfg})
+  if [ ! -z ${valret} ]; then
+    echo "invalid file"
+    return 1
+  fi
 
   # check existence of key
   keylist=$(parsejsonlistkeys ${cfg})
@@ -197,10 +218,14 @@ parsejsongetkey()
     echo "parsejsonkey -> key '${key}' does not exist" >&2
     return 1
   fi
+
+  # clean the object
+  cfgcl=$(parsejsonclean "${cfg}")
   
   # extract value of key
-  keyval=$(cat ${cfg} | grep -oP "\"${key}\":[^,]*" | awk -F "\"${key}\":" '{print $2}' | tr -d '"' )
-
-  echo ${keyval}
+  keyful=$(echo "${cfgcl}" | grep -oP "\" *${key} *\"")
+  keyval=$(echo "${cfgcl}" | grep -oP "\" *${key} *\" *: *(\"[^\"]*\"|[0-9]*)" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+  
+  echo "${keyval}"
 }
 
