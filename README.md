@@ -38,13 +38,16 @@ _ReswarmOS_ may be used in two different ways:
 
 Just download the latest release, grab the SD card for your device and flash it
 using the [Reflasher](https://github.com/RecordEvolution/Reflasher). After the 
-flash process is successfully finished, open up the _root filesystem_ and the 
-file _/etc/device-config.ini_. Here, you may enter all configuration parameters
-for your device like i.a. your prefered _username_ and corresponding login _password_.
-To be able to immediately connect to the device via WIFI you have to enter the 
-_SSID_ and _Password_ of your local wireless network. Booting up the device, it will 
-show up with its _hostname_ (you provided in _device-config.ini)_ on the local network.
-Hence, you can connect to it via _ssh_ by
+flash process is successfully finished, open up the _boot partition (vfat)_ 
+labeled _RESWARMOS_ containing the file _/device-config.ini_. Here, you may enter 
+all configuration parameters for your device like i.a. your prefered _username_ and 
+corresponding login _password_ to be set up on the device. To be able to immediately 
+connect to the device via WIFI you have to enter the _SSID_ and _password_ of your 
+local wireless network. However, I you choose to not enter your WIFI credentials you
+may still connect via LAN at any time. After booting up the device, it will show up 
+with its _hostname_ (you provided in _device-config.ini)_ on the local network.
+Hence, you can connect to it via _ssh_ and your credentials entered in _device-config.ini_
+by
 
 ```
 ssh <your-username>@<device-hostname> 
