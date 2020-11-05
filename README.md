@@ -60,12 +60,12 @@ _Reswarm_ are by default equipped with the latest version of _ReswarmOS_
 and automatically configured to securely connect and communicate with
 the Reswarm server cloud instance. Since this setup is coupled to your
 individual Reswarm user account the _ssh login_ is more customized and 
-corresponds to the `swarm_name` as user and `device_key` as password,
-while the _hostname_ is given by the Reswarm device name. For instance,
-the _ssh login_ may look like this:
+corresponds to the `swarm_owner_name` as user and `secret` as password,
+while the _hostname_ is given by the Reswarm device name. Henceforth,
+the _ssh login_ looks like this:
 
 ```
-ssh Lab@mf-pi-29 # password: 3056
+ssh <swarm_owner_name>@<name> # password: <secret>
 ```   
 
 ## Build Process
