@@ -19,8 +19,9 @@ RUN chmod 755 /home/build-it.sh
 RUN chmod 755 /home/logging.sh
 
 # copy configurations and assets
-COPY configs /home/configs
 COPY assets/ /home/assets/
+COPY configs /home/configs
+COPY agent-setup/ /home/agent-setup/
 COPY distro-setup/ /home/distro-setup/
 COPY device-setup/ /home/device-setup/
 
