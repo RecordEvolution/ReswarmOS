@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# https://stedolan.github.io/jq/
 # https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html
 
 parsejsonclean()
@@ -24,7 +25,9 @@ parsejsonclean()
                                                    | sed 's/, *\"/,\"/g' | sed 's/\" *,/\",/g' \
                                                    | sed 's/\" *: */\":/g' \
                                                    | sed 's/\" *: *{ *\"/\":{\"/g' \
-                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g')
+                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g' \
+                                                   | sed 's/{ *\"/{\"/g' | sed 's/} *}/}}/g' \
+                                                   | sed -E 's/} +}/}}/g' )
   echo "${cfgcl}"
 }
 
@@ -48,7 +51,7 @@ parsejsonvalid()
   # check invalid key character sequences
   #-------------------------------------------------------#
 
-  invalseq=$(cat "${cfg}" | tr -d "\n" | grep "{ *,\|, *{\|, *{\|, *:\|: *,\|{ *:\|} *:\|: *}\|{ *{\|} *}")
+  invalseq=$(cat "${cfg}" | tr -d "\n" | grep "{ *,\|, *{\|, *:\|: *,\|{ *:\|} *:\|: *}\|{ *{")
   if [ ! -z "${invalseq}" ]; then
     echo "parsejsonvalid -> invalid json: invalid character sequence of set [{},:]" >&2
     echo 1
