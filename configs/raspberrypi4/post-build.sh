@@ -54,3 +54,12 @@ fi
 # copy default device to boot partition
 cp -v ${DEVCNF}/device-config.ini ${BINARIES_DIR}/device-config.ini
 
+# Reswarm management agent setup
+AGTCNF="/home/agent-setup"
+cp -v ${AGTCNF}/S17check-reswarm ${TARGET_DIR}/etc/init.d/S17check-reswarm
+cp -v ${AGTCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
+chmod 644 ${TARGET_DIR}/etc/init.d/S17check-reswarm
+chmod 644 ${TARGET_DIR}/etc/init.d/S96reswarm-agent
+cp -v ${AGTCNF}/parse-config.py ${TARGET_DIR}/usr/bin/parse-config.py
+chmod 755 ${TARGET_DIR}/usr/bin/parse-config.py
+
