@@ -130,13 +130,13 @@ parsejsonvalid()
 #                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g')
 
   # extract all regex patterns of key-value match
-  elements=$(echo "${cfgcl}" | grep -Po "\"[^,:{}]*\" *: *[\"]?[^,\"{}]*[\"]?")
+  elements=$(echo "${cfgcl}" | grep -Eo "\"[^,:{}]*\" *: *[\"]?[^,\"{}]*[\"]?")
 
   # count all characters contained in list of matches
   matchcount=$(echo "${elements}" | tr -d "\n" | wc -c)
 
   # after removing all key-value pairs the only remaining characters are supposed to be [,{}]
-  remchars=$(echo "${cfgcl}" | grep -P "[,{}]" -o | tr -d "\n" | wc -c)
+  remchars=$(echo "${cfgcl}" | grep -E "[,{}]" -o | tr -d "\n" | wc -c)
 
   # compare to total number of characters in object
   totchars=$(echo "${cfgcl}" | wc -c)
@@ -182,10 +182,13 @@ parsejsonlistkeys()
     return 1
   fi
 
+  # clean the object
+  cfgcl=$(parsejsonclean "${cfg}")
+ 
   # find list of keys (keys may not contain the set of characters [,:{}] )
-  keylist=$(cat ${cfg} | grep -oP "\"[^,:{}]*\" *:" | tr -d '":')
+  keylist=$(echo "${cfgcl}" | grep -oE "\"[^,:{}]*\" *:" | tr -d '":')
 
-  echo ${keylist}
+  echo "${keylist}"
 }
 
 parsejsongetkey()
@@ -218,7 +221,7 @@ parsejsongetkey()
 
   # check existence of key
   keylist=$(parsejsonlistkeys ${cfg})
-  keyfind=$(echo ${keylist} | grep "${key}")
+  keyfind=$(echo "${keylist}" | grep "^${key}$")
   if [ -z "${keyfind}" ]; then
     echo "parsejsonkey -> key '${key}' does not exist" >&2
     return 1
@@ -226,14 +229,15 @@ parsejsongetkey()
 
   # clean the object
   cfgcl=$(parsejsonclean "${cfg}")
-  
+
   # extract value of key
-  keyful=$(echo "${cfgcl}" | grep -oP "\" *${key} *\"")
-  keyval=$(echo "${cfgcl}" | grep -oP "\" *${key} *\" *: *(\"[^\"]*\"|[0-9]*)" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
- 
+  keyful=$(echo "${cfgcl}" | grep -oE "\" *${key} *\"")
+  keyval=$(echo "${cfgcl}" | grep -oE "\" *${key} *\" *: *(\"[^\"]*\"|[0-9]*)" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+  
   # consider nested object values
   if [ -z "${keyval}" ]; then
-    keyval=$(echo "${cfgcl}" | grep -oP "\" *${key} *\" *: *{[^{}]*}" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+    #keyval=$(echo "${cfgcl}" | grep -oE "\" *${key} *\" *: *{[^{}]*}" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')  # gnu grep
+    keyval=$(echo "${cfgcl}" | grep -oE "\" *${key} *\" *: *\{[^{}]*\}" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g') # busybox grep
     if [ -z "${keyval}" ]; then
       echo "parsejsonkey -> parsing of json object featuring more then two levels of nesting are not supported" >&2
       return 1
@@ -241,6 +245,5 @@ parsejsongetkey()
   fi
 
   echo "${keyval}"
-
 }
 
