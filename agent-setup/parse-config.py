@@ -45,7 +45,7 @@ if __name__ == "__main__" :
     devicesetupcnt = ( devicesetupcnt + "\n[device]\n"
                                       + "HOSTNAME = \"" + str(devicecfg['name']) + "\"\n\n" 
                                       + "[user]\n"  
-                                      + "USER     = \"" + str(devicecfg['swarm_owner_name']) + "\"\n"
+                                      + "USERNAME = \"" + str(devicecfg['swarm_owner_name']) + "\"\n"
                                       + "PASSWD   = \"" + str(devicecfg['secret']) + "\"\n"
                                       + "HOME     = \"" + "/home/" + str(devicecfg['swarm_owner_name']) + "\"\n\n"
                                       + "[wifi]\n"
