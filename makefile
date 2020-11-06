@@ -12,7 +12,7 @@ setup: Dockerfile $(OUT)
 
 $(OUT):
 	mkdir -pv $(OUT)
-	chmod 777 -R $(OUT)
+	chmod -R 777 $(OUT)
 
 build:
 	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
