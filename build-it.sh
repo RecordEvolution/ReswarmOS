@@ -74,7 +74,7 @@ else
     unzip -q "${comcfg}.zip"
     mkdir -pv ./reswarmos-build/buildroot
     echo "moving buildroot directory to ./reswarmos-build/"
-    mv ./reswarmos-build/buildroot-*/* ./reswarmos-build/buildroot
+    mv ./buildroot-*/* ./reswarmos-build/buildroot
   else
     echo "failed to download ${archiveurl}" >&2
     exit 1
