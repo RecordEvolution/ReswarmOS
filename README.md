@@ -84,7 +84,12 @@ make build
 ```
 
 where the last step may take about up to one to two hours to finish 
-depending on your machine.
+depending on your machine. Here are some random (non-averaged, single)
+run stats:
+
+| CPU                                      | OS                  | buildtime (min) | HD usage (kB) |
+|------------------------------------------|---------------------|-----------------|---------------|
+| Intel(R) Core(TM) i7-8700T CPU @ 2.40GHz | Ubuntu 20.04.1 LTS  |   49:35         | 13288264      |
 
 ### References
 
