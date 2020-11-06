@@ -70,8 +70,11 @@ else
   wget ${archiveurl}
 
   if [[ -f ${comcfg}.zip ]]; then
-    unzip -q "${comcfg}.zip" -d ./reswarmos-build/
-    mv ./reswarmos-build/buildroot-* ./reswarmos-build/buildroot
+    echo "unzip buildroot archive ${comcfg}.zip"
+    unzip -q "${comcfg}.zip"
+    mkdir -pv ./reswarmos-build/buildroot
+    echo "moving buildroot directory to ./reswarmos-build/"
+    mv ./reswarmos-build/buildroot-*/* ./reswarmos-build/buildroot
   else
     echo "failed to download ${archiveurl}" >&2
     exit 1
@@ -155,9 +158,10 @@ finishsec=$(date +%s)
 logging_message "finished build process"
 echo "started:  ${startts}"
 echo "finished: ${finishts}"
+# use ISO 8601 for representation
 elapsec=$((finishsec-startsec))
 elapmin=$((elapsec/60))
 elapsecrem=$((elapsec-elapmin*60))
-echo "elapsed:  ${elapmin}.${elapsecrem}min"
+echo "elapsed:  ${elapmin}M${elapsecrem}S"
 
 # --------------------------------------------------------------------------- #

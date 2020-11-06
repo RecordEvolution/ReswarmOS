@@ -11,7 +11,7 @@ tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/ini
 fi
 
 # add static/distro configuration
-DSTCNF="/home/distro-setup"
+DSTCNF="/home/buildroot/distro-setup"
 
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
@@ -32,7 +32,7 @@ echo "/dev/mmcblk0p1  /boot           vfat    defaults        0       2" >> ${TA
 
 # add (default) dynamic/device configuration file and device-config init.d scripts
 echo "default device configuration"
-DEVCNF="/home/device-setup"
+DEVCNF="/home/buildroot/device-setup"
 cp -v ${DEVCNF}/read-ini.sh ${TARGET_DIR}/usr/bin/read-ini.sh
 chmod 755 ${TARGET_DIR}/usr/bin/read-ini.sh
 cp -v ${DEVCNF}/S18set-hostname ${TARGET_DIR}/etc/init.d/S18set-hostname
@@ -46,7 +46,7 @@ cp -v ${DEVCNF}/device-config.ini ${BINARIES_DIR}/device-config.ini
 
 # configuration of interactive (ssh) access to ReswarmOS
 echo "ssh configuration"
-ASSCNF="/home/assets"
+ASSCNF="/home/buildroot/assets"
 cp -v ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
 cp -v ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
@@ -57,7 +57,7 @@ cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 
 # Reswarm management agent setup
 echo "set up Reswarm management agent"
-AGTCNF="/home/agent-setup"
+AGTCNF="/home/buildroot/agent-setup"
 cp -v ${AGTCNF}/S17check-reswarm ${TARGET_DIR}/etc/init.d/S17check-reswarm
 cp -v ${AGTCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
 chmod 755 ${TARGET_DIR}/etc/init.d/S*
