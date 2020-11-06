@@ -36,7 +36,7 @@ COPY device-setup/ ./device-setup/
 
 # create directory (make sure to match directory/path given in makefile) to 
 # be mounted as volume and transfer ownership
-RUN mkdir ./reswarmos-build
+RUN mkdir -v ./reswarmos-build
 RUN chown buildroot:buildroot ./reswarmos-build
 
 # set ownership/permissions and switch to non-root user for build process
