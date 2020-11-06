@@ -3,21 +3,23 @@ OUT = output-build/
 CDR = $(shell pwd)
 IMG = $(shell ls $(OUT)*.img | head -n1)
 NAM = $(shell basename $(IMG))
+TNM = reswarmos-builder:latest
+CNM = reswarmos-builder
 
 setup: Dockerfile $(OUT)
-	docker build ./ --tag=reswarmos-builder:latest
+	docker build ./ --tag=$(TNM)
 
 $(OUT):
 	mkdir -pv $(OUT)
 
 build:
-	docker run -it --rm --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
+	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):/home/reswarmos-build $(TNM)
 
 build-daemon:
-	docker run -it -d --name reswarmos-builder --volume $(CDR)/$(OUT):/home/reswarmos-build reswarmos-builder:latest
+	docker run -it -d --name $(CNM) --volume $(CDR)/$(OUT):/home/reswarmos-build $(TNM)
 
 build-logs:
-	docker logs reswarmos-builder
+	docker logs $(CNM)
 
 compress-zip:
 	mv $(IMG) ./
@@ -38,5 +40,5 @@ clean-output:
 	rm -r $(OUT)
 
 clean-docker:
-	docker image rm reswarmos-builder:latest
+	docker image rm $(TNM)
 
