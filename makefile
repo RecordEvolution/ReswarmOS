@@ -5,18 +5,20 @@ IMG = $(shell ls $(OUT)*.img | head -n1)
 NAM = $(shell basename $(IMG))
 TNM = reswarmos-builder:latest
 CNM = reswarmos-builder
+VLP = /home/buildroot/reswarmos-build
 
 setup: Dockerfile $(OUT)
 	docker build ./ --tag=$(TNM)
 
 $(OUT):
 	mkdir -pv $(OUT)
+	chmod 777 -R $(OUT)
 
 build:
-	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):/home/reswarmos-build $(TNM)
+	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
 
 build-daemon:
-	docker run -it -d --name $(CNM) --volume $(CDR)/$(OUT):/home/reswarmos-build $(TNM)
+	docker run -it -d --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
 
 build-logs:
 	docker logs $(CNM)

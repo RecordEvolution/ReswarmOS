@@ -7,8 +7,9 @@ logging_header "starting to build ReswarmOS"
 # --------------------------------------------------------------------------- #
 
 logging_message "set up and check environment"
-export FORCE_UNSAFE_CONFIGURE=1
+#export FORCE_UNSAFE_CONFIGURE=1
 env
+echo "current user: $(whoami)"
 
 logging_message "check directories and files"
 
@@ -40,6 +41,10 @@ imgname=$(echo "${osname}-${osversion}-${model}.img")
 # path of configuration (derived from distro-config.yaml)
 cfgfile="configs/${model}/${confg}"
 
+# show device configuration
+logging_message "device configuration"
+cat device-setup/device-config.ini
+
 # --------------------------------------------------------------------------- #
 
 # extract required commit (note, that any buildroot configuration corresponds to specific commit)
@@ -51,22 +56,6 @@ if [[ -z ${comcfg} ]]; then
   echo "invalid buildroot configuration: no 'Buildroot -g.* Configuration' flag found!" >&2
   exit 1
 fi
-
-#logging_message "clone buildroot repository"
-#
-#if [[ -d reswarmos-build/buildroot ]]; then
-#  echo "buildroot directory already exists: please remove to get a fresh clone"
-#else
-#  git clone https://github.com/buildroot/buildroot --single-branch --depth=1 ./reswarmos-build/buildroot
-#fi
-
-#logging_message "checking out the required commit"
-#
-#pushd ./reswarmos-build/buildroot/
-#reqcom=$(git log --pretty=short | grep commit | awk '{print $2}' | tr -d ' ' | grep "^${comcfg}")
-#echo "given configuration corresponds to commit ${comcfg} -> ${reqcom}"
-#git reset --hard ${reqcom}
-#popd
 
 # get archive of specific commit
 logging_message "obtaining buildroot respository of commit ${comcfg}"
@@ -98,11 +87,11 @@ ls -lh reswarmos-build/
 logging_message "copy required configuration file"
 
 if [[ -f ${cfgfile} ]]; then
-#  if [[ -f ./reswarmos-build/buildroot/.config ]]; then
-#    echo "buildroot configuration .config already present: remove it to employ a new one"
-#  else
-  cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
-#  fi
+  if [[ -f ./reswarmos-build/buildroot/.config ]]; then
+    echo "buildroot configuration .config already present: remove it to employ a new one"
+  else
+    cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
+  fi
 else
   echo "sorry, the required config file '${cfgfile}' does not exist!" >&2
   exit 1
@@ -140,6 +129,7 @@ logging_message "initializing build process"
 
 # get starting timestamp
 startts=$(date)
+startsec=$(date +%s)
 
 pushd ./reswarmos-build/buildroot
 make
@@ -156,11 +146,18 @@ else
   echo "build incomplete: no image file produced"
 fi
 
+# --------------------------------------------------------------------------- #
+
 # finishing timestamp
 finishts=$(date)
+finishsec=$(date +%s)
 
 logging_message "finished build process"
 echo "started:  ${startts}"
 echo "finished: ${finishts}"
+elapsec=$((finishsec-startsec))
+elapmin=$((elapsec/60))
+elapsecrem=$((elapsec-elapmin*60))
+echo "elapsed:  ${elapmin}.${elapsecrem}min"
 
 # --------------------------------------------------------------------------- #
