@@ -51,21 +51,16 @@ cp -v ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
 cp -v ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
-# evtl. allow root login
-sshdopt="PermitRootLogin yes"
-sshdpath="${TARGET_DIR}/etc/ssh/sshd_config"
-sshdoptch=$(cat ${sshdpath} | grep -v "^#" | grep "${sshdopt}")
-if [ -z "${sshdoptch}" ]; then
-  echo "${sshdopt}" >> ${sshdpath}
-fi
+
+# use custom sshd_config to be employed
+cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 
 # Reswarm management agent setup
 echo "set up Reswarm management agent"
 AGTCNF="/home/agent-setup"
 cp -v ${AGTCNF}/S17check-reswarm ${TARGET_DIR}/etc/init.d/S17check-reswarm
 cp -v ${AGTCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
-chmod 644 ${TARGET_DIR}/etc/init.d/S17check-reswarm
-chmod 644 ${TARGET_DIR}/etc/init.d/S96reswarm-agent
+chmod 755 ${TARGET_DIR}/etc/init.d/S*
 cp -v ${AGTCNF}/parse-config.py ${TARGET_DIR}/usr/bin/parse-config.py
 chmod 755 ${TARGET_DIR}/usr/bin/parse-config.py
 
