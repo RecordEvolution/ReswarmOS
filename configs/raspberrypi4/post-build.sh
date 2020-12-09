@@ -65,6 +65,7 @@ cp -v ${AGTCNF}/parse-config.py ${TARGET_DIR}/usr/bin/parse-config.py
 chmod 755 ${TARGET_DIR}/usr/bin/parse-config.py
 
 # fix inconsistent wpa_supplicant configuration directory
-mkdir ${TARGET_DIR}/etc/wpa_supplicant/
-ln -s ${TARGET_DIR}/etc/wpa_supplicant.conf ${TARGET_DIR}/etc/wpa_supplicant/
+echo "fix WIFI for management-agent.py on NOOS"
+mkdir -pv ${TARGET_DIR}/etc/wpa_supplicant/
+cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -f wpa_supplicant.conf && ln -s ../wpa_supplicant.conf && ls -lh && cd -
 
