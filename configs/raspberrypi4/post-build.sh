@@ -64,3 +64,7 @@ chmod 755 ${TARGET_DIR}/etc/init.d/S*
 cp -v ${AGTCNF}/parse-config.py ${TARGET_DIR}/usr/bin/parse-config.py
 chmod 755 ${TARGET_DIR}/usr/bin/parse-config.py
 
+# fix inconsistent wpa_supplicant configuration directory
+mkdir ${TARGET_DIR}/etc/wpa_supplicant/
+ln -s ${TARGET_DIR}/etc/wpa_supplicant.conf ${TARGET_DIR}/etc/wpa_supplicant/
+
