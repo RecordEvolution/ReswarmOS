@@ -50,7 +50,9 @@ if __name__ == "__main__" :
                                       + "HOME     = \"" + "/home/" + str(devicecfg['swarm_owner_name']) + "\"\n\n"
                                       + "[wifi]\n"
                                       + "SSID     = \"" + str(devicecfg['wlanssid']) + "\"\n"
-                                      + "PASSWD   = \"" + str(devicecfg['password']) + "\"\n\n" )
+                                      + "PASSWD   = \"" + str(devicecfg['password']) + "\"\n\n"
+                                      + "[docker]\n"
+                                      + "INSECREG = \"" + str(devicecfg['insecure-registries']) + "\"\n\n" )
 
     with open(args.devicesetup,"w") as stpfile:
         stpfile.write(devicesetupcnt)
