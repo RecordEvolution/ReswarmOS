@@ -59,7 +59,7 @@ cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 echo "set up Reswarm management agent"
 AGTCNF="/home/buildroot/agent-setup"
 cp -v ${AGTCNF}/S17check-reswarm ${TARGET_DIR}/etc/init.d/S17check-reswarm
-cp -v ${AGTCNF}/S57docker-config ${TARGET_DIR}/etc/init.d/S57docker-config
+#cp -v ${AGTCNF}/S57docker-config ${TARGET_DIR}/etc/init.d/S57docker-config
 cp -v ${AGTCNF}/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
 chmod 755 ${TARGET_DIR}/etc/init.d/S*
 cp -v ${AGTCNF}/parse-config.py ${TARGET_DIR}/usr/bin/parse-config.py
