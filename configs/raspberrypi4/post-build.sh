@@ -69,7 +69,5 @@ chmod 755 ${TARGET_DIR}/usr/bin/parse-config.py
 echo "fix WIFI for management-agent.py on NOOS"
 mkdir -pv ${TARGET_DIR}/etc/wpa_supplicant/
 #cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -f wpa_supplicant.conf && ln -s ../wpa_supplicant.conf && ls -lh && cd -
-cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -vf wpa_supplicant.conf && cp ../wpa_supplicant.conf ./ && ls -lh && cd -
+cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -vf wpa_supplicant.conf && touch wpa_supplicant.conf ./ && ls -lh && cd -
 cd ${TARGET_DIR}/etc/ && rm -vf wpa_supplicant.conf && ln -s wpa_supplicant/wpa_supplicant.conf && ls -lh && cd -
-
-
