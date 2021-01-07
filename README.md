@@ -11,9 +11,9 @@
 
 # ReswarmOS
 
-_ReswarmOS_ represents a lightweight, customizable and efficient host operating 
-system for embedded devices in the IoT context and is specifically designed to 
-meet the requirements of the IoT Development Studio 
+_ReswarmOS_ represents a lightweight, customizable and efficient host operating
+system for embedded devices in the IoT context and is specifically designed to
+meet the requirements of the IoT Development Studio
 _[Reswarm](https://www.record-evolution.de/reswarm/)_.
 
 - Hardware (Rasbperry Pi Models)
@@ -37,29 +37,29 @@ _ReswarmOS_ may be used in two different ways:
 ### Independent OS
 
 Just download the latest release, grab the SD card for your device and flash it
-using the [Reflasher](https://github.com/RecordEvolution/Reflasher). After the 
-flash process is successfully finished, open up the _boot partition (vfat)_ 
-labeled _RESWARMOS_ containing the file _/device-config.ini_. Here, you may enter 
-all configuration parameters for your device like i.a. your prefered _username_ and 
-corresponding login _password_ to be set up on the device. To be able to immediately 
-connect to the device via WIFI you have to enter the _SSID_ and _password_ of your 
+using the [Reflasher](https://github.com/RecordEvolution/Reflasher). After the
+flash process is successfully finished, open up the _boot partition (vfat)_
+labeled _RESWARMOS_ containing the file _/device-config.ini_. Here, you may enter
+all configuration parameters for your device like i.a. your prefered _username_ and
+corresponding login _password_ to be set up on the device. To be able to immediately
+connect to the device via WIFI you have to enter the _SSID_ and _password_ of your
 local wireless network. However, I you choose to not enter your WIFI credentials you
-may still connect via LAN at any time. After booting up the device, it will show up 
+may still connect via LAN at any time. After booting up the device, it will show up
 with its _hostname_ (you provided in _device-config.ini)_ on the local network.
 Hence, you can connect to it via _ssh_ and your credentials entered in _device-config.ini_
 by
 
 ```
-ssh <your-username>@<device-hostname> 
+ssh <your-username>@<device-hostname>
 ```
 
 ### Reswarm IoT devices
 
-Any devices created within the framework of the IoT Development Studio 
+Any devices created within the framework of the IoT Development Studio
 _Reswarm_ are by default equipped with the latest version of _ReswarmOS_
 and automatically configured to securely connect and communicate with
 the Reswarm server cloud instance. Since this setup is coupled to your
-individual Reswarm user account the _ssh login_ is more customized and 
+individual Reswarm user account the _ssh login_ is more customized and
 corresponds to the `swarm_owner_name` as user and `secret` as password,
 while the _hostname_ is given by the Reswarm device name. Henceforth,
 the _ssh login_ looks like this:
@@ -71,9 +71,9 @@ ssh <swarm_owner_name>@<name> # password: <secret>
 ## Build Process
 
 The development of _ReswarmOS_ relies on [Buildroot](https://buildroot.org)
-as its build system. To build _ReswarmOS_ yourself, all you need is a 
-_docker-able_ host machine (with at least 4 threads and 4GB of RAM and 
-20GB free disk space). Clone the repository, customize _device-config.yaml_ 
+as its build system. To build _ReswarmOS_ yourself, all you need is a
+_docker-able_ host machine (with at least 4 threads and 4GB of RAM and
+20GB free disk space). Clone the repository, customize _device-config.yaml_
 to your needs, build the docker image and start the container by
 
 ```
@@ -83,7 +83,7 @@ make setup
 make build
 ```
 
-where the last step may take about up to one to two hours to finish 
+where the last step may take about up to one to two hours to finish
 depending on your machine. Here are some random (non-averaged, single)
 run stats:
 
@@ -96,6 +96,7 @@ run stats:
 
 #### Buildroot
 
+- https://github.com/buildroot/buildroot
 - https://buildroot.org/downloads/manual/manual.html
 - https://elinux.org/images/2/2a/Using-buildroot-real-project.pdf
 
