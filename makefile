@@ -57,3 +57,13 @@ clean-output:
 clean-docker:
 	docker image rm $(TNM)
 
+# analyse objects contributing to final root filesystem size
+OUTCL:=$(shell echo $(OUT) | sed 's/\///g')
+analyse:
+	du -sh $(OUT)buildroot/output/target/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
+	# /usr
+	du -sh $(OUT)buildroot/output/target/usr/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
+	du -sh $(OUT)buildroot/output/target/usr/bin/* | sort -rh | head -n12 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
+	# /lib
+	du -sh $(OUT)buildroot/output/target/lib/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
+	du -sh $(OUT)buildroot/output/target/lib/modules/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'

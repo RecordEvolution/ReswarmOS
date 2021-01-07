@@ -3,5 +3,5 @@
   version: 0.0.3
   board: raspberrypi
   model: raspberrypi4
-  config: config_v0.0.3
+  config: config_v0.0.3-nopython
 ...
