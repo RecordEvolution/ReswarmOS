@@ -91,6 +91,7 @@ run stats:
 |------------------------------------------|---------------------|-----------------|-----------------|---------------|
 | Intel(R) Core(TM) i7-8700T CPU @ 2.40GHz | Ubuntu 20.04.1 LTS  | Container       | 49:35           | 13288264      |
 | Intel(R) Core(TM) i7-8700T CPU @ 2.40GHz | Ubuntu 20.04.1 LTS  | Host            | 31:02           | 12830624      |
+| Intel(R) Core(TM) i5-7500T CPU @ 2.70GHz | Ubuntu 20.10        | Container       | 69:48           | 12855272      |
 
 ### References
 
