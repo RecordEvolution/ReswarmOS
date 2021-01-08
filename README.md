@@ -93,6 +93,36 @@ run stats:
 | Intel(R) Core(TM) i7-8700T CPU @ 2.40GHz | Ubuntu 20.04.1 LTS  | Host            | 31:02           | 12830624      |
 | Intel(R) Core(TM) i5-7500T CPU @ 2.70GHz | Ubuntu 20.10        | Container       | 69:48           | 12855272      |
 
+### Root Filesystem
+
+To decrease the overall size of the root filesystem, we first have to analyse
+the size accumulation of objects contributing to the final extend. The analysis
+of the root filesystem built with configuration [v0.0.4](configs/raspberrypi4/config_v0.0.4)
+shows the following main contributions:
+
+| Size | Dir   | Size   | Dir               | Size | Dir                          |
+|------|-------|--------|-------------------|------|------------------------------|
+| 175M | /usr  | 115M   | /usr/bin          | 37M  | /usr/bin/dockerd             |
+|      |       |        |                   | 33M  | /usr/bin/docker              |
+|      |       |        |                   | 26M  | /usr/bin/containerd          |
+|      |       |        |                   | 7,0M | /usr/bin/runc                |
+|      |       |        |                   | 5,4M | /usr/bin/containerd-shim     |
+|      |       |        |                   | 1,8M | /usr/bin/vim                 |
+|      |       | 36M    | /usr/lib          | 25M  | /usr/lib/python3.9           |
+|      |       |        |                   | 2,3M | /usr/lib/libpython3.9.so.1.0 |
+|      |       |        |                   | 1,9M | /usr/lib/libcrypto.so.1.1    |
+|      |       |        |                   | 1,2M | /usr/lib/libstdc++.so.6.0.28 |
+|      |       | 21M    | /usr/share        |      |                              |
+|      |       | 3,2M   | /usr/sbin         |      |                              |
+|      |       | 1,2M   | /usr/libexec      |      |                              |
+| 63M  | /lib  | 59M    | /lib/modules      |      |                              |
+|      |       | 1,3M   | /lib/libc-2.31.so |      |                              |
+|      |       | 1,1M   | /lib/firmware     |      |                              |
+| 2,3M | /sbin |        |                   |      |                              |
+| 1,7M | /bin  |        |                   |      |                              |
+| 1,6M | /etc  |        |                   |      |                              |
+| 16K  | /var  |        |                   |      |                              |
+
 ### References
 
 #### Buildroot

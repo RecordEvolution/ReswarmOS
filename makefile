@@ -64,6 +64,8 @@ analyse:
 	# /usr
 	du -sh $(OUT)buildroot/output/target/usr/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
 	du -sh $(OUT)buildroot/output/target/usr/bin/* | sort -rh | head -n12 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
+	du -sh $(OUT)buildroot/output/target/usr/lib/* | sort -rh | head -n12 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
+	du -sh $(OUT)buildroot/output/target/usr/share/* | sort -rh | head -n12 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
 	# /lib
 	du -sh $(OUT)buildroot/output/target/lib/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
 	du -sh $(OUT)buildroot/output/target/lib/modules/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
