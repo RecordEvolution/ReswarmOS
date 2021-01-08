@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# source the configuration parser
+. /usr/bin/read-ini.sh
+
+# define filename/path of device configuration
+CNFG="/boot/device-config.ini"
+
+if [ ! -f ${CNFG} ]; then
+  echo "device configuration file ${CNFG} is missing" >&2
+  exit 1
+fi
+
+# extract [docker] section and properties for daemon.json
+insecregs=$(readini ${CNFG} docker INSECREG)
+
+if [ -z ${insecregs} ]; then
+  echo "no insecure registry given: not providing any daemon.json" >&2
+  exit 1
+fi
+
+case "$1" in
+  
+  start)
+    
+    echo "creating /etc/docker/daemon.json..."
+
+    echo -e "{\n\t\"insecure-registries\":${insecregs}\n}\n" > /etc/docker/daemon.json
+
+    # remove script itself 
+    rm -vf $0
+    ;;
+  
+  *)
+    
+    echo "Usage: $0 start"
+    exit 1
+    ;;
+
+esac
+

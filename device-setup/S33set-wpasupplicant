@@ -5,7 +5,7 @@
 
 # define filename/path of device configuration
 CNFG="/boot/device-config.ini"
-WCFG="/etc/wpa_supplicant.conf"
+WCFG="/etc/wpa_supplicant/wpa_supplicant.conf"
 
 if [ ! -f ${CNFG} ]; then
   echo "device configuration file ${CNFG} is missing" >&2
@@ -34,10 +34,10 @@ case "$1" in
   start)
 
     echo "setting up wpa_supplicant.conf for immediate network access..."
-    
+
     echo "writing to ${WCFG}"
     echo "${wpaconf}" > ${WCFG}
-    
+
     rm -vf $0
     ;;
 
@@ -48,4 +48,3 @@ case "$1" in
     ;;
 
 esac
-
