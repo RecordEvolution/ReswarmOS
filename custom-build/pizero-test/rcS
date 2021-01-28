@@ -1,0 +1,32 @@
+#!/bin/sh
+
+mkdir -p /home/seal
+echo "$(date): ${0}" > /home/seal/startup.log
+
+# Start all init scripts in /etc/init.d
+# executing them in numerical order.
+#
+for i in /etc/init.d/S??* ;do
+	
+     echo "$(date): ${0} ... $i" >> /home/seal/startup.log
+
+     # Ignore dangling symlinks (if any).
+     [ ! -f "$i" ] && continue
+
+     case "$i" in
+	*.sh)
+	    # Source shell script for speed.
+	    (
+		trap - INT QUIT TSTP
+		set start
+		. $i
+	    )
+	    ;;
+	*)
+	    # No sh extension, so fork subprocess.
+	    $i start
+	    ;;
+    esac
+done
+
+echo "$(date): ${0} ... done" >> /home/seal/startup.log
