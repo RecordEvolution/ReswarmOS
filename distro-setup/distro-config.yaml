@@ -1,7 +1,7 @@
 ---
   os-name: "ReswarmOS"
-  version: 0.0.4
+  version: 0.0.1
   board: raspberrypi
-  model: raspberrypi4
-  config: config_v0.0.4
+  model: raspberrypi0
+  config: config_v0.0.8
 ...
