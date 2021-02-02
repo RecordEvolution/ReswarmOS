@@ -5,11 +5,11 @@
 # define login banner
 bannerA=$(cat << 'EOF'
         Welcome to
-____   _____  ____ __        __ _     ____   __  __   ___   ____
-|  _ \ | ____|/ ___|\ \      / // \   |  _ \ |  \/  | / _ \ / ___|
-| |_) ||  _|  \___ \ \ \ /\ / // _ \  | |_) || |\/| || | | |\___ \
-|  _ < | |___  ___) | \ V  V // ___ \ |  _ < | |  | || |_| | ___) |
-|_| \_\|_____||____/   \_/\_//_/   \_\|_| \_\|_|  |_| \___/ |____/ 
+  ____  _____ ______        ___    ____  __  __  ___  ____
+ |  _ \| ____/ ___\ \      / / \  |  _ \|  \/  |/ _ \/ ___|
+ | |_) |  _| \___ \\ \ /\ / / _ \ | |_) | |\/| | | | \___ \
+ |  _ <| |___ ___) |\ V  V / ___ \|  _ <| |  | | |_| |___) |
+ |_| \_\_____|____/  \_/\_/_/   \_\_| \_\_|  |_|\___/|____/
 
 EOF
 )
@@ -20,6 +20,21 @@ subnetip()
   iface=$(route | grep default | awk -F ' ' '{print $NF}')
   ipsub=$(ip address | grep $iface -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk -F ' ' '{print $2}')
   echo ${ipsub}
+}
+
+# get value of JSON key
+getkey()
+{
+  echo "$1" | grep -Po "\"$2\": \"[^\"]*\"" | awk -F ':' '{print $2}' | tr -d '"' | sed 's/^ *//g' | sed 's/ *$//g'
+}
+
+# geo location
+geolocation()
+{
+  pubip=$(wget -qO- http://ipinfo.io/ip)
+  locat=$(wget -qO- "ipinfo.io/${pubip}")
+  echo "$(getkey "${locat}" city) $(getkey "${locat}" region) $(getkey "${locat}" country) $(getkey "${locat}" loc)"
+  #echo "${locat}" | grep -Po "\"city\": \"[^\"]*\"" | awk -F ':' '{print $2}' | tr -d '"' | sed 's/^ *//g' | sed 's/ *$//g'
 }
 
 # add system information
@@ -35,10 +50,12 @@ ossysteminfo=$(cat << EOF
    memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    subnet ip: $(subnetip)
    public ip: $(wget -qO- http://ipinfo.io/ip)
+   location:  $(geolocation)
 EOF
 )
 
 echo ""
 echo "${bannerA}"
+echo ""
 echo "${ossysteminfo}"
 echo ""
