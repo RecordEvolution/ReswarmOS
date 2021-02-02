@@ -25,7 +25,7 @@ subnetip()
 # get value of JSON key
 getkey()
 {
-  echo "$1" | grep -Po "\"$2\": \"[^\"]*\"" | awk -F ':' '{print $2}' | tr -d '"' | sed 's/^ *//g' | sed 's/ *$//g'
+  echo "$1" | grep -o "\"$2\": \"[^\"]*\"" | awk -F ':' '{print $2}' | tr -d '"' | sed 's/^ *//g' | sed 's/ *$//g'
 }
 
 # geo location
