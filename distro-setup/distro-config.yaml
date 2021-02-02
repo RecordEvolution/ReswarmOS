@@ -3,5 +3,5 @@
   version: 0.0.1
   board: raspberrypi
   model: raspberrypi0
-  config: config_v0.0.8
+  config: config_v0.0.8-python
 ...
