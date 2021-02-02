@@ -13,10 +13,13 @@ fi
 # add static/distro configuration
 DSTCNF="/home/buildroot/distro-setup"
 
+# specify device model/board
+MDL="raspberrypi4"
+
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
-cp ${DSTCNF}/interfaces ${TARGET_DIR}/etc/network/interfaces
-cp ${DSTCNF}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
+cp ${DSTCNF}/${MDL}/interfaces ${TARGET_DIR}/etc/network/interfaces
+cp ${DSTCNF}/${MDL}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
 
 # resizing of root filesystem during first boot
 echo "resize rootfs during first boot"

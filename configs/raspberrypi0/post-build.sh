@@ -13,10 +13,13 @@ fi
 # add static/distro configuration
 DSTCNF="/home/buildroot/distro-setup"
 
+# specify device model/board
+MDL="raspberrypi0"
+
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
-cp ${DSTCNF}/interfaces ${TARGET_DIR}/etc/network/interfaces
-cp ${DSTCNF}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
+cp ${DSTCNF}/${MDL}/interfaces ${TARGET_DIR}/etc/network/interfaces
+cp ${DSTCNF}/${MDL}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
 
 # resizing of root filesystem during first boot
 echo "resize rootfs during first boot"
@@ -29,6 +32,10 @@ chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 echo "mount boot partition"
 mkdir -p ${TARGET_DIR}/boot
 echo "/dev/mmcblk0p1  /boot           vfat    defaults        0       2" >> ${TARGET_DIR}/etc/fstab
+
+# system initialization
+echo "system initialization => load WiFi firmware"
+cp -v ${DSTCNF}/${MDL}/inittab ${TARGET_DIR}/etc/
 
 # add (default) dynamic/device configuration file and device-config init.d scripts
 echo "default device configuration"
