@@ -14,7 +14,7 @@ fi
 DSTCNF="/home/buildroot/distro-setup"
 
 # specify device model/board
-MDL="raspberrypi0"
+MDL="raspberrypi0w"
 
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
