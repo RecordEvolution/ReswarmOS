@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # use reagent management logger
-. reagent-mgmt-logger.sh
+source reagent-mgmt-logger.sh
 
 # by default, use (latest) *.reswarm configuration file in /boot directory
 reswmexst=$(ls /boot/*.reswarm -t | head -n1)
@@ -26,7 +26,15 @@ reagentdir="/opt/reagent"
 reagentnam="reagent-"
 log_reagent_mgmt_event "INFO" "using Reagent binaries ${reagentdir}/${reagentnam}*"
 
-# keep three symbolic links to manage binaries and their updates
+# keep three symbolic links to manage binaries including restart/failure/updates
+# Rules: (with versions of Active(A), Latest(L), Previous(P); 0=no process, 1=active process)
+# 0: L = A = P => start
+# 0: L = A > P => A = P, P = L, start
+# 0: L = P > A => start
+# 1: L > A = P => P = A, A = L, upgrade
+# 1: L = P > A => none
+# 1: L > P > A => P = A, A = L, upgrade
+# 1: L = A > P => none
 reagentActive="${reagentdir}/${reagentnam}active"
 reagentLatest="${reagentdir}/${reagentnam}latest"
 reagentPrevious="${reagentdir}/${reagentnam}previous"
@@ -34,19 +42,21 @@ reagentPrevious="${reagentdir}/${reagentnam}previous"
 # (re)start reagent
 start_agent() {
 
-  log_reagent_mgmt_event "INFO" "attempting to launch ${REAGENT} with parameters..."
+  log_reagent_mgmt_event "INFO" "attempting to launch ${reagentActive} with parameters..."
   log_reagent_mgmt_event "INFO" "...appsDirectory: ${appsDir}"
   log_reagent_mgmt_event "INFO" "...config: ${resfile}"
 
+  nohup \
   # nice -2 \
   ${reagentActive} -appsDirectory ${appsDir} \
-                   -config ${resfile}
-  #            -compressedBuildExtension ${cbldExt} \
-  #            -dbFileName ${dbfilen} \
-  #            -debug ${debuglg} \
-  #            -debugMessaging ${debugMs} \
-  #            -initScripts ${initScripts} \
-  #            -logFile ${logfile}
+                   -config ${resfile} \
+#                   -compressedBuildExtension ${cbldExt} \
+#                   -dbFileName ${dbfilen} \
+#                   -debug ${debuglg} \
+#                   -debugMessaging ${debugMs} \
+#                   -initScripts ${initScripts} \
+#                   -logFile ${logfile}
+  &
 }
 
 kill_agent() {
@@ -104,28 +114,93 @@ check_agent() {
   echo "${prcs}"
 }
 
-# get latest agent
-get_latest_agent() {
+# check for latest agent
+check_latest() {
+
+  log_reagent_mgmt_event "INFO" "checking for new reagent"
+
+  # find latest reagent binary in given directory
+  reagentupgr=$(ls ${reagentdir}/${reagentnam}* -t | head -n1)
+
+  if [ -z ${reagentupr} ]; then
+    log_reagent_mgmt_event "CRITICAL" "no reagent binary ${reagentupr}/${reagentnam}* found"
+  else
+    # make sure symbolic link points to latest binary
+    compbin=$(readlink -f ${reagentLatest})
+    if [ ! "${compbin}" == "${reagentupgr}" ]; then  
+      log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than ${compbin}"
+      ln -s ${reagentupgr} ${reagentLatest}
+    fi
+  fi
+}
+
+# check for upgrade
+check_upgrade() {
+
+  log_reagent_mgmt_event "INFO" "check for reagent upgrade"
+
 
 }
 
 # update reagent
 update_agent() {
 
+  log_reagent_mgmt_event "INFO" "updating reagent from ${reagentActive} to ${reagentLatest}"
+
+  # kill the active reagent process
+  kill_agent
+
+  # start the new one
+  start_agent
 }
 
-# keep observing reagent process and any updates
+# keep observing reagent process and any incoming binary upgrades
 while true
 do
+
+  # mark latest binary as "reagentLatest"
+  check_latest
+
+  # if reagentActive does not yet exist link it to reagentLatest
+  if [ ! -L ${reagentActive} ]; then
+    log_reagent_mgmt_event "INFO" "linking ${reagentActive} to ${reagentLatest}"
+    ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
+  fi
+  # if reagentPrevious does not yet exist link it to reagentActive
+  if [ ! -L ${reagentPrevious} ]; then
+    log_reagent_mgmt_event "INFO" "linking ${reagentPrevious} to ${reagentActive}"
+    ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
+  fi
 
   # check agent process
   prcs=$(check_agent)
 
+  # if there's no reagent process, restart the "reagentActive" one
   if [ -z ${prcs} ]; then
+
+    if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive} ]; then
+      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious} ]; then
+        ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
+        ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
+      fi
+    fi
     start_agent
+
+  # check prerequisites for update
+  else
+ 
+    if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive} ]; then
+      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious} ]; then
+        ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
+        ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
+	update_agent
+      fi
+    fi
+
   fi
 
   # check for running reagent and any updates every n seconds
-	sleep 30
+  sleep 30
 
 done
+
