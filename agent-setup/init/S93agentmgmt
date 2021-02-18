@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# use reagent management logger
+. reagent-mgmt-logger.sh
+
+# check for *.reswarm configuration file in /boot directory
+reswmexst=$(ls /boot/ | grep -E ".reswarm" | head -n1)
+
+# if no .reswarm file is present ReswarmOS is supposed to run in "standalone" mode
+if [ -z ${reswmexst} ]; then
+  log_reagent_mgmt_event "INFO" "no .reswarm file found in /boot => running in standalone mode"
+  exit 1
+else
+  log_reagent_mgmt_event "INFO" ".reswarm file ${reswmexst} found => running in reswarm mode"
+fi
+
+case "$1" in
+
+  start)
+    manage-reagent.sh
+    ;;
+
+  # stop)
+  #   ;;
+  #
+  # restart)
+  #   ;;
+
+  *)
+    echo "Usage: $0 start"
+    exit 1
+    ;;
+
+esac
