@@ -27,7 +27,7 @@ logfile=""
 # always use symbolic link to "active" Reagent version
 reagent="/opt/reagent/ln-reagent-active"
 if [ ! -L ${reagent} ]; then
-  log_reagent_mgmt_event "INFO" "link to active reagent binary does not exist yet"
+  log_reagent_mgmt_event "INFO" "link ${reagent} to active binary does not exist yet"
   usebin=$(ls /opt/reagent/reagent-* -t | head -n1)
   log_reagent_mgmt_event "INFO" "linking ${reagent} to ${usebin}"
   ln -s ${usebin} ${reagent}

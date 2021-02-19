@@ -4,7 +4,7 @@
 CNFG="/boot/device-config.ini"
 
 # define volume directory
-pwdmng="/home/agent"
+# pwdmng="/home/agent"
 
 # check for *.reswarm file in /boot directory
 reswmexst=$(ls /boot/ | grep -E ".reswarm" | head -n1)
@@ -25,18 +25,15 @@ case "$1" in
   
     # preliminary solution! => mount directory and config files according to weird 
     # requirements of wamp_management.py
-    mkdir -pv ${pwdmng}/config
-    mkdir -pv ${pwdmng}/boot
+    #mkdir -pv ${pwdmng}/config
+    #mkdir -pv ${pwdmng}/boot
     
     # apparently the management-agent expects boot/config.txt and boot/cmdline.txt as well
-    cp -v /boot/config.txt ${pwdmng}/boot/
-    cp -v /boot/cmdline.txt ${pwdmng}/boot/
+    #cp -v /boot/config.txt ${pwdmng}/boot/
+    #cp -v /boot/cmdline.txt ${pwdmng}/boot/
     
     # find and parse *.reswarm configuration and write separate configuration files to appropriate locations
-    python3 /usr/bin/parse-config.py /boot/${reswmexst} ${pwdmng}/config/device-config.yaml \
-	                                                ${pwdmng}/boot/client.key.pem \
-                                                        ${pwdmng}/boot/client.cert.pem \
-                                                        ${CNFG}
+    python3 /usr/bin/parse-config.py /boot/${reswmexst} ${CNFG}
     
     rm -vf $0
     ;;
