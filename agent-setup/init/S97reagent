@@ -28,10 +28,10 @@ logfile=""
 reagent="/opt/reagent/ln-reagent-active"
 if [ ! -L ${reagent} ]; then
   log_reagent_mgmt_event "INFO" "link ${reagent} to active binary does not exist yet"
-  usebin=$(ls /opt/reagent/reagent-* -t | head -n1)
+  usebin="/opt/reagent/"$(ls /opt/reagent/ | grep "reagent-" | head -n1)
   log_reagent_mgmt_event "INFO" "linking ${reagent} to ${usebin}"
   ln -s ${usebin} ${reagent}
-  log_reagent_mgmt_event "INFO" "$(ls -lh ${reagent})"
+  log_reagent_mgmt_event "INFO" "$(ls ${reagent}) : $(readlink -f ${reagent})"
 fi
 
 startAgent() {
@@ -41,8 +41,9 @@ startAgent() {
   log_reagent_mgmt_event "INFO" "appsDirectory: ${appsDir}"
   log_reagent_mgmt_event "INFO" "config: ${resfile}"
   
-  ${reagent} -appsDirectory ${appsDir} \
-             -config ${resfile}
+  nohup ${reagent} \
+	     -appsDirectory ${appsDir} \
+             -config ${resfile} > /var/log/S97reagent.out 2> /var/log/S97reagent.err < /dev/null &
 #            -compressedBuildExtension ${cbldExt} \
 #            -dbFileName ${dbfilen} \
 #            -debug ${debuglg} \
@@ -57,7 +58,7 @@ stopAgent() {
   log_reagent_mgmt_event "INFO" "preparing to kill agent process"
 
   # check process and get id
-  prcs=$(ps aux | grep "reagent-"  | grep -v "grep")
+  prcs=$(ps aux | grep "${reagent}"  | grep -v "grep")
   prcsid=$(echo ${prcs} | awk -F ' ' '{print $1}')
   log_reagent_mgmt_event "INFO" "reagent process: ${prcs} with id: ${prcsid}"
 
@@ -66,7 +67,7 @@ stopAgent() {
   kill -TERM ${prcsid}
 
   # check process once more
-  prcs=$(ps aux | grep "reagent-"  | grep -v "grep")
+  prcs=$(ps aux | grep "${reagent}"  | grep -v "grep")
   prcsid=$(echo ${prcs} | awk -F ' ' '{print $2}')
   if [ -z ${prcs} ]; then
 
@@ -78,7 +79,7 @@ stopAgent() {
     sleep 30
 
     # check process third time
-    prcs=$(ps aux | grep "reagent-"  | grep -v "grep")
+    prcs=$(ps aux | grep "${reagent}"  | grep -v "grep")
     prcsid=$(echo ${prcs} | awk -F ' ' '{print $2}')
     if [ -z ${prcs} ]; then
       log_reagent_mgmt_event "INFO" "reagent process finally terminated"
@@ -107,7 +108,7 @@ case "$1" in
     ;;
 
   status)
-    ps aux | grep "reagent-"  | grep -v "grep")
+    ps aux | grep "${reagent}"  | grep -v "grep"
     ;; 
 
   *)
