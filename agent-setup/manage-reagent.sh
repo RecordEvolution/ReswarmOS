@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # use reagent management logger
-source reagent-mgmt-logger.sh
+source /usr/bin/reagent-mgmt-logger.sh
 
 # by default, use (latest) *.reswarm configuration file in /boot directory
 reswmexst=$(ls /boot/*.reswarm -t | head -n1)
@@ -10,16 +10,6 @@ if [ -z ${reswmexst} ]; then
   log_reagent_mgmt_event "ERROR" ".reswarm file missing in /boot"
   exit 1
 fi
-
-# assemble CLI parameters
-appsDir="/opt/reagent/apps"
-cbldExt="tgz"
-resfile="${reswmexst}"
-dbfilen="reagent.db"
-debuglg=""
-debugMs=""
-initScripts=""
-logfile=""
 
 # set directory of Reagent binaries and base name of any binary
 reagentdir="/opt/reagent"
@@ -38,81 +28,6 @@ log_reagent_mgmt_event "INFO" "using Reagent binaries ${reagentdir}/${reagentnam
 reagentActive="${reagentdir}/${reagentnam}active"
 reagentLatest="${reagentdir}/${reagentnam}latest"
 reagentPrevious="${reagentdir}/${reagentnam}previous"
-
-# (re)start reagent
-start_agent() {
-
-  log_reagent_mgmt_event "INFO" "attempting to launch ${reagentActive} with parameters..."
-  log_reagent_mgmt_event "INFO" "...appsDirectory: ${appsDir}"
-  log_reagent_mgmt_event "INFO" "...config: ${resfile}"
-
-  nohup \
-  # nice -2 \
-  ${reagentActive} -appsDirectory ${appsDir} \
-                   -config ${resfile} \
-#                   -compressedBuildExtension ${cbldExt} \
-#                   -dbFileName ${dbfilen} \
-#                   -debug ${debuglg} \
-#                   -debugMessaging ${debugMs} \
-#                   -initScripts ${initScripts} \
-#                   -logFile ${logfile}
-  &
-}
-
-kill_agent() {
-
-  log_reagent_mgmt_event "INFO" "preparing to kill agent process"
-
-  # check process and get id
-  prcs=$(check_agent)
-  prcsid=$(echo ${prcs} | awk -F ' ' '{print $2}')
-  log_reagent_mgmt_event "INFO" "reagent process: ${prcs} with id: ${prcsid}"
-
-  # send SIGTERM to process
-  log_reagent_mgmt_event "INFO" "sending SIGTERM to process id ${prcsid}"
-  kill -TERM ${prcsid}
-
-  # check process once more
-  prcs=$(check_agent)
-  prcsid=$(echo ${prcs} | awk -F ' ' '{print $2}')
-  if [ -z ${prcs} ]; then
-
-    log_reagent_mgmt_event "INFO" "reagent process successfully terminated"
-
-  else
-
-    log_reagent_mgmt_event "INFO" "reagent process did not terminate => waiting..."
-    sleep 30
-
-    # check process third time
-    prcs=$(check_agent)
-    prcsid=$(echo ${prcs} | awk -F ' ' '{print $2}')
-    if [ -z ${prcs} ]; then
-      log_reagent_mgmt_event "INFO" "reagent process finally terminated"
-    else
-      log_reagent_mgmt_event "INFO" "reagent process refused to terminate => going to kill it"
-      kill -KILL ${prcsid}
-    fi
-
-  fi
-}
-
-# check agent process
-check_agent() {
-
-  log_reagent_mgmt_event "INFO" "check for reagent process"
-
-  # check for running reagent process
-  prcs=$(ps aux | grep "${reagentnam}" | grep -v "grep")
-
-  if [ -z ${prcs} ]; then
-    log_reagent_mgmt_event "CRITICAL" "no reagent process found"
-  else
-    log_reagent_mgmt_event "INFO" "found reagent process: ${prcs}"
-  fi
-
-  echo "${prcs}"
-}
 
 # check for latest agent
 check_latest() {
@@ -134,26 +49,6 @@ check_latest() {
   fi
 }
 
-# check for upgrade
-check_upgrade() {
-
-  log_reagent_mgmt_event "INFO" "check for reagent upgrade"
-
-
-}
-
-# update reagent
-update_agent() {
-
-  log_reagent_mgmt_event "INFO" "updating reagent from ${reagentActive} to ${reagentLatest}"
-
-  # kill the active reagent process
-  kill_agent
-
-  # start the new one
-  start_agent
-}
-
 # keep observing reagent process and any incoming binary upgrades
 while true
 do
@@ -172,11 +67,9 @@ do
     ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
   fi
 
-  # check agent process
-  prcs=$(check_agent)
-
-  # if there's no reagent process, restart the "reagentActive" one
-  if [ -z ${prcs} ]; then
+  # check status of agent
+  agentstatus=$(/etc/init.d/S97reagent status)
+  if [ -z ${agentstatus} ]; then
 
     if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive} ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious} ]; then
@@ -184,16 +77,15 @@ do
         ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
       fi
     fi
-    start_agent
+    /etc/init.d/S97reagent start
 
-  # check prerequisites for update
   else
  
     if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive} ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious} ]; then
         ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
         ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
-	update_agent
+        /etc/init.d/S97reagent restart
       fi
     fi
 
