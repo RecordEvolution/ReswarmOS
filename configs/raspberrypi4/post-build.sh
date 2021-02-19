@@ -63,14 +63,20 @@ echo "set up Reswarm management agent"
 AGTCNF="/home/buildroot/agent-setup"
 cp -v ${AGTCNF}/init/S17check-reswarm ${TARGET_DIR}/etc/init.d/S17check-reswarm
 #cp -v ${AGTCNF}/S57docker-config ${TARGET_DIR}/etc/init.d/S57docker-config
-cp -v ${AGTCNF}/init/S96reswarm-agent ${TARGET_DIR}/etc/init.d/S96reswarm-agent
+cp -v ${AGTCNF}/init/S97reagent ${TARGET_DIR}/etc/init.d/S97reagent
+cp -v ${AGTCNF}/init/S98agentmgmt ${TARGET_DIR}/etc/init.d/S98agentmgmt
 chmod 755 ${TARGET_DIR}/etc/init.d/S*
 cp -v ${AGTCNF}/parse-config.py ${TARGET_DIR}/usr/bin/parse-config.py
 chmod 755 ${TARGET_DIR}/usr/bin/parse-config.py
+cp -v ${AGTCNF}/manage-reagent.sh ${TARGET_DIR}/usr/bin/manage-reagent.sh
+chmod 755 ${TARGET_DIR}/usr/bin/manage-reagent.sh
+cp -v ${AGTCNF}/reagent-mgmt-logger.sh ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
+chmod 755 ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
 
 # fix inconsistent wpa_supplicant configuration directory
-echo "fix WIFI for management-agent.py on NOOS"
-mkdir -pv ${TARGET_DIR}/etc/wpa_supplicant/
+#echo "fix WIFI for management-agent.py on NOOS"
+#mkdir -pv ${TARGET_DIR}/etc/wpa_supplicant/
 #cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -f wpa_supplicant.conf && ln -s ../wpa_supplicant.conf && ls -lh && cd -
-cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -vf wpa_supplicant.conf && touch wpa_supplicant.conf ./ && ls -lh && cd -
-cd ${TARGET_DIR}/etc/ && rm -vf wpa_supplicant.conf && ln -s wpa_supplicant/wpa_supplicant.conf && ls -lh && cd -
+#cd ${TARGET_DIR}/etc/wpa_supplicant/ && rm -vf wpa_supplicant.conf && touch wpa_supplicant.conf ./ && ls -lh && cd -
+#cd ${TARGET_DIR}/etc/ && rm -vf wpa_supplicant.conf && ln -s wpa_supplicant/wpa_supplicant.conf && ls -lh && cd -
+
