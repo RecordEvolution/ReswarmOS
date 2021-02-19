@@ -53,10 +53,10 @@ if __name__ == "__main__" :
                                       + "SSID     = \"" + str(devicecfg['wlanssid']) + "\"\n"
                                       + "PASSWD   = \"" + str(devicecfg['password']) + "\"\n\n" )
 
-#    # check for docker insecure registries
-#    if "insecure-registries" in devicecfg :
-#        devicesetupcnt = ( devicesetupcnt + "[docker]\n"
-#                        + "INSECREG = \"" + str(devicecfg['insecure-registries']) + "\"\n\n" )
+    # check for docker insecure registries
+    if "insecure-registries" in devicecfg :
+        devicesetupcnt = ( devicesetupcnt + "[docker]\n"
+                        + "INSECREG = \"" + str(devicecfg['insecure-registries']) + "\"\n\n" )
 
     with open(args.devicesetup,"w") as stpfile:
         stpfile.write(devicesetupcnt)
