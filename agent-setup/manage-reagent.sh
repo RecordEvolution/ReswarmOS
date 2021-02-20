@@ -36,14 +36,15 @@ check_latest() {
   log_reagent_mgmt_event "INFO" "checking for new reagent"
 
   # find latest reagent binary in given directory
-  reagentupgr=$(ls ${reagentdir}/${reagentname}* -t | head -n1)
-
+  reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentname}* | head -n1)
+  echo ${reagentupgr}
   if [ -z ${reagentupr} ]; then
-    log_reagent_mgmt_event "CRITICAL" "no reagent binary ${reagentupr}/${reagentname}* found"
+    log_reagent_mgmt_event "CRITICAL" "no reagent binary ${reagentdir}/${reagentname}* found"
   else
     # make sure symbolic link points to latest binary
     if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then  
       log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than $(readlinke -f ${reagentLatest})"
+      rm ${reagentLatest}
       ln -s $(readlink -f ${reagentupgr}) ${reagentLatest}
     fi
   fi
@@ -57,10 +58,10 @@ do
   check_latest
 
   # if reagentActive does not yet exist link it to reagentLatest
-  #if [ ! -L ${reagentActive} ]; then
-  #  log_reagent_mgmt_event "INFO" "linking ${reagentActive} to ${reagentLatest}"
-  #  ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
-  #fi
+  if [ ! -L ${reagentActive} ]; then
+    log_reagent_mgmt_event "INFO" "linking ${reagentActive} to ${reagentLatest}"
+    ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
+  fi
   # if reagentPrevious does not yet exist link it to reagentActive
   if [ ! -L ${reagentPrevious} ]; then
     log_reagent_mgmt_event "INFO" "linking ${reagentPrevious} to ${reagentActive}"
@@ -76,7 +77,9 @@ do
     if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
         log_reagent_mgmt_event "INFO" "revert upgrade to latest failed reagent ${reagentLatest}"
+	rm ${reagentActive}
         ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
+	rm ${reagentPrevious}
         ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
       fi
     fi
@@ -87,7 +90,9 @@ do
     if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
         log_reagent_mgmt_event "INFO" "upgrading to latest version of reagent ${reagentLatest}"
+	rm ${reagentPrevious}
         ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
+	rm ${reagentActive}
         ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
         /etc/init.d/S97reagent restart
       fi
@@ -99,4 +104,3 @@ do
   sleep 30
 
 done
-
