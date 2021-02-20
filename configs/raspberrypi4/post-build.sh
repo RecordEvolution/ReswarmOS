@@ -58,6 +58,9 @@ chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 # use custom sshd_config to be employed
 cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 
+# WiFi network setup
+mkdir -pv ${TARGET_DIR}/etc/wpa_supplicant
+
 # Reswarm management agent setup
 echo "set up Reswarm management agent"
 AGTCNF="/home/buildroot/agent-setup"
@@ -73,7 +76,7 @@ chmod 755 ${TARGET_DIR}/usr/bin/manage-reagent.sh
 cp -v ${AGTCNF}/reagent-mgmt-logger.sh ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
 chmod 755 ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
 
-# add Reagent
+# add Reagent binary
 #echo "adding Reagent"
 #reagenturl="https://storage.googleapis.com/reagent/"
 #mkdir -pv ${TARGET_DIR}/opt/reagent

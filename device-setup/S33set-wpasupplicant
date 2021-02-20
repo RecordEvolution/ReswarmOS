@@ -5,7 +5,7 @@
 
 # define filename/path of device configuration
 CNFG="/boot/device-config.ini"
-WCFG="/etc/wpa_supplicant/wpa_supplicant.conf"
+WCFG="/etc/wpa_supplicant"
 
 if [ ! -f ${CNFG} ]; then
   echo "device configuration file ${CNFG} is missing" >&2
@@ -28,6 +28,8 @@ network={
 EOF
 )
 
+# define name of initial WiFi configuration file
+CFGFILE="wifinetwork.conf"
 
 case "$1" in
 
@@ -35,9 +37,14 @@ case "$1" in
 
     echo "setting up wpa_supplicant.conf for immediate network access..."
 
-    echo "writing to ${WCFG}"
-    echo "${wpaconf}" > ${WCFG}
+    echo "writing to ${WCFG}/${CFGFILE}"
+    echo "${wpaconf}" > ${WCFG}/${CFGFILE}
 
+    # adjust soft link to WiFi config
+    rm -f /etc/wpa_supplicant.conf
+    ln -s ${WCFG}/${CFGFILE} /etc/wpa_supplicant.conf
+
+    # remove this startup configuration script
     rm -vf $0
     ;;
 
