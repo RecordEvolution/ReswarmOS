@@ -17,7 +17,7 @@ fi
 case "$1" in
 
   start)
-    /usr/bin/manage-reagent.sh
+    nohup /usr/bin/manage-reagent.sh > /var/log/S98mgmt.out 2> /var/log/S98mgmt.err < /dev/null &
     ;;
 
   # stop)
