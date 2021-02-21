@@ -20,9 +20,12 @@ case "$1" in
     nohup /usr/bin/manage-reagent.sh > /var/log/S98mgmt.out 2> /var/log/S98mgmt.err < /dev/null &
     ;;
 
-  # stop)
-  #   ;;
-  #
+  stop)
+    prcs=$(ps aux | grep "/usr/bin/manage-reagent.sh"  | grep -v "grep")
+    prcsid=$(echo ${prcs} | awk -F ' ' '{print $1}')
+    kill -TERM ${prcsid}
+    ;;
+  
   # restart)
   #   ;;
 
@@ -32,3 +35,4 @@ case "$1" in
     ;;
 
 esac
+

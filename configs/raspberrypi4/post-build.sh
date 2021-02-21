@@ -77,9 +77,9 @@ cp -v ${AGTCNF}/reagent-mgmt-logger.sh ${TARGET_DIR}/usr/bin/reagent-mgmt-logger
 chmod 755 ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
 
 # add Reagent binary
-#echo "adding Reagent"
+echo "preparing and adding Reagent"
 #reagenturl="https://storage.googleapis.com/reagent/"
-#mkdir -pv ${TARGET_DIR}/opt/reagent
+mkdir -pv ${TARGET_DIR}/opt/reagent
 #wget ${reagenturl} -P ${TARGET_DIR}/opt/reagent/
 #mv ${TARGET_DIR}/opt/reagent/reagent ${TARGET_DIR}/opt/reagent/reagent-v0.1
 #chmod 755 ${TARGET_DIR}/opt/reagent/reagentv0.1

@@ -36,14 +36,13 @@ check_latest() {
   log_reagent_mgmt_event "INFO" "checking for new reagent"
 
   # find latest reagent binary in given directory
-  reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentname}* | head -n1)
-  echo ${reagentupgr}
-  if [ -z ${reagentupr} ]; then
+  reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentname} | grep -v ${reagentlink} | head -n1)
+  if [ -z ${reagentupgr} ]; then
     log_reagent_mgmt_event "CRITICAL" "no reagent binary ${reagentdir}/${reagentname}* found"
   else
     # make sure symbolic link points to latest binary
     if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then  
-      log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than $(readlinke -f ${reagentLatest})"
+      log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than $(readlink -f ${reagentLatest})"
       rm ${reagentLatest}
       ln -s $(readlink -f ${reagentupgr}) ${reagentLatest}
     fi
@@ -69,7 +68,8 @@ do
   fi
 
   # check status of agent
-  agentstatus=$(/etc/init.d/S97reagent status)
+  agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep")
+  log_reagent_mgmt_event "INFO" "${agentstatus}"
   if [ -z ${agentstatus} ]; then
     
     log_reagent_mgmt_event "ERROR" "reagent is down => going to restart"
@@ -104,3 +104,4 @@ do
   sleep 30
 
 done
+
