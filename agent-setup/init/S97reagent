@@ -4,7 +4,7 @@
 . /usr/bin/reagent-mgmt-logger.sh
 
 # check for *.reswarm file in /boot directory
-reswmexst=$(ls /boot/ | grep -E ".reswarm" | head -n1)
+reswmexst="/boot/"$(ls -t /boot/ | grep -E ".reswarm" | head -n1)
 
 # if no .reswarm file is present ReswarmOS is supposed to run in "standalone" mode
 if [ -z ${reswmexst} ]; then
@@ -28,10 +28,10 @@ logfile=""
 reagent="/opt/reagent/ln-reagent-active"
 if [ ! -L ${reagent} ]; then
   log_reagent_mgmt_event "INFO" "link ${reagent} to active binary does not exist yet"
-  usebin="/opt/reagent/"$(ls /opt/reagent/ | grep "reagent-" | head -n1)
+  usebin="/opt/reagent/"$(ls /opt/reagent/ -t | grep "reagent-" | grep -v "ln-reagent" | head -n1)
   log_reagent_mgmt_event "INFO" "linking ${reagent} to ${usebin}"
   ln -s ${usebin} ${reagent}
-  log_reagent_mgmt_event "INFO" "$(ls ${reagent}) : $(readlink -f ${reagent})"
+  log_reagent_mgmt_event "INFO" "${reagent} : $(readlink -f ${reagent})"
 fi
 
 startAgent() {
@@ -43,7 +43,8 @@ startAgent() {
   
   nohup ${reagent} \
 	     -appsDirectory ${appsDir} \
-             -config ${resfile} > /var/log/S97reagent.out 2> /var/log/S97reagent.err < /dev/null &
+             -config ${resfile} \
+	     -debug > /var/log/S97reagent.out 2> /var/log/S97reagent.err < /dev/null &
 #            -compressedBuildExtension ${cbldExt} \
 #            -dbFileName ${dbfilen} \
 #            -debug ${debuglg} \
