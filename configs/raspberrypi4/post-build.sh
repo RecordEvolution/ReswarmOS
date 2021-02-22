@@ -16,6 +16,12 @@ DSTCNF="/home/buildroot/distro-setup"
 # specify device model/board
 MDL="raspberrypi4"
 
+# copy default device configuration to boot partition
+BOTCFG="/home/buildroot/configs/${MDL}/boot"
+echo "use customized boot configuration in ${BOTCFG}"
+cp -v ${BOTCFG}/reswarm/config.txt ${BINARIES_DIR}/config.txt
+cp -v ${BOTCFG}/reswarm/cmdline.txt ${BINARIES_DIR}/cmdline.txt
+
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
 cp ${DSTCNF}/${MDL}/interfaces ${TARGET_DIR}/etc/network/interfaces
@@ -54,6 +60,8 @@ cp -v ${ASSCNF}/motd.sh ${TARGET_DIR}/etc/profile.d/motd.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/motd.sh
 cp -v ${ASSCNF}/shell-prompt.sh ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
 chmod 644 ${TARGET_DIR}/etc/profile.d/shell-prompt.sh
+cp -v ${ASSCNF}/reswarmos.txt ${TARGET_DIR}/etc/reswarmos.txt
+chmod 644 ${TARGET_DIR}/etc/reswarmos.txt
 
 # use custom sshd_config to be employed
 cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config

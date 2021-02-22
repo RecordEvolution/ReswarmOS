@@ -126,6 +126,9 @@ cp -v "./configs/${model}/genimage.cfg" "./reswarmos-build/buildroot/board/${mod
 echo "final post-build.sh"
 cat ${pstbldscr}
 
+# generate/update os-version file
+echo "${osname}-${osversion}" > ./assets/reswarmos.txt
+
 # --------------------------------------------------------------------------- #
 
 logging_message "initializing build process"
