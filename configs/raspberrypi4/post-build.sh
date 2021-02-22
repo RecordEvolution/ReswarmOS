@@ -16,7 +16,7 @@ DSTCNF="/home/buildroot/distro-setup"
 # specify device model/board
 MDL="raspberrypi4"
 
-# copy default device configuration to boot partition
+# deploy customized boot configuration
 BOTCFG="/home/buildroot/configs/${MDL}/boot"
 echo "use customized boot configuration in ${BOTCFG}"
 cp -v ${BOTCFG}/reswarm/config.txt ${BINARIES_DIR}/config.txt
