@@ -1,7 +1,7 @@
 
 OUT = output-build/
 CDR = $(shell pwd)
-IMG = $(shell ls $(OUT)*.img | head -n1)
+IMG = $(shell ls -t $(OUT)*.img | head -n1)
 NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
 TNM = reswarmos-builder:latest
