@@ -86,10 +86,9 @@ chmod 755 ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
 
 # add Reagent binary
 echo "preparing and adding Reagent"
-#reagenturl="https://storage.googleapis.com/reagent/"
+reagenturl="https://storage.googleapis.com/re-agent/reagent-v0.0.1"
 mkdir -pv ${TARGET_DIR}/opt/reagent
-#wget ${reagenturl} -P ${TARGET_DIR}/opt/reagent/
-#mv ${TARGET_DIR}/opt/reagent/reagent ${TARGET_DIR}/opt/reagent/reagent-v0.1
-#chmod 755 ${TARGET_DIR}/opt/reagent/reagentv0.1
+wget ${reagenturl} -P ${TARGET_DIR}/opt/reagent/
+chmod 755 ${TARGET_DIR}/opt/reagent/reagent-*
 
 
