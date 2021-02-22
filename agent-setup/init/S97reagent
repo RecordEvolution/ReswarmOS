@@ -40,6 +40,7 @@ startAgent() {
   log_reagent_mgmt_event "INFO" "binary: ${reagent} -> $(readlink -f ${reagent})"
   log_reagent_mgmt_event "INFO" "appsDirectory: ${appsDir}"
   log_reagent_mgmt_event "INFO" "config: ${resfile}"
+  log_reagent_mgmt_event "INFO" "debug: true"
   
   nohup ${reagent} \
 	     -appsDirectory ${appsDir} \

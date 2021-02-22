@@ -15,7 +15,7 @@ fi
 reagentdir="/opt/reagent"
 reagentlink="ln-reagent-"
 reagentname="reagent-"
-log_reagent_mgmt_event "INFO" "using Reagent binaries ${reagentdir}/${reagentnam}*"
+log_reagent_mgmt_event "INFO" "using Reagent binaries ${reagentdir}/${reagentname}*"
 
 # keep three symbolic links to manage binaries including restart/failure/updates
 # Rules: (with versions of Active(A), Latest(L), Previous(P); 0=no process, 1=active process)
@@ -30,10 +30,17 @@ reagentActive="${reagentdir}/${reagentlink}active"
 reagentLatest="${reagentdir}/${reagentlink}latest"
 reagentPrevious="${reagentdir}/${reagentlink}previous"
 
+# define length of management cycle
+cyclenumsecs=30
+
+# define time-out for version upgrade to be reverted after failure
+numcycleout=4
+countcycles=999
+
 # check for latest agent
 check_latest() {
 
-  log_reagent_mgmt_event "INFO" "checking for new reagent"
+  #log_reagent_mgmt_event "INFO" "checking for new reagent"
 
   # find latest reagent binary in given directory
   reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentname} | grep -v ${reagentlink} | head -n1)
@@ -69,18 +76,20 @@ do
 
   # check status of agent
   agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep")
-  log_reagent_mgmt_event "INFO" "${agentstatus}"
+  #log_reagent_mgmt_event "INFO" "${agentstatus}"
   if [ -z ${agentstatus} ]; then
     
     log_reagent_mgmt_event "ERROR" "reagent is down => going to restart"
 
     if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
-        log_reagent_mgmt_event "INFO" "revert upgrade to latest failed reagent ${reagentLatest}"
-	rm ${reagentActive}
-        ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
-	rm ${reagentPrevious}
-        ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
+        if [ $countcycles -lt $numcycleout ]; then
+	  log_reagent_mgmt_event "INFO" "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
+	  rm ${reagentActive}
+          ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
+	  rm ${reagentPrevious}
+          ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
+	fi
       fi
     fi
     /etc/init.d/S97reagent start
@@ -95,13 +104,16 @@ do
 	rm ${reagentActive}
         ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
         /etc/init.d/S97reagent restart
+	countcycles=0
       fi
     fi
 
   fi
 
+  # count cycles
+  countcycles=$((countcycles+1))
+
   # check for running reagent and any updates every n seconds
-  sleep 30
+  sleep $cyclenumsecs
 
 done
-
