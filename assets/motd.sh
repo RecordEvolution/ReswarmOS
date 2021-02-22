@@ -42,6 +42,7 @@ ossysteminfo=$(cat << EOF
    $(uptime | sed 's/^ *//g')
    $(uname -a)
 
+   os:        $(cat /etc/reswarmos.txt | tr -d '\n ')
    user:      $(whoami)
    host:      $(hostname)
    date:      $(date)
