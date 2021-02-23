@@ -38,14 +38,15 @@ startAgent() {
 
   log_reagent_mgmt_event "INFO" "launching agent process"
   log_reagent_mgmt_event "INFO" "binary: ${reagent} -> $(readlink -f ${reagent})"
-  log_reagent_mgmt_event "INFO" "appsDirectory: ${appsDir}"
-  log_reagent_mgmt_event "INFO" "config: ${resfile}"
-  log_reagent_mgmt_event "INFO" "debug: true"
+  #log_reagent_mgmt_event "INFO" "appsDirectory: ${appsDir}"
+  #log_reagent_mgmt_event "INFO" "config: ${resfile}"
+  #log_reagent_mgmt_event "INFO" "debug: true"
   
   nohup ${reagent} \
-	     -appsDirectory ${appsDir} \
-             -config ${resfile} \
-	     -debug > /var/log/S97reagent.out 2> /var/log/S97reagent.err < /dev/null &
+              -config ${resfile} \
+              > /var/log/S97reagent.out 2> /var/log/S97reagent.err < /dev/null &
+#	     -appsDirectory ${appsDir} \
+#	     -debug \ 
 #            -compressedBuildExtension ${cbldExt} \
 #            -dbFileName ${dbfilen} \
 #            -debug ${debuglg} \

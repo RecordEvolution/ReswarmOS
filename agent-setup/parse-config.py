@@ -4,6 +4,7 @@ import yaml
 import json
 import argparse
 import ast
+import os
 
 parser = argparse.ArgumentParser(description='Parse *.reswarm and prepare configuration files for management agent')
 parser.add_argument('reswarmfile',type=str,help='path/file of *.reswarm file')
@@ -23,6 +24,10 @@ if __name__ == "__main__" :
 
     # filter all elements but authentication dict and write to .yaml file
     devicecfg = { key:value for (key,value) in data.items() if ( key != "authentication" and key != "config_passphrase" )}
+
+    # show element
+    print('configuration file:',devicecfg.keys())
+    print('configuration file with values:',devicecfg)
 
     #print('writing device configuration to ' + str(args.devicecfg))
     #with open(args.devicecfg,"w") as devfile:
@@ -68,7 +73,17 @@ if __name__ == "__main__" :
         daemonstr = json.dumps( {"insecure-registries": insecregs }, sort_keys=True, indent=None)
         daemonstr = "{\n" + "    " + daemonstr.strip("{}") + "\n}"
         print('adding insecure registries to /etc/docker/daemon.json')
+        # check for /etc/docker directory
+        if not os.path.isdir("/etc/docker"):
+            try :
+                os.mkdir("/etc/docker",mode = 0o755)
+            except RuntimeError as e :
+                print("failed to create /etc/docker: " + str(e))
+        # write daemon.json config file
         with open("/etc/docker/daemon.json","w") as dckcfg:
+            print("daemon.json:\n",daemonstr)
             dckcfg.write(daemonstr + "\n")
+        os.chmod("/etc/docker/daemon.json",0o644)
 
 # --------------------------------------------------------------------------- #
+

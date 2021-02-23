@@ -47,9 +47,10 @@ check_latest() {
   if [ -z ${reagentupgr} ]; then
     log_reagent_mgmt_event "CRITICAL" "no reagent binary ${reagentdir}/${reagentname}* found"
   else
-    # make sure symbolic link points to latest binary
+    # make sure symbolic link points to latest (executable) binary
     if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then  
       log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than $(readlink -f ${reagentLatest})"
+      chmod 755 ${reagentupgr}
       rm ${reagentLatest}
       ln -s $(readlink -f ${reagentupgr}) ${reagentLatest}
     fi
