@@ -23,6 +23,7 @@ cp -v ${DTBCFG}/bcm2710-rpi-3-b.dtb ${BINARIES_DIR}/
 cp -v ${DTBCFG}/bcm2710-rpi-3-b-plus.dtb ${BINARIES_DIR}/
 cp -v ${DTBCFG}/bcm2710-rpi-cm3.dtb ${BINARIES_DIR}/
 cp -v ${DTBCFG}/bootcode.bin ${BINARIES_DIR}/
+chmod +x ${BINARIES_DIR}/bcm2710-rpi-*.dtb
 
 # deploy customized boot configuration
 BOTCFG="/home/buildroot/configs/${MDL}/boot"

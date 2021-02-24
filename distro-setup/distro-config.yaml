@@ -4,4 +4,5 @@
   board: raspberrypi
   model: raspberrypi
   config: config_v0.0.4
+  image: genimage-raspberrypi4.cfg
 ...
