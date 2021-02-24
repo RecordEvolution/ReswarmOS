@@ -51,7 +51,7 @@ check_latest() {
     if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then  
       log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than $(readlink -f ${reagentLatest})"
       chmod 755 ${reagentupgr}
-      rm ${reagentLatest}
+      rm -f ${reagentLatest}
       ln -s $(readlink -f ${reagentupgr}) ${reagentLatest}
     fi
   fi
@@ -76,7 +76,7 @@ do
   fi
 
   # check status of agent
-  agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep")
+  agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep" | awk '{print $1}')
   #log_reagent_mgmt_event "INFO" "${agentstatus}"
   if [ -z ${agentstatus} ]; then
     
@@ -86,9 +86,9 @@ do
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
         if [ $countcycles -lt $numcycleout ]; then
 	  log_reagent_mgmt_event "INFO" "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
-	  rm ${reagentActive}
+	  rm -f ${reagentActive}
           ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
-	  rm ${reagentPrevious}
+	  rm -f ${reagentPrevious}
           ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
 	fi
       fi
@@ -100,9 +100,9 @@ do
     if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
         log_reagent_mgmt_event "INFO" "upgrading to latest version of reagent ${reagentLatest}"
-	rm ${reagentPrevious}
+	rm -f ${reagentPrevious}
         ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
-	rm ${reagentActive}
+	rm -f ${reagentActive}
         ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
         /etc/init.d/S97reagent restart
 	countcycles=0
