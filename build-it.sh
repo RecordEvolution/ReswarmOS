@@ -33,6 +33,7 @@ cat ${reswarmcfg}
 board=$(cat ${reswarmcfg} | grep "^ *board" | awk -F ':' '{print $2}' | tr -d ' ')
 model=$(cat ${reswarmcfg} | grep "^ *model" | awk -F ':' '{print $2}' | tr -d ' ')
 confg=$(cat ${reswarmcfg} | grep "^ *config" | awk -F ':' '{print $2}' | tr -d ' ')
+imcfg=$(cat ${reswarmcfg} | grep "^ *image" | awk -F ':' '{print $2}' | tr -d ' ')
 
 # construct image file name
 osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
@@ -121,7 +122,7 @@ cp -v ./configs/${model}/post-build.sh ${pstbldscr}
 #python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/
 
 # employ genimage configuration for partitions and image
-cp -v "./configs/${model}/genimage.cfg" "./reswarmos-build/buildroot/board/${model}/genimage-${model}.cfg"
+cp -v "./configs/${model}/genimage.cfg" "./reswarmos-build/buildroot/board/${model}/${imcfg}"
 
 # show final post-build.sh
 echo "final post-build.sh"
