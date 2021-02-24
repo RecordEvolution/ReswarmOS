@@ -14,10 +14,10 @@ fi
 DSTCNF="/home/buildroot/distro-setup"
 
 # specify device model/board
-MDL="raspberrypiall"
+MDL="raspberrypi"
 
 # add rasberrypi3 dtb's since configuration is based on rasberrypi4
-DTBCFG="/home/buildroot/configs/rasberrypi3/boot"
+DTBCFG="/home/buildroot/configs/${MDL}/boot"
 echo "adding DTBs for rasberrypi3"
 cp -v ${DTBCFG}/bcm2710-rpi-3-b.dtb ${BINARIES_DIR}/
 cp -v ${DTBCFG}/bcm2710-rpi-3-b-plus.dtb ${BINARIES_DIR}/
@@ -96,7 +96,7 @@ chmod 755 ${TARGET_DIR}/usr/bin/reagent-mgmt-logger.sh
 echo "preparing and adding Reagent"
 reagenturl="https://storage.googleapis.com/re-agent/reagent-latest"
 mkdir -pv ${TARGET_DIR}/opt/reagent
-rm -v ${TARGET_DIR}/opt/reagent/reagent-*
+rm -vf ${TARGET_DIR}/opt/reagent/reagent-*
 wget ${reagenturl} -P ${TARGET_DIR}/opt/reagent/
 chmod 755 ${TARGET_DIR}/opt/reagent/reagent-*
 
