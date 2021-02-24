@@ -30,13 +30,14 @@ reswarmcfg="./distro-setup/distro-config.yaml"
 cat ${reswarmcfg}
 
 # find required configuration file
+board=$(cat ${reswarmcfg} | grep "^ *board" | awk -F ':' '{print $2}' | tr -d ' ')
 model=$(cat ${reswarmcfg} | grep "^ *model" | awk -F ':' '{print $2}' | tr -d ' ')
 confg=$(cat ${reswarmcfg} | grep "^ *config" | awk -F ':' '{print $2}' | tr -d ' ')
 
 # construct image file name
 osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
 osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\" ")
-imgname=$(echo "${osname}-${osversion}-${model}.img")
+imgname=$(echo "${osname}-${osversion}-${board}.img")
 
 # path of configuration (derived from distro-config.yaml)
 cfgfile="configs/${model}/${confg}"
