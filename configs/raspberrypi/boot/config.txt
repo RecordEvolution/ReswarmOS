@@ -46,4 +46,7 @@ dtoverlay=w1-gpio,gpiopin=18
 # Light Sensor
 dtparam=i2c_arm=on,i2c1=on
 
+# MCC
+# https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md
+dtparam=spi=on
 
