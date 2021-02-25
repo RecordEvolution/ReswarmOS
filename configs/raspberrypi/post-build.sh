@@ -48,6 +48,10 @@ echo "mount boot partition"
 mkdir -p ${TARGET_DIR}/boot
 echo "/dev/mmcblk0p1  /boot           vfat    defaults        0       2" >> ${TARGET_DIR}/etc/fstab
 
+# system initialization
+echo "system initialization => load i2c"
+cp -v ${DSTCNF}/${MDL}/inittab ${TARGET_DIR}/etc/
+
 # add (default) dynamic/device configuration file and device-config init.d scripts
 echo "default device configuration"
 DEVCNF="/home/buildroot/device-setup"
