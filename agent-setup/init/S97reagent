@@ -43,13 +43,12 @@ startAgent() {
   #log_reagent_mgmt_event "INFO" "debug: true"
   
   nohup ${reagent} \
-              -config ${resfile} \
+              -config ${resfile} -debug \
               > /var/log/S97reagent.out 2> /var/log/S97reagent.err < /dev/null &
 #	     -appsDirectory ${appsDir} \
 #	     -debug \ 
 #            -compressedBuildExtension ${cbldExt} \
 #            -dbFileName ${dbfilen} \
-#            -debug ${debuglg} \
 #            -debugMessaging ${debugMs} \
 #            -initScripts ${initScripts} \
 #            -logFile ${logfile}
