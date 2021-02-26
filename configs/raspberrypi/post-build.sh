@@ -31,6 +31,11 @@ echo "use customized boot configuration in ${BOTCFG}"
 cp -v ${BOTCFG}/config.txt ${BINARIES_DIR}/config.txt
 cp -v ${BOTCFG}/cmdline.txt ${BINARIES_DIR}/cmdline.txt
 
+# employ fake hardware clock
+echo "employ faked fake-hwclock"
+cp ${DSTCNF}/S13hwclock ${TARGET_DIR}/etc/init.d/S13hwclock
+chmod 755 ${TARGET_DIR}/etc/init.d/S13hwclock
+
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
 cp ${DSTCNF}/${MDL}/interfaces ${TARGET_DIR}/etc/network/interfaces
