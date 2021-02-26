@@ -2,16 +2,18 @@
 
 # fake the fake-hwclock
 # https://manpages.debian.org/jessie/fake-hwclock/fake-hwclock.8.en.html
+hwclocklog="/boot/hwclock.data"
 
 case "$1" in
   start)
-	date -s "$(cat /etc/hwclock.data | tr -d '\n')"
+	date -s "$(cat ${hwclocklog} | tr -d '\n')"
 	;;
   stop)
-	date "+%Y-%m-%d %H:%M:%S" > /etc/hwclock.data
+	date "+%Y-%m-%d %H:%M:%S" > ${hwclocklog}
 	;;
   *)
 	echo "Usage: $0 {start|stop}"
 	exit 1
 	;;
 esac
+
