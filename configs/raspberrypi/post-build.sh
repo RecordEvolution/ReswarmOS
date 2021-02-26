@@ -33,19 +33,19 @@ cp -v ${BOTCFG}/cmdline.txt ${BINARIES_DIR}/cmdline.txt
 
 # employ fake hardware clock
 echo "employ faked fake-hwclock"
-cp ${DSTCNF}/S13hwclock ${TARGET_DIR}/etc/init.d/S13hwclock
+cp -v ${DSTCNF}/S13hwclock ${TARGET_DIR}/etc/init.d/S13hwclock
 chmod 755 ${TARGET_DIR}/etc/init.d/S13hwclock
 
 # configure wlan0 and dhcp
 echo "configure wlan0 and dhcp"
-cp ${DSTCNF}/${MDL}/interfaces ${TARGET_DIR}/etc/network/interfaces
-cp ${DSTCNF}/${MDL}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
+cp -v ${DSTCNF}/${MDL}/interfaces ${TARGET_DIR}/etc/network/interfaces
+cp -v ${DSTCNF}/${MDL}/dhcpcd.conf ${TARGET_DIR}/etc/dhcpcd.conf
 
 # resizing of root filesystem during first boot
 echo "resize rootfs during first boot"
-cp ${DSTCNF}/S22expand-rootpart ${TARGET_DIR}/etc/init.d/S22expand-rootpart
+cp -v ${DSTCNF}/S22expand-rootpart ${TARGET_DIR}/etc/init.d/S22expand-rootpart
 chmod 755 ${TARGET_DIR}/etc/init.d/S22expand-rootpart
-cp ${DSTCNF}/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
+cp -v ${DSTCNF}/S23expand-rootfs ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 chmod 755 ${TARGET_DIR}/etc/init.d/S23expand-rootfs
 
 # mount boot partition
