@@ -110,4 +110,7 @@ rm -vf ${TARGET_DIR}/opt/reagent/reagent-*
 wget ${reagenturl} -P ${TARGET_DIR}/opt/reagent/
 chmod 755 ${TARGET_DIR}/opt/reagent/reagent-*
 
-
+# customize docker daemon
+echo "customize dockerd"
+cp -v ${DSTCNF}/S60dockerd ${TARGET_DIR}/etc/init.d/S60dockerd
+chmod 755 ${TARGET_DIR}/etc/init.d/S60dockerd
