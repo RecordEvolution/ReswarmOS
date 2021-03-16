@@ -82,7 +82,7 @@ cp -v ${ASSCNF}/reswarmos.txt ${TARGET_DIR}/etc/reswarmos.txt
 chmod 644 ${TARGET_DIR}/etc/reswarmos.txt
 
 # use custom sshd_config to be employed
-cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
+# cp -v ${DEVCNF}/sshd_config ${TARGET_DIR}/etc/ssh/sshd_config
 
 # WiFi network setup
 mkdir -pv ${TARGET_DIR}/etc/wpa_supplicant

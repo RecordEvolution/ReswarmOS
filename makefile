@@ -30,6 +30,11 @@ compress-zip:
 	mv $(NAM) $(OUT)
 	mv $(NAM).zip $(OUT)
 
+compress-gzip:
+	cp -v $(IMG) ./
+	gzip $(NAM)
+	mv -v $(NAM).gz $(OUT)
+
 compress-targz:
 	mv $(IMG) ./
 	tar --create --gzip --format=oldgnu --file=$(NAM).tar.gz $(NAM)
