@@ -1,8 +1,12 @@
 ---
   os-name: "ReswarmOS"
-  version: 0.1.6
+  version: 0.1.7
+  # general board description
   board: raspberrypi
+  # specific board model
   model: raspberrypi
-  config: config_v0.0.4
+  # custom configuration file
+  config: config_v0.0.5
+  # name of image configuration file to be employed during build
   image: genimage-raspberrypi4.cfg
 ...
