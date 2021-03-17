@@ -3,7 +3,8 @@
 NAME=dockerd
 DAEMON=/usr/bin/$NAME
 PIDFILE=/var/run/$NAME.pid
-DAEMON_ARGS="--max-concurrent-downloads 3 --max-concurrent-uploads 5 --cpu-rt-period 100000 --cpu-rt-runtime 95000"
+DAEMON_ARGS="--max-concurrent-downloads 3 --max-concurrent-uploads 5"
+#--cpu-rt-period 100000 --cpu-rt-runtime 95000"
 
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME $1
 

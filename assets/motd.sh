@@ -18,7 +18,8 @@ EOF
 subnetip()
 {
   iface=$(route | grep default | awk -F ' ' '{print $NF}')
-  ipsub=$(ip address | grep $iface -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk -F ' ' '{print $2}')
+  #ipsub=$(ip address | grep "${iface}" -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk -F ' ' '{print $2}')
+  ipsub=$(echo "${iface}" | while read f; do echo $f | ip address | grep $f -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk -F  ' ' '{print $2}'; done;)
   echo ${ipsub}
 }
 
@@ -60,3 +61,4 @@ echo "${bannerA}"
 echo ""
 echo "${ossysteminfo}"
 echo ""
+
