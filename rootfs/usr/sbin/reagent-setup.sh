@@ -13,7 +13,7 @@ if [ ! -z ${reswarmcfg} ]; then
 
   # make sure link to active reagent binary exists
   if [ ! -L /opt/reagent/reagent-active ]; then
-    ln -sv /opt/reagent/reagent-latest /opt/reagent/reagent-active
+    ln -sv /opt/reagent/reagent-latest /opt/reagent/ln-reagent-active
   fi
 
 # standalone/free mode

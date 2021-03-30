@@ -27,4 +27,4 @@ echo "using SSID ${ssid} with password ${passwd}"
 nmcli connection add type wifi con-name "${ssid}" ifname wlan0 ssid "${ssid}"
 nmcli connection modify "${ssid}" wifi-sec.key-mgmt wpa-psk wifi-sec.psk "${passwd}"
 #nmcli connection modify "${ssid}" connection.autoconnect yes
-#nmcli connection up "${ssid}"
+nmcli connection up "${ssid}"

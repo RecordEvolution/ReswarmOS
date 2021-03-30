@@ -43,7 +43,7 @@ tc filter add dev ${ifc} parent 10: protocol ip prio 10 handle 1: cgroup
 tc qdisc show dev ${ifc}
 
 # add (exclusively!) reagent process to cgroup
-reagentpid=$(ps -eo pid,command,args | grep reagent | grep -v grep | awk '{print $1}' | tr -d ' ')
+reagentpid=$(ps -eo pid,command,args | grep reagent | grep -v grep | awk '{print $1}' | tr -d ' ' | head -n1)
 echo "using PID ${reagentpid} of reagent service"
 echo "${reagentpid}" > /sys/fs/cgroup/net_cls/reagent/tasks
 echo "/sys/fs/cgroup/net_cls/reagent/tasks"

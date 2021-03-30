@@ -1,21 +1,10 @@
 #!/bin/bash
 
-# use reagent management logger
-source /usr/sbin/reagent-mgmt-logger.sh
-
-# by default, use (latest) *.reswarm configuration file in /boot directory
-reswmexst=$(ls /boot/*.reswarm -t | head -n1)
-
-if [ -z ${reswmexst} ]; then
-  log_reagent_mgmt_event "ERROR" ".reswarm file missing in /boot"
-  exit 1
-fi
-
 # set directory of Reagent binaries and base name of any binary
 reagentdir="/opt/reagent"
 reagentlink="ln-reagent-"
 reagentname="reagent-"
-log_reagent_mgmt_event "INFO" "using Reagent binaries ${reagentdir}/${reagentname}*"
+echo "using Reagent binaries ${reagentdir}/${reagentname}*"
 
 # keep three symbolic links to manage binaries including restart/failure/updates
 # Rules: (with versions of Active(A), Latest(L), Previous(P); 0=no process, 1=active process)
@@ -45,11 +34,11 @@ check_latest() {
   # find latest reagent binary in given directory
   reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentname} | grep -v ${reagentlink} | head -n1)
   if [ -z ${reagentupgr} ]; then
-    log_reagent_mgmt_event "CRITICAL" "no reagent binary ${reagentdir}/${reagentname}* found"
+    echo "no reagent binary ${reagentdir}/${reagentname}* found"
   else
     # make sure symbolic link points to latest (executable) binary
     if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then
-      log_reagent_mgmt_event "INFO" "${reagentupgr} is newer than $(readlink -f ${reagentLatest})"
+      echo "${reagentupgr} is newer than $(readlink -f ${reagentLatest})"
       chmod 755 ${reagentupgr}
       rm -f ${reagentLatest}
       ln -s $(readlink -f ${reagentupgr}) ${reagentLatest}
@@ -66,50 +55,49 @@ do
 
   # if reagentActive does not yet exist link it to reagentLatest
   if [ ! -L ${reagentActive} ]; then
-    log_reagent_mgmt_event "INFO" "linking ${reagentActive} to ${reagentLatest}"
+    echo "INFO" "linking ${reagentActive} to ${reagentLatest}"
     ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
   fi
   # if reagentPrevious does not yet exist link it to reagentActive
   if [ ! -L ${reagentPrevious} ]; then
-    log_reagent_mgmt_event "INFO" "linking ${reagentPrevious} to ${reagentActive}"
+    echo "linking ${reagentPrevious} to ${reagentActive}"
     ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
   fi
 
   # check status of agent
-  agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep" | awk '{print $1}')
-  #log_reagent_mgmt_event "INFO" "${agentstatus}"
-  if [ -z ${agentstatus} ]; then
+  # agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep" | awk '{print $1}')
+  # if [ -z ${agentstatus} ]; then
+  #
+  #   echo "reagent is down => going to restart"
+  #
+  #   if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
+  #     if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
+  #       if [ $countcycles -lt $numcycleout ]; then
+  #         echo "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
+  #         rm -f ${reagentActive}
+  #         ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
+  #         rm -f ${reagentPrevious}
+  #         ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
+  #       fi
+  #     fi
+  #   fi
+  #   /etc/init.d/S97reagent start
+  #
+  # else
 
-    log_reagent_mgmt_event "ERROR" "reagent is down => going to restart"
-
-    if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
-      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
-        if [ $countcycles -lt $numcycleout ]; then
-	  log_reagent_mgmt_event "INFO" "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
-	  rm -f ${reagentActive}
-          ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
-	  rm -f ${reagentPrevious}
-          ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
-	fi
-      fi
+  if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
+    if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
+      echo "upgrading to latest version of reagent ${reagentLatest}"
+      rm -f ${reagentPrevious}
+      ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
+      rm -f ${reagentActive}
+      ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
+      systemctl restart reagent
+      countcycles=0
     fi
-    /etc/init.d/S97reagent start
-
-  else
-
-    if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
-      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
-        log_reagent_mgmt_event "INFO" "upgrading to latest version of reagent ${reagentLatest}"
-	rm -f ${reagentPrevious}
-        ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
-	rm -f ${reagentActive}
-        ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
-        /etc/init.d/S97reagent restart
-	countcycles=0
-      fi
-    fi
-
   fi
+
+  # fi
 
   # count cycles
   countcycles=$((countcycles+1))

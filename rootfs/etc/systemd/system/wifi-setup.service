@@ -1,6 +1,6 @@
 [Unit]
 Description=WiFi configuration
-After=rootfs-repart.service
+After=rootfs-repart.service systemd-timesyncd.service
 Before=network-online.target
 
 [Service]

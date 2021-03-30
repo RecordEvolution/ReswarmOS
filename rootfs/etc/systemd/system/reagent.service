@@ -1,12 +1,12 @@
 [Unit]
 Description=Reagent
 Wants=network-online.target
-After=network-online.target
+After=network-online.target redocker-setup.service
 
 [Service]
 Type=simple
 ExecStartPre=/usr/sbin/reagent-setup.sh
-ExecStart=/opt/reagent/reagent-active -config /opt/reagent/device-config.reswarm -debug
+ExecStart=/opt/reagent/ln-reagent-active -config /opt/reagent/device-config.reswarm -debug
 ExecStartPost=/usr/sbin/reagent-tc.sh
 RestartSec=30
 Restart=always

@@ -1,7 +1,7 @@
 [Unit]
 Description=Docker customization for Reswarm
 # Wants=network-online.target
-After=rootfs-repart.service
+After=rootfs-repart.service systemd-timesyncd.service
 Before=docker.service
 
 [Service]
