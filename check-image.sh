@@ -4,7 +4,7 @@
 outbuild="output-build"
 
 # find image file
-imgpath=$(ls ${outbuild} | grep -Po "^ReswarmOS-.*.img$")
+imgpath=$(ls ${outbuild} | grep -Po "^ReswarmOS-.*.img$" | head -n1)
 
 if [ -z ${imgpath} ]; then
   echo "no image file found ${outbuild}" >&2
@@ -31,6 +31,15 @@ echo -e "...as ${imgdev}\n"
 # show partition table
 parted ${imgdev} print
 
+# mount filesystems
+# udisksctl mount --block-device ${imgdev}p1
+# udisksctl mount --block-device ${imgdev}p2
+
+# unmount
+# umount ${imgdev}p1
+# umount ${imgdev}p2
+
 # detach device
 losetup -d ${imgdev}
+
 

@@ -1,0 +1,20 @@
+[Unit]
+Description=Reagent
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/usr/sbin/reagent-setup.sh
+ExecStart=/opt/reagent/reagent-active -config /opt/reagent/device-config.reswarm -debug
+ExecStartPost=/usr/sbin/reagent-tc.sh
+RestartSec=30
+Restart=always
+RemainAfterExit=no
+# CPUAccounting=1
+# MemoryAccounting=1
+# BlockIOAccounting=1
+# IPAccounting=true
+
+[Install]
+WantedBy=multi-user.target

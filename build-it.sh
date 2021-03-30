@@ -14,22 +14,19 @@ echo "current user: $(whoami)"
 logging_message "check directories and files"
 
 echo "working directory: $(pwd)"
- 
+
 ls -lhd ./
 ls -lh
 
 ls -lhd ./reswarmos-build/
 ls -lh ./reswarmos-build/
 
-logging_message "list available configurations"
-ls -lhR configs/
-
 logging_message "ReswarmOS configuration"
 
-reswarmcfg="./distro-setup/distro-config.yaml"
+reswarmcfg="./config.yaml"
 cat ${reswarmcfg}
 
-# find required configuration file
+# extra some information from .yaml configuration file
 board=$(cat ${reswarmcfg} | grep "^ *board" | awk -F ':' '{print $2}' | tr -d ' ')
 model=$(cat ${reswarmcfg} | grep "^ *model" | awk -F ':' '{print $2}' | tr -d ' ')
 confg=$(cat ${reswarmcfg} | grep "^ *config" | awk -F ':' '{print $2}' | tr -d ' ')
@@ -40,17 +37,44 @@ osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d
 osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\" ")
 imgname=$(echo "${osname}-${osversion}-${board}.img")
 
-# path of configuration (derived from distro-config.yaml)
-cfgfile="configs/${model}/${confg}"
+# buildroot configuration file
+cfgfile="./${confg}"
 
-# show device configuration
-logging_message "device configuration"
-cat device-setup/device-config.ini
+# determine relative path of rootfs overlay directory
+rfsovly=$(realpath --relative-to=./reswarmos-build/buildroot ./rootfs)
+echo "relative path of overlay directory: ${rfsovly}"
+rfsovly=$(echo ${rfsovly} | sed 's/\//\\\//g')
+sed -i "s/BR2_ROOTFS_OVERLAY=\"\"/BR2_ROOTFS_OVERLAY=\"${rfsovly}\"/g" ${cfgfile}
+cat ${cfgfile} | grep BR2_ROOTFS_OVERLAY
+
+# insert relative path of boot directory
+#btpth=$(realpath --relative-to=./reswarmos-build/buildroot ./boot)
+#echo "relative path of boot/binaries directory: ${btpth}"
+#btpth=$(echo ${btpth} | sed 's/\//\\\//g')
+#sed -i "s/BINARIESDIR/${btpth}/g" ./post-build.sh
+#cat ./post-build.sh | grep BINARIES_DIR
+echo "putting post-build.sh in place"
+cp -v ./post-build.sh "./reswarmos-build/buildroot/board/${model}/"
+
+# --------------------------------------------------------------------------- #
+# Reagent
+
+# check reagent configuration
+reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
+reagenturl=$(echo "${reagentcfg}" | grep "^ *url-latest" | awk -F ': ' '{print $2}' | tr -d ' ')
+reagentinc=$(echo "${reagentcfg}" | grep "^ *include" | awk -F ': ' '{print $2}' | tr -d ' ')
+
+if [[ "${reagentinc}" == "true" ]]; then
+  logging_message "preparing and adding Reagent"
+  # reagenturl="https://storage.googleapis.com/re-agent/reagent-latest"
+  wget ${reagenturl} -P ./rootfs/opt/reagent/
+  chmod 755 ./rootfs/opt/reagent/reagent-*
+fi
 
 # --------------------------------------------------------------------------- #
 
-# extract required commit (note, that any buildroot configuration corresponds to specific commit)
-logging_message "extracting required commit from buildroot configuration"
+# extract buildroot commit required by particular configuration
+logging_message "extracting required buildroot commit from buildroot configuration"
 comcfg=$(cat ${cfgfile} | grep "^# Buildroot -g.*Configuration" | awk -F ' ' '{print $3}' | sed 's/-g//g' | tr -d ' ')
 echo "chosen configuration corresponds to buildroot commit ${comcfg}"
 
@@ -92,11 +116,11 @@ ls -lh reswarmos-build/
 logging_message "copy required configuration file"
 
 if [[ -f ${cfgfile} ]]; then
-  if [[ -f ./reswarmos-build/buildroot/.config ]]; then
-    echo "buildroot configuration .config already present: remove it to employ a new one"
-  else
-    cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
-  fi
+  #if [[ -f ./reswarmos-build/buildroot/.config ]]; then
+  #  echo "buildroot configuration .config already present: remove it to employ a new one"
+  #else
+  cp -v ${cfgfile} ./reswarmos-build/buildroot/.config
+  #fi
 else
   echo "sorry, the required config file '${cfgfile}' does not exist!" >&2
   exit 1
@@ -109,27 +133,16 @@ ls -lha ./reswarmos-build/buildroot/
 
 # --------------------------------------------------------------------------- #
 
-logging_message "performing distribution configuration"
-
-# obtain required path of post-build.sh script in buildroot config
-pstbldscr="./reswarmos-build/buildroot/$(cat ${cfgfile} | grep "BR2_ROOTFS_POST_BUILD_SCRIPT" | awk -F '=' '{print $2}' | tr -d '" ')"
-echo "setting post-build actions in ${pstbldscr}"
-
-# copy post-build.sh of distribution to buildroot subdirectory
-cp -v ./configs/${model}/post-build.sh ${pstbldscr}
-
-## perform distribution configuration (buildroot directory must already exist!!)
-#python3 distro-setup/distro-setup.py ./distro-setup/ ./configs/ ./reswarmos-build/buildroot/
+logging_message "image configuration"
 
 # employ genimage configuration for partitions and image
-cp -v "./configs/${model}/genimage.cfg" "./reswarmos-build/buildroot/board/${model}/${imcfg}"
+cp -v "./img/${imcfg}" "./reswarmos-build/buildroot/board/${model}/"
 
-# show final post-build.sh
-echo "final post-build.sh"
-cat ${pstbldscr}
+# generate/update os-version file in rootfs overlay directory
+echo "${osname}-${osversion}" > ./rootfs/etc/reswarmos
+cat ./rootfs/etc/reswarmos
 
-# generate/update os-version file
-echo "${osname}-${osversion}" > ./assets/reswarmos.txt
+ls -lhR ./rootfs
 
 # --------------------------------------------------------------------------- #
 
@@ -144,7 +157,7 @@ make
 popd
 
 # show produced image file
-logging_message "image file"
+logging_message "manage image file"
 if [[ -f "./reswarmos-build/buildroot/output/images/sdcard.img" ]]; then
   ls -lh reswarmos-build/buildroot/output/images/
   cp -v reswarmos-build/buildroot/output/images/sdcard.img ./reswarmos-build/${imgname}

@@ -27,12 +27,13 @@ COPY ./build-it.sh ./
 COPY ./logging.sh ./
 RUN chmod 755 ./*.sh
 
-# copy configurations and assets
-COPY assets/ ./assets/
-COPY configs ./configs/
-COPY agent-setup/ ./agent-setup/
-COPY distro-setup/ ./distro-setup/
-COPY device-setup/ ./device-setup/
+# copy configuration, rootfs overlay and boot directory
+COPY config ./config
+COPY config.yaml ./config.yaml
+COPY img/ ./img
+COPY rootfs/ ./rootfs/
+COPY boot/ ./boot/
+COPY ./post-build.sh ./
 
 # create directory (make sure to match directory/path given in makefile) to 
 # be mounted as volume and transfer ownership
