@@ -1,9 +1,9 @@
 [Unit]
 Description=Reagent manager
+After=reagent.service
 
 [Service]
-ExecStart=
-#/usr/sbin/reagent-manager.sh
+ExecStart=/usr/sbin/reagent-manager.sh
 RestartSec=30
 Restart=always
 
