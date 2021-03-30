@@ -1,0 +1,13 @@
+[Unit]
+Description=Docker customization for Reswarm
+# Wants=network-online.target
+After=rootfs-repart.service
+Before=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/redocker.sh
+RemainAfterExit=no
+
+[Install]
+WantedBy=sysinit.target

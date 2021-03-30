@@ -1,0 +1,15 @@
+[Unit]
+Description=WiFi configuration
+After=rootfs-repart.service
+Before=network-online.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/sbin/reparse.sh
+ExecStart=/usr/sbin/reconn.sh /boot/device.ini
+Restart=on-failure
+RestartSec=5s
+RemainAfterExit=no
+
+[Install]
+WantedBy=sysinit.target

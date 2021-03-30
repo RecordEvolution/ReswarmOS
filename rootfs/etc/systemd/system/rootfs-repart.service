@@ -1,0 +1,17 @@
+[Unit]
+Description=Resize partition and root filesystem
+DefaultDependencies=no
+After=default.target
+Before=shutdown.target
+#ConditionFirstBoot=yes  # don't use it => breaks system initialization!
+
+[Service]
+#User=root
+Type=oneshot
+ExecStart=/usr/sbin/rootfs-repart.sh
+RemainAfterExit=no
+ExecStartPost=/usr/bin/sudo /usr/bin/systemctl disable /etc/systemd/system/rootfs-repart.service
+ExecStop=/usr/bin/sudo /usr/sbin/reboot
+
+[Install]
+WantedBy=sysinit.target
