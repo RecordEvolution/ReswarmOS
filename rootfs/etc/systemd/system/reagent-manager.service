@@ -1,10 +1,11 @@
 [Unit]
 Description=Reagent manager
-After=reagent.service
+ConditionPathExists=/opt/reagent/reswarm-mode
+After=redocker.service
 
 [Service]
 ExecStart=/usr/sbin/reagent-manager.sh
-RestartSec=30
+RestartSec=120
 Restart=always
 
 [Install]

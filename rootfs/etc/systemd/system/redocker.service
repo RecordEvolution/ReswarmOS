@@ -1,0 +1,14 @@
+[Unit]
+Description=Docker customization for Reswarm
+ConditionPathExists=/opt/reagent/reswarm-mode
+Wants=network-online.target
+After=systemd-timesyncd.service rewifi.service
+Before=docker.service reagent.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/redocker.sh /opt/reagent/device-config.reswarm
+RemainAfterExit=no
+
+[Install]
+WantedBy=sysinit.target

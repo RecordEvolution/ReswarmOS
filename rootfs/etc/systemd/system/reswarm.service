@@ -1,0 +1,12 @@
+[Unit]
+Description=Reswarm mode configuration
+After=repart.service
+Before=rehost.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/reswarm.sh
+RemainAfterExit=no
+
+[Install]
+WantedBy=sysinit.target

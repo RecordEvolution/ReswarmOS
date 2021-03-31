@@ -47,15 +47,6 @@ rfsovly=$(echo ${rfsovly} | sed 's/\//\\\//g')
 sed -i "s/BR2_ROOTFS_OVERLAY=\"\"/BR2_ROOTFS_OVERLAY=\"${rfsovly}\"/g" ${cfgfile}
 cat ${cfgfile} | grep BR2_ROOTFS_OVERLAY
 
-# insert relative path of boot directory
-#btpth=$(realpath --relative-to=./reswarmos-build/buildroot ./boot)
-#echo "relative path of boot/binaries directory: ${btpth}"
-#btpth=$(echo ${btpth} | sed 's/\//\\\//g')
-#sed -i "s/BINARIESDIR/${btpth}/g" ./post-build.sh
-#cat ./post-build.sh | grep BINARIES_DIR
-echo "putting post-build.sh in place"
-cp -v ./post-build.sh "./reswarmos-build/buildroot/board/${model}/"
-
 # --------------------------------------------------------------------------- #
 # Reagent
 
@@ -137,6 +128,10 @@ logging_message "image configuration"
 
 # employ genimage configuration for partitions and image
 cp -v "./img/${imcfg}" "./reswarmos-build/buildroot/board/${model}/"
+
+# insert relative path of boot directory
+echo "employ post-build.sh"
+cp -v ./post-build.sh "./reswarmos-build/buildroot/board/${model}/"
 
 # generate/update os-version file in rootfs overlay directory
 echo "${osname}-${osversion}" > ./rootfs/etc/reswarmos

@@ -1,16 +1,21 @@
 [Unit]
 Description=Reagent
+ConditionPathExists=/opt/reagent/reswarm-mode
 Wants=network-online.target
-After=network-online.target redocker-setup.service
+After=reagent-manager.service
+# Before=
 
 [Service]
 Type=simple
-ExecStartPre=/usr/sbin/reagent-setup.sh
-ExecStart=/opt/reagent/ln-reagent-active -config /opt/reagent/device-config.reswarm -debug
+# ExecStartPre=/usr/sbin/reagent-setup.sh
+ExecStart=/opt/reagent/Reagent-active -config /opt/reagent/device-config.reswarm -debug
 ExecStartPost=/usr/sbin/reagent-tc.sh
-RestartSec=30
-Restart=always
-RemainAfterExit=no
+# ExecStop=
+# ExecStopPost=/bin/sh -c 'if [ "$$EXIT_STATUS" = 2 ]; then rm /file/to/delete; fi'
+# RestartSec=30
+Restart=no
+# Restart=always
+# RemainAfterExit=no
 # CPUAccounting=1
 # MemoryAccounting=1
 # BlockIOAccounting=1

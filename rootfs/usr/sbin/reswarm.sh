@@ -6,10 +6,35 @@
 # check for (latest) *.reswarm device configuration file on /boot partition
 reswarmcfg=$(ls -t /boot/*.reswarm | head -n1)
 
+# define reswarm mode file and soft link to .reswarm configuration
+remode=/opt/reagent/reswarm-mode
+relink=/opt/reagent/device-config.reswarm
+
+# check reagent binary as well
+reagentdir=/opt/reagent/
+reagentbin=$(ls -t ${reagentdir} | grep "reagent-")
+
 # reswarm mode
 if [ ! -z ${reswarmcfg} ]; then
 
   echo "latest *.reswarm configuration ${reswarmcfg}"
+
+  if [ ! -z ${reagentbin} ]; then
+
+    echo "latest reagent binary ${reagentbin}"
+
+    # activate reswarm mode
+    echo "activating reswarm mode"
+    touch "${remode}"
+
+  else
+
+    echo "no reagent binary available"
+
+  fi
+
+  # set up symbolic link targeting latest reswarm configuration
+  ln -svf ${reswarmcfg} ${relink}
 
   # extract host configuration parameters from *.reswarm configuration file
   # hostname=$(parsejsongetkey ${reswarmcfg} name)
@@ -29,6 +54,7 @@ if [ ! -z ${reswarmcfg} ]; then
   echo "wifipasswd: ${wifipasswd}"
 
   # insert host configuration into /boot/device.ini
+  # TODO inherit any non-default/additional values from device.ini
   deviceini=$(cat << EOF
 [device]
 HOSTNAME = ${hostname}
@@ -52,5 +78,9 @@ EOF
 else
 
   echo "no *.reswarm configuration found in /boot"
+
+  # make sure reswarm mode is deactivated and config link removed
+  rm -vf ${remode}
+  rm -vf ${relink}
 
 fi
