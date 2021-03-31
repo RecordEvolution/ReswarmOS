@@ -1,13 +1,14 @@
 #!/bin/bash
 
-# set directory of Reagent binaries and base name of any binary
+# specify directory of Reagent binaries and base name of any binary
 reagentdir="/opt/reagent"
-reagentlink="ln-reagent-"
-reagentname="reagent-"
-echo "using Reagent binaries ${reagentdir}/${reagentname}*"
+reagentbin="reagent-"
+reagentlin="Reagent-"
+echo "using Reagent binaries ${reagentdir}/${reagentbin}*"
 
 # keep three symbolic links to manage binaries including restart/failure/updates
 # Rules: (with versions of Active(A), Latest(L), Previous(P); 0=no process, 1=active process)
+# (UPDATE: when reagent service is managed by systemd we can rely on an active process)
 # 0: L = A = P => start
 # 0: L = A > P => A = P, P = L, start
 # 0: L = P > A => start
@@ -15,9 +16,9 @@ echo "using Reagent binaries ${reagentdir}/${reagentname}*"
 # 1: L = P > A => none
 # 1: L > P > A => P = A, A = L, upgrade
 # 1: L = A > P => none
-reagentActive="${reagentdir}/${reagentlink}active"
-reagentLatest="${reagentdir}/${reagentlink}latest"
-reagentPrevious="${reagentdir}/${reagentlink}previous"
+reagentActive="${reagentdir}/${reagentlin}active"
+reagentLatest="${reagentdir}/${reagentlin}latest"
+reagentPrevious="${reagentdir}/${reagentlin}previous"
 
 # define length of management cycle
 cyclenumsecs=30
@@ -29,12 +30,12 @@ countcycles=999
 # check for latest agent
 check_latest() {
 
-  #log_reagent_mgmt_event "INFO" "checking for new reagent"
+  echo "checking for reagent upgrade"
 
   # find latest reagent binary in given directory
-  reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentname} | grep -v ${reagentlink} | head -n1)
+  reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentbin} | grep -v ${reagentlin} | head -n1)
   if [ -z ${reagentupgr} ]; then
-    echo "no reagent binary ${reagentdir}/${reagentname}* found"
+    echo "no reagent binary ${reagentdir}/${reagentbin}* found"
   else
     # make sure symbolic link points to latest (executable) binary
     if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then
@@ -50,12 +51,12 @@ check_latest() {
 while true
 do
 
-  # mark latest binary as "reagentLatest"
+  # check for reagent upgrade and evtl. mark latest binary as "reagentLatest"
   check_latest
 
   # if reagentActive does not yet exist link it to reagentLatest
   if [ ! -L ${reagentActive} ]; then
-    echo "INFO" "linking ${reagentActive} to ${reagentLatest}"
+    echo "linking ${reagentActive} to ${reagentLatest}"
     ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
   fi
   # if reagentPrevious does not yet exist link it to reagentActive
@@ -65,39 +66,38 @@ do
   fi
 
   # check status of agent
-  # agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep" | awk '{print $1}')
-  # if [ -z ${agentstatus} ]; then
-  #
-  #   echo "reagent is down => going to restart"
-  #
-  #   if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
-  #     if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
-  #       if [ $countcycles -lt $numcycleout ]; then
-  #         echo "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
-  #         rm -f ${reagentActive}
-  #         ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
-  #         rm -f ${reagentPrevious}
-  #         ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
-  #       fi
-  #     fi
-  #   fi
-  #   /etc/init.d/S97reagent start
-  #
-  # else
+  agentstatus=$(ps aux | grep ${reagentActive} | grep -v "grep" | awk '{print $1}')
+  if [ -z ${agentstatus} ]; then
 
-  if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
-    if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
-      echo "upgrading to latest version of reagent ${reagentLatest}"
-      rm -f ${reagentPrevious}
-      ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
-      rm -f ${reagentActive}
-      ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
-      systemctl restart reagent
-      countcycles=0
+    echo "reagent failed"
+
+    if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
+      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
+        if [ $countcycles -lt $numcycleout ]; then
+          echo "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
+          rm -f ${reagentActive}
+          ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
+          rm -f ${reagentPrevious}
+          ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
+        fi
+      fi
     fi
-  fi
 
-  # fi
+  else
+
+    if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
+      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
+        echo "upgrading to latest version of reagent ${reagentLatest}"
+        rm -f ${reagentPrevious}
+        ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
+        rm -f ${reagentActive}
+        ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
+        systemctl restart reagent
+        # countcycles=0
+      fi
+    fi
+
+  fi
 
   # count cycles
   countcycles=$((countcycles+1))

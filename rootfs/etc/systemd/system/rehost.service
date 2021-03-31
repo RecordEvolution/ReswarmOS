@@ -1,14 +1,13 @@
 [Unit]
 Description=Host configuration
-After=rootfs-repart.service
-Before=wifi-setup.service
+After=reswarm.service
+Before=rewifi.service
 
 [Service]
 Type=oneshot
-ExecStartPre=/usr/sbin/reparse.sh
 ExecStart=/usr/sbin/reconfigure.sh /boot/device.ini
-Restart=on-failure
-RestartSec=5s
+# Restart=on-failure
+# RestartSec=5s
 RemainAfterExit=no
 
 [Install]

@@ -1,14 +1,14 @@
 [Unit]
 Description=WiFi configuration
-After=rootfs-repart.service systemd-timesyncd.service
-Before=network-online.target
+After=systemd-timesyncd.service rehost.service
+Before=network-online.target redocker.service
 
 [Service]
 Type=oneshot
-ExecStartPre=/usr/sbin/reparse.sh
+# ExecStartPre=
 ExecStart=/usr/sbin/reconn.sh /boot/device.ini
-Restart=on-failure
-RestartSec=5s
+# Restart=on-failure
+# RestartSec=5s
 RemainAfterExit=no
 
 [Install]
