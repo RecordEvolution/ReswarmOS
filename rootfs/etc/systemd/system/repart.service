@@ -2,8 +2,8 @@
 Description=Resize partition and root filesystem
 DefaultDependencies=no
 After=default.target
-Before=shutdown.target
-#ConditionFirstBoot=yes  # don't use it => breaks system initialization!
+# Before=shutdown.target
+# ConditionFirstBoot=yes  # don't use it => breaks system initialization!
 
 [Service]
 #User=root
@@ -11,7 +11,7 @@ Type=oneshot
 ExecStart=/usr/sbin/rootfs-repart.sh
 RemainAfterExit=no
 ExecStartPost=/usr/bin/systemctl disable repart.service
-ExecStop=/usr/sbin/reboot
+ExecStartPost=/usr/sbin/reboot
 
 [Install]
 WantedBy=sysinit.target

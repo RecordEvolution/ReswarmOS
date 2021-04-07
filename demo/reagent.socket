@@ -1,0 +1,16 @@
+[Unit]
+Description=Reagent traffic shaping
+PartOf=reagent.service
+
+[Socket]
+Priority=0
+IPTOS=0
+
+[Install]
+WantedBy=sockets.target
+
+# Reference:
+# - https://www.freedesktop.org/software/systemd/man/systemd.socket.html
+# - https://man7.org/linux/man-pages/man7/socket.7.html
+# - https://linux.die.net/man/7/ip
+# - https://gist.github.com/kylemanna/d193aaa6b33a89f649524ad27ce47c4b

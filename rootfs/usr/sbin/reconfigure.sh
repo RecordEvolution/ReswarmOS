@@ -17,5 +17,12 @@ fi
 
 # set up hostname according to given configuration file
 hostnm=$(readini ${configfile} device HOSTNAME)
+if [ -z ${hostnm} ]; then
+  echo "empty hostname found" >&2
+  exit 1
+fi
 echo "using hostname ${hostnm}"
-echo "${hostnm}" > /etc/hostname
+#echo "${hostnm}" > /etc/hostname
+#hostname "${hostnm}"
+hostnamectl set-hostname "${hostnm}"
+hostnamectl

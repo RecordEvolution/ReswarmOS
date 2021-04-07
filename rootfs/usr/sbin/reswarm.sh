@@ -4,24 +4,25 @@
 # . /usr/sbin/reparse-json.sh
 
 # check for (latest) *.reswarm device configuration file on /boot partition
-reswarmcfg=$(ls -t /boot/*.reswarm | head -n1)
+reswarmfile=$(ls -t /boot/ | grep ".reswarm" | head -n1)
+reswarmcfg="/boot/${reswarmfile}"
 
 # define reswarm mode file and soft link to .reswarm configuration
 remode=/opt/reagent/reswarm-mode
 relink=/opt/reagent/device-config.reswarm
 
-# check reagent binary as well
+# check reagent binary as well (get latest only)
 reagentdir=/opt/reagent/
-reagentbin=$(ls -t ${reagentdir} | grep "reagent-")
+reagentbin=$(ls -t ${reagentdir} | grep "reagent-" | head -n1)
 
 # reswarm mode
-if [ ! -z ${reswarmcfg} ]; then
+if [ ! -z ${reswarmfile} ]; then
 
   echo "latest *.reswarm configuration ${reswarmcfg}"
 
   if [ ! -z ${reagentbin} ]; then
 
-    echo "latest reagent binary ${reagentbin}"
+    echo "latest reagent binary ${reagentdir}${reagentbin}"
 
     # activate reswarm mode
     echo "activating reswarm mode"
@@ -52,6 +53,20 @@ if [ ! -z ${reswarmcfg} ]; then
   echo "userpasswd: ${userpasswd}"
   echo "wifissid:   ${wifissid}"
   echo "wifipasswd: ${wifipasswd}"
+
+  # check validity of configuration
+  if [ -z "${hostname}" ]; then
+    echo "empty hostname found" >&2
+    exit 1
+  fi
+  if [ -z "${username}/${userpasswd}" ]; then
+    echo "empty username/userpasswd found" >&2
+    exit 1
+  fi
+  if [ -z "${wifissid}${wifipasswd}" ]; then
+    echo "empty wifissid/wifipasswd found" >&2
+    exit 1
+  fi
 
   # insert host configuration into /boot/device.ini
   # TODO inherit any non-default/additional values from device.ini

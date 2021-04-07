@@ -1,0 +1,22 @@
+" vim customization for ReswarmOS
+" check `:version` for system vimrc file
+"
+
+" colorscheme
+colorscheme koehler
+
+" show line numbers
+:set number
+
+" syntax
+syntax on
+
+" adjust indentation
+:set expandtab
+:set shiftwidth=2
+:set softtabstop=2
+
+" filetype detection
+filetype on
+filetype plugin on
+filetype indent on

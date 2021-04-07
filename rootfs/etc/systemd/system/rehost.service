@@ -1,7 +1,7 @@
 [Unit]
 Description=Host configuration
 After=reswarm.service
-Before=rewifi.service
+# Before=rewifi.service
 
 [Service]
 Type=oneshot

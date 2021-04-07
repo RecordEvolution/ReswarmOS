@@ -1,7 +1,7 @@
 [Unit]
 Description=Reswarm mode configuration
-After=repart.service
-Before=rehost.service
+After=repart.service mnt-wibble.mount
+# Before=rehost.service
 
 [Service]
 Type=oneshot

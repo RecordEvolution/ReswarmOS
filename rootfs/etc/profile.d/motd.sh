@@ -14,6 +14,14 @@ bannerA=$(cat << 'EOF'
 EOF
 )
 
+# get operating system info and version tag
+ostags()
+{
+  osname=$(cat /etc/os-release | grep "^NAME=" | awk -F '=' '{print $2}' | tr -d '\n ')
+  osversion=$(cat /etc/os-release  | grep "^VERSION=" | awk -F '=' '{print $2}' | tr -d '\n ')
+  echo "${osname}${osversion}"
+}
+
 # acquire subnet ip including its mask
 subnetip()
 {
@@ -27,6 +35,14 @@ subnetip()
 getkey()
 {
   echo "$1" | grep -o "\"$2\": \"[^\"]*\"" | awk -F ':' '{print $2}' | tr -d '"' | sed 's/^ *//g' | sed 's/ *$//g'
+}
+
+# board/model/hardware
+boardhardware()
+{
+  cpumodel=$(lscpu | grep "Model name" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+  boardmod=$(cat /proc/cpuinfo | grep "Model" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+  echo "${boardmod} ${cpumodel}"
 }
 
 # geo location
@@ -43,11 +59,12 @@ ossysteminfo=$(cat << EOF
    $(uptime | sed 's/^ *//g')
    $(uname -a)
 
-   os:        $(cat /etc/reswarmos | tr -d '\n ')
+   os:        $(ostags)
    user:      $(whoami)
    host:      $(hostname)
    date:      $(date)
    shell:     $(echo $SHELL)
+   board:     $(boardhardware)
    cpu:       $(cat /proc/cpuinfo | grep "model name" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    subnet ip: $(subnetip)
@@ -61,3 +78,4 @@ echo "${bannerA}"
 echo ""
 echo "${ossysteminfo}"
 echo ""
+
