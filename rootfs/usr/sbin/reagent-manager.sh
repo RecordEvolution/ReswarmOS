@@ -30,7 +30,7 @@ countcycles=999
 # check for latest agent
 check_latest() {
 
-  echo "checking for reagent upgrade"
+  #echo "checking for reagent upgrade"
 
   # find latest reagent binary in given directory
   reagentupgr="${reagentdir}/"$(ls -t ${reagentdir} | grep ${reagentbin} | grep -v ${reagentlin} | head -n1)
@@ -83,17 +83,28 @@ do
       fi
     fi
 
+    # (re)start agent
+    agentver=$(${reagentActive} --version)
+    echo "(re)starting agent version ${agentver}"
+    systemctl start reagent
+
   else
 
     if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
+
         echo "upgrading to latest version of reagent ${reagentLatest}"
         rm -f ${reagentPrevious}
         ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
         rm -f ${reagentActive}
         ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
+
+        # check version of binary and restart reagent service
+        agentver=$(${reagentActive} --version)
+        echo "(re)starting agent version ${agentver}"
         systemctl restart reagent
-        # countcycles=0
+
+        countcycles=0
       fi
     fi
 

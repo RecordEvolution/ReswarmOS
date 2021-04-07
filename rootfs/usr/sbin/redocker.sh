@@ -23,5 +23,13 @@ insecreg=$(echo ${insecreg} | sed "s/\"\[/\[/g" | sed "s/\]\"/\]/g")
 
 echo "insecure-registries: ${insecreg}"
 
-# add insecure-registries to /etc/docker/daemon.json
-sed -i "s/\"insecure-registries\" *: *\[\]/\"insecure-registries\": ${insecreg}/g" /etc/docker/daemon.json
+if [ "${insecreg}" != "null" ]; then
+  # add insecure-registries to /etc/docker/daemon.json
+  echo "adding insecure-registries to /etc/docker/daemon.json"
+  # sed -i "s/\"insecure-registries\" *: *\[\]/\"insecure-registries\": ${insecreg}/g" /etc/docker/daemon.json
+  sed -i "s/\"insecure-registries\" *: *.*,$/\"insecure-registries\": ${insecreg},/g" /etc/docker/daemon.json
+  # test it
+  #cat rootfs/etc/docker/daemon.json | sed "s/\"insecure-registries\" *: *.*,$/\"insecure-registries\": ${insecreg},/g"
+else
+  echo "no insecure-registries provided in configuration file"
+fi

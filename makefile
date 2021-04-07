@@ -10,6 +10,7 @@ VLP = /home/buildroot/reswarmos-build
 
 setup: Dockerfile $(OUT)
 	docker build ./ --tag=$(TNM)
+	./os-release.sh > rootfs/etc/os-release
 
 $(OUT):
 	mkdir -pv $(OUT)

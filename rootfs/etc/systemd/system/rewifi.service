@@ -1,12 +1,12 @@
 [Unit]
 Description=WiFi configuration
-After=systemd-timesyncd.service rehost.service
-Before=network-online.target redocker.service
+After=reswarm.service 
+Requires=NetworkManager.service
 
 [Service]
 Type=oneshot
 # ExecStartPre=
-ExecStart=/usr/sbin/reconn.sh /boot/device.ini
+ExecStart=/usr/sbin/rewifi.sh /boot/device.ini
 # Restart=on-failure
 # RestartSec=5s
 RemainAfterExit=no
