@@ -2,3 +2,5 @@
 output-build/
 *.img
 *.img.zip
+*.img.gz
+rootfs/etc/os-release
