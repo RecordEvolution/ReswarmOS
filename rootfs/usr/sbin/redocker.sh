@@ -18,8 +18,9 @@ fi
 # including ALL daemon.json config!!
 insecreg=$(cat ${configfile} | /usr/bin/jq ' . | ."insecure-registries"')
 # TODO preliminary
-# get rid of outer quotes
+# get rid of outer quotes, replace any single quotes by double quotes
 insecreg=$(echo ${insecreg} | sed "s/\"\[/\[/g" | sed "s/\]\"/\]/g")
+insecreg=$(echo ${insecreg} | sed "s/'/\"/g")
 
 echo "insecure-registries: ${insecreg}"
 
