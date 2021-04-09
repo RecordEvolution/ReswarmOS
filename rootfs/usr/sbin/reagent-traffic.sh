@@ -10,17 +10,20 @@ reconfig=/opt/reagent/device-config.reswarm
 
 # --------------------------------------------------------------------------- #
 
-# get interface in use (mostly wlan0,eth0)
-get_iface()
+# get active/default interfaces (mostly wlan0,eth0)
+get_ifaces()
 {
-  iface=$(route | grep UG | head -n1 | awk '{print $NF}')
-  echo "${iface}"
+  # ifaces=$(route | grep UG | head -n1 | awk '{print $NF}')
+  ifaces=$(nmcli connection show --active | grep -v NAME | grep -v docker \
+   | awk '{print $NF}' | sed 's/$/ /g' | tr -d '\n')
+  echo "${ifaces}"
 }
 
 # get PID of active reagent process
 get_reagent_pid()
 {
-  pid=$(ps -eo pid,command,args | grep Reagent-active | grep -v grep | head -n1 | awk '{print $1}')
+  pid=$(ps -eo pid,command,args | grep Reagent-active | grep -v grep \
+   | head -n1 | awk '{print $1}')
   echo "${pid}"
 }
 
@@ -45,10 +48,20 @@ get_device_endpoint()
 show_tc_rules()
 {
   echo "---- started show_tc_rules ----"
-  tc qdisc show dev $IF
-  tc class show dev $IF
-  tc -g class show dev $IF
-  tc filter show dev $IF
+
+  iface="$1"
+  if [ -z ${iface} ]; then
+    echo "missing iface argument" >&2
+    exit 1
+  fi
+
+  echo "for interface: ${iface}"
+
+  tc qdisc show dev $iface
+  tc class show dev $iface
+  tc -g class show dev $iface
+  tc filter show dev $iface
+
   echo "---- finished show_tc_rules ----"
 }
 
@@ -56,10 +69,97 @@ show_tc_rules()
 clear_tc_rules()
 {
   echo "---- started clear_tc_rules ----"
-  tc qdisc del dev $IF root
-  tc filter del dev wlan0
+
+  iface="$1"
+  if [ -z ${iface} ]; then
+    echo "missing iface argument" >&2
+    exit 1
+  fi
+
+  echo "for interface: ${iface}"
+
+  tc qdisc del dev $iface root
+  tc filter del dev $iface
+
   echo "---- finished clear_tc_rules ----"
 }
+
+# set up qdisc and classes
+setup_classes()
+{
+  echo "---- started setup_classes ----"
+
+  $TC -Version
+
+  iface="$1"
+  if [ -z ${iface} ]; then
+    echo "missing iface argument" >&2
+    exit 1
+  fi
+
+  echo "for interface: ${iface}"
+
+  echo "add root qdisc"
+  $TC qdisc add dev $iface root handle f010: htb default a2
+
+  echo "intermediate class (to throttle for testing)"
+  $TC class add dev $iface parent f010: classid f010:a0 htb rate 500mbit
+
+  #echo "add htb rate classes"
+  #$TC class add dev $iface parent f010:a0 classid f010:a1 htb rate 100mbit
+  #$TC class add dev $iface parent f010:a0 classid f010:a2 htb rate 4kbit
+
+  echo "add prio classes"
+  $TC class add dev $iface parent f010:a0 classid f010:a1 htb rate 400mbit prio 1
+  $TC class add dev $iface parent f010:a0 classid f010:a2 htb rate 400mbit prio 2
+
+  #echo "add prio qdisc"
+  #$TC qdisc add dev $iface parent f010:a0 handle ff: prio
+  # => creates three child classes by default, i.e. ff:1, ff:2, ff:3
+
+  #echo "attach leave classes for filtering"
+  #$TC class add dev $iface parent ff:1 classid f010:a1
+  #$TC class add dev $iface parent ff:2 classid f010:a2
+
+  echo "---- finished setup_classes ----"
+}
+
+# set up filters
+setup_filters()
+{
+  echo "---- started setup_filter ----"
+
+  iface="$1"
+  if [ -z ${iface} ]; then
+    echo "missing iface argument" >&2
+    exit 1
+  fi
+
+  echo "for interface: ${iface}"
+
+  # cgroup based filter
+  #$TC filter add dev $IF parent f010: handle 7: protocol ip cgroup
+
+  devendpoint=$(get_device_endpoint)
+  if [ ! -z "${devendpoint}" ]; then
+
+    devendip=$(echo ${devendpoint} | awk -F ':' '{print $1}')
+    devendpt=$(echo ${devendpoint} | awk -F ':' '{print $2}')
+
+    # IP/port device endpoint based filter
+    $TC filter add dev $iface protocol ip parent f010: prio 1 \
+  	  u32 match ip dst ${devendip}/32 flowid f010:a1
+  #	  u32 match ip dst 192.168.178.43/32 flowid f010:a1
+  #	  u32 match ip dst ${devendip}/32 flowid f010:a1
+  #	  u32 match ip dst ${devendip} dport ${devendpt} flowid f010:a1
+  else
+    echo -e "no device endpoint available"
+  fi
+
+  echo "---- finished setup_filters ----"
+}
+
+# --------------------------------------------------------------------------- #
 
 # set up cgroup
 setup_cgroup()
@@ -78,60 +178,6 @@ setup_cgroup()
   echo -e "tasks: \n$(cat /sys/fs/cgroup/net_cls/reagent/tasks)"
 
   echo "---- finished setup_cgroup ----"
-}
-
-# set up qdisc and classes
-setup_classes()
-{
-  echo "---- started setup_classes ----"
-
-  $TC -Version
-
-  echo "add root qdisc"
-  $TC qdisc add dev $IF root handle f010: htb default a2
-
-  echo "intermediate class (to throttle for testing)"
-  $TC class add dev $IF parent f010: classid f010:a0 htb rate 500mbit
-
-  #echo "add htb rate classes"
-  #$TC class add dev $IF parent f010:a0 classid f010:a1 htb rate 100mbit
-  #$TC class add dev $IF parent f010:a0 classid f010:a2 htb rate 4kbit
-
-  echo "add prio classes"
-  $TC class add dev $IF parent f010:a0 classid f010:a1 htb rate 400mbit prio 1
-  $TC class add dev $IF parent f010:a0 classid f010:a2 htb rate 400mbit prio 2
-
-  #echo "add prio qdisc"
-  #$TC qdisc add dev $IF parent f010:a0 handle ff: prio
-  # => creates three child classes by default, i.e. ff:1, ff:2, ff:3
-
-  #echo "attach leave classes for filtering"
-  #$TC class add dev $IF parent ff:1 classid f010:a1
-  #$TC class add dev $IF parent ff:2 classid f010:a2
-
-  echo "---- finished setup_classes ----"
-}
-
-# set up filters
-setup_filters()
-{
-  echo "---- started setup_filter ----"
-
-  devendpoint=$(get_device_endpoint)
-  devendip=$(echo ${devendpoint} | awk -F ':' '{print $1}')
-  devendpt=$(echo ${devendpoint} | awk -F ':' '{print $2}')
-
-  # cgroup based filter
-  #$TC filter add dev $IF parent f010: handle 7: protocol ip cgroup
-
-  # IP/port device endpoint based filter
-  $TC filter add dev $IF protocol ip parent f010: prio 1 \
-	  u32 match ip dst ${devendip}/32 flowid f010:a1
-#	  u32 match ip dst 192.168.178.43/32 flowid f010:a1
-#	  u32 match ip dst ${devendip}/32 flowid f010:a1
-#	  u32 match ip dst ${devendip} dport ${devendpt} flowid f010:a1
-
-  echo "---- finished setup_filters ----"
 }
 
 # add task to cgroup
@@ -154,41 +200,60 @@ add_task()
 # --------------------------------------------------------------------------- #
 
 # get/select default interface
-IF=$(get_iface)
+IF=$(get_ifaces)
 
 # check for correctly set up interface
-if [ -z $IF ]; then
-  echo "no default interface detected" >&2
+if [ -z "$IF" ]; then
+  echo "no (default/active) interfaces detected" >&2
   exit 1
 fi
 
 # check prerequisites
-echo -e "current default interface:   $IF"
+echo -e "current (default/active) interfaces: $IF"
 
+# determine 'device_endpoint_url' pointing to Reswarm instance
 devendpoint=$(get_device_endpoint)
-devendip=$(echo ${devendpoint} | awk -F ':' '{print $1}')
-devendpt=$(echo ${devendpoint} | awk -F ':' '{print $2}')
-echo -e "device endpoint url/port:    ${devendip}:${devendpt}"
+if [ ! -z "${devendpoint}" ]; then
+  devendip=$(echo ${devendpoint} | awk -F ':' '{print $1}')
+  devendpt=$(echo ${devendpoint} | awk -F ':' '{print $2}')
+  echo -e "device endpoint url/port:          ${devendip}:${devendpt}"
+else
+  echo -e "no device endpoint available"
+fi
 
 reagentpid=$(get_reagent_pid)
-echo -e "PID of main reagent process: ${reagentpid}"
+if [ ! -z "${reagentpid}" ]; then
+  echo -e "PID of main reagent process:       ${reagentpid}"
+else
+  echo -e "no reagent process detected"
+fi
 
-# reset all qdiscs, classes, filters...
-clear_tc_rules
+# treat every interface separately
+for if in $IF; do
 
-# show current tc rules
-echo -e "$(show_tc_rules)"
+    echo -e "--- configuring interface $if ---"
+
+    # reset all qdiscs, classes, filters...
+    clear_tc_rules $if
+
+    # show current tc rules
+    echo -e "$(show_tc_rules $if)"
+
+    # set up traffic control
+    setup_classes $if
+    setup_filters $if
+
+    # show current tc rules
+    echo -e "$(show_tc_rules $if)"
+
+done
 
 # set up cgroup
 #setup_cgroup
 
-# set up traffic control
-setup_classes
-setup_filters
-
 # when using cgroups => add reagent's PID to cgroup tasks (or use 'cgexec' anyway)
 #add_task ${reagentpid}
 
-echo -e "$(show_tc_rules)"
+# echo -e "$(show_tc_rules)"
 
 # --------------------------------------------------------------------------- #
