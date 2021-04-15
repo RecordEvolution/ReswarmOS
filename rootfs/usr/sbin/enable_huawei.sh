@@ -4,7 +4,7 @@ echo "triggering udev rule 40-huawei-lte.rules at $(date)" > /var/log/udev-huawe
 
 usb_modeswitch -J -c /etc/usb_modeswitch.conf
 
-echo "finished udev rule 40-huawei-lte.rules at $(date)" > /var/log/udev-huawei.log
+echo "finished udev rule 40-huawei-lte.rules at $(date)" >> /var/log/udev-huawei.log
 
 # check device properties:
 # $ udevadm info -a -n /dev/sr0
