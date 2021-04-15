@@ -1,0 +1,1 @@
+ATTRS{idVendor}=="12d1", ATTRS{manufacturer}!="Android", ATTR{bInterfaceNumber}=="00", ATTR{bInterfaceClass}=="08", RUN+="/usr/sbin/enable_huawei.sh"
