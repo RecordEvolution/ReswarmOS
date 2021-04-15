@@ -14,3 +14,6 @@ fi
 ls /home/buildroot/boot/ -lh
 cp -v /home/buildroot/boot/* ${BINARIES_DIR}/
 
+# copy usb_modeswitch.d configuration
+cp -v ${BASE_DIR}/build/usb_modeswitch_data-*/usb_modeswitch.d/* ${TARGET_DIR}/etc/usb_modeswitch.d/
+
