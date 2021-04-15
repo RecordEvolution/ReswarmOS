@@ -1,7 +1,7 @@
 [Unit]
 Description=Resize partition and root filesystem
 DefaultDependencies=no
-After=default.target
+# Before=default.target
 # Before=shutdown.target
 # ConditionFirstBoot=yes  # don't use it => breaks system initialization!
 
