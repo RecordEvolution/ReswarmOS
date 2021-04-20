@@ -14,7 +14,8 @@ ExecStartPost=/usr/sbin/reagent-traffic.sh
 Restart=no
 # Restart=always
 # RemainAfterExit=no
-
+CPUWeight=2048
+Nice=-16
 # CPUAccounting=1
 # MemoryAccounting=1
 # BlockIOAccounting=1
