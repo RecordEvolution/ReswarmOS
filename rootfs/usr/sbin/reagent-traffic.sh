@@ -44,6 +44,24 @@ get_device_endpoint()
   echo "${devendpoint}"
 }
 
+# get IP of endpoint by evtl. resolving domainname
+resolve_endpoint()
+{
+  if [ -z "$1" ]; then
+    echo "isip: missing IP/domainname argument" >&2
+    exit 1
+  fi
+
+  # check for argument being an IP already
+  theip=$(echo "$1" | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}")
+
+  if [ -z ${theip} ]; then
+    echo $(dig "$1" +short)
+  else
+    echo "$1"
+  fi
+}
+
 # show tc rules
 show_tc_rules()
 {
@@ -143,8 +161,9 @@ setup_filters()
   devendpoint=$(get_device_endpoint)
   if [ ! -z "${devendpoint}" ]; then
 
-    devendip=$(echo ${devendpoint} | awk -F ':' '{print $1}')
-    devendpt=$(echo ${devendpoint} | awk -F ':' '{print $2}')
+    devendipdm=$(echo ${devendpoint} | awk -F ':' '{print $1}')
+    devendport=$(echo ${devendpoint} | awk -F ':' '{print $2}')
+    devendip=$(resolve_endpoint ${devendipdm})
 
     # IP/port device endpoint based filter
     $TC filter add dev $iface protocol ip parent f010: prio 1 \
@@ -214,16 +233,18 @@ echo -e "current (default/active) interfaces: $IF"
 # determine 'device_endpoint_url' pointing to Reswarm instance
 devendpoint=$(get_device_endpoint)
 if [ ! -z "${devendpoint}" ]; then
-  devendip=$(echo ${devendpoint} | awk -F ':' '{print $1}')
-  devendpt=$(echo ${devendpoint} | awk -F ':' '{print $2}')
-  echo -e "device endpoint url/port:          ${devendip}:${devendpt}"
+  devendipdm=$(echo ${devendpoint} | awk -F ':' '{print $1}')
+  devendport=$(echo ${devendpoint} | awk -F ':' '{print $2}')
+  echo -e "device endpoint url/port:            ${devendipdm}:${devendport}"
+  devendip=$(resolve_endpoint ${devendipdm})
+  echo -e "resolving endpoint:                  ${devendipdm} -> ${devendip}"
 else
   echo -e "no device endpoint available"
 fi
 
 reagentpid=$(get_reagent_pid)
 if [ ! -z "${reagentpid}" ]; then
-  echo -e "PID of main reagent process:       ${reagentpid}"
+  echo -e "PID of main reagent process:         ${reagentpid}"
 else
   echo -e "no reagent process detected"
 fi
