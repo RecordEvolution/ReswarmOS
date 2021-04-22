@@ -10,9 +10,10 @@ After=reswarm.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/redocker.sh /opt/reagent/device-config.reswarm
-ExecStartPost=/usr/bin/systemctl restart docker.service
+#ExecStartPost=/usr/bin/systemctl restart docker.service
 RemainAfterExit=no
 
 [Install]
 WantedBy=sysinit.target
+RequiredBy=docker.service
 # WantedBy=multi-user.target

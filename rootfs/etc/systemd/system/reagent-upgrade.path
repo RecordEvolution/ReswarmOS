@@ -1,0 +1,12 @@
+[Unit]
+Description=Reagent upgrade watcher
+ConditionPathExists=/opt/reagent/reswarm-mode
+#After=reswarm.service network-online.target
+#Requires=network-online.target
+
+[Path]
+PathExistsGlob=/opt/reagent/reagent-*
+Unit=reagent-upgrade.service
+
+[Install]
+#WantedBy=sysinit.target
