@@ -1,0 +1,14 @@
+[Unit]
+Description=Reagent upgrade manager
+ConditionPathExists=/opt/reagent/reswarm-mode
+#After=reswarm.service network-online.target
+#Requires=network-online.target
+
+[Service]
+Type=oneshot
+#ExecStartPre=
+#ExecStart=/usr/sbin/reagent-upgrade.sh
+#ExecStartPost=
+
+[Install]
+#WantedBy=sysinit.target

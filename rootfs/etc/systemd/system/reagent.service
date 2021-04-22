@@ -1,7 +1,8 @@
 [Unit]
 Description=Reagent
 ConditionPathExists=/opt/reagent/reswarm-mode
-After=reswarm.service
+After=reswarm.service network-online.target
+Requires=network-online.target
 #reagent.socket
 #Requires=reagent.socket
 
