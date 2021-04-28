@@ -25,13 +25,16 @@ gpu_mem_512=100
 gpu_mem_1024=100
 
 # fixes rpi (3B, 3B+, 3A+, 4B and Zero W) ttyAMA0 serial console
-#dtoverlay=miniuart-bt
+dtoverlay=miniuart-bt
 
 #-----------------------------------------------------------------------------#
 # Reswarm required config
 
 hdmi_force_hotplug=1
 enable_uart=1
+
+# strompi (see https://strompi.joy-it.net/quick-start)
+core_freq=250
 
 # Enable audio (added by raspberrypi-sys-mods)
 dtparam=audio=on
