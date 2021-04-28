@@ -66,7 +66,7 @@ fi
 
 # extract buildroot commit required by particular configuration
 logging_message "extracting required buildroot commit from buildroot configuration"
-comcfg=$(cat ${cfgfile} | grep "^# Buildroot -g.*Configuration" | awk -F ' ' '{print $3}' | sed 's/-g//g' | tr -d ' ')
+comcfg=$(cat ${cfgfile} | grep "^# Buildroot .*-g.*Configuration" | awk -F '-g' '{print $2}' | awk -F ' ' '{print $1}' | tr -d ' ')
 echo "chosen configuration corresponds to buildroot commit ${comcfg}"
 
 if [[ -z ${comcfg} ]]; then
