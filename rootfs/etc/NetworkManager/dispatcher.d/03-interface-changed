@@ -1,0 +1,99 @@
+#!/bin/bash
+
+LGFL="/var/log/nm-dispatcher.log"
+
+if [ -f "${LGFL}" ]; then
+	if [ $(cat "${LGFL}" | wc -l) -ge 2000 ]; then
+		echo "[$(date +%F%T)] refresh/clean log file..." > "${LGFL}"
+	fi
+fi
+
+echo "[$(date +%FT%T)] NetworkManager-dispatcher: starting $0 with..." >> "${LGFL}"
+echo "[$(date +%FT%T)] arg1: $1" >> "${LGFL}"
+echo "[$(date +%FT%T)] arg2: $2" >> "${LGFL}"
+
+# obtain connection UUIDs/DEVICEs
+#uuideth=$(nmcli -f UUID,DEVICE,TYPE c | grep ethernet | grep eth0 | awk '{print $1}' | head -n1)
+#uuidwifi=$(nmcli -f UUID,DEVICE,TYPE c | grep wifi | grep wlan0 | awk '{print $1}' | head -n1)
+#uuidlte=$(nmcli -f UUID,DEVICE,TYPE c | grep ethernet | grep enp | awk '{print $1}' | head -n1)
+#ifacelte=$(nmcli -f UUID,DEVICE,TYPE c | grep ethernet | grep enp | awk '{print $2}' | head -n1)
+
+devinfo=$(nmcli -f UUID,DEVICE,TYPE c | grep ${1} | head -n1)
+theuuid=$(echo "${devinfo}" | awk '{print $1}')
+thetype=$(echo "${devinfo}" | awk '{print $3}')
+thedevice=$(echo "${devinfo}" | awk '{print $2}')
+
+echo "[$(date +%FT%T)] UUID:   ${theuuid}"   >> "${LGFL}"
+echo "[$(date +%FT%T)] DEVICE: ${thedevice}" >> "${LGFL}"
+echo "[$(date +%FT%T)] TYPE:   ${thetype}"   >> "${LGFL}"
+
+#if [ ! -z "${uuideth}" ]; then	
+#	echo "[$(date +%FT%T)] adjust routing for eth0 (${uuideth})" >> "${LGFL}"
+#	nmcli connection modify uuid ${uuideth} ipv4.route-metric 100
+#	nmcli connection modify uuid ${uuideth} ipv6.route-metric 100
+#fi
+#
+#if [ ! -z "${uuidwifi}" ]; then	
+#	echo "[$(date +%FT%T)] adjust routing for wlan0 (${uuidwifi})" >> "${LGFL}"
+#	nmcli connection modify uuid ${uuidwifi} ipv4.route-metric 200
+#	nmcli connection modify uuid ${uuidwifi} ipv6.route-metric 200
+#fi
+#
+#if [ ! -z "${uuidlte}" ]; then	
+#	echo "[$(date +%FT%T)] adjust routing for ${ifacelte} (${uuidlte})" >> "${LGFL}"
+#	nmcli connection modify uuid ${uuidlte} ipv4.route-metric 300
+#	nmcli connection modify uuid ${uuidlte} ipv6.route-metric 300
+#fi
+#
+#if [ ! -z "${uuideth}" ] || [ ! -z "${uuidwifi}" ] || [ ! -z "${uuidlte}" ]; then
+#	echo "[$(date +%FT%T)] restarting NetworkManager..." >> "${LGFL}"
+#	#systemctl restart NetworkManager
+#	echo -e "[$(date +%FT%T)]\n$(route)" >> "${LGFL}"
+#fi
+
+if [ "$1" != "docker0" ] && [ "$1" != "none" ]; then
+	if [ "$2" == "up" ] || [ "$2" == "down" ] || [ "$2" == "connectivity-change" ]; then
+
+		# identify connection type and adjust routing metric
+		if [ "${thetype}" == "ethernet" ] && [ "${thedevice}" == "eth0" ]; then
+			echo "[$(date +%FT%T)] adjust routing metric for ${thedevice}..."  >> "${LGFL}"
+			nmcli connection modify uuid ${theuuid} ipv4.route-metric 100
+			nmcli connection modify uuid ${theuuid} ipv6.route-metric 100
+			if [ "$2" == "up" ]; then
+				nmcli connection up uuid ${theuuid}
+			fi
+		elif [ "${thetype}" == "ethernet" ] && [ "${thedevice}" != "eth0" ]; then
+			echo "[$(date +%FT%T)] adjust routing metric for ${thedevice}..."  >> "${LGFL}"
+			nmcli connection modify uuid ${theuuid} ipv4.route-metric 300
+			nmcli connection modify uuid ${theuuid} ipv6.route-metric 300
+			if [ "$2" == "up" ]; then
+				nmcli connection up uuid ${theuuid}
+			fi
+		elif [ "${thetype}" == "wifi" ] && [ "${thedevice}" == "wlan0" ]; then
+			echo "[$(date +%FT%T)] adjust routing metric for ${thedevice}..."  >> "${LGFL}"
+			nmcli connection modify uuid ${theuuid} ipv4.route-metric 200
+			nmcli connection modify uuid ${theuuid} ipv6.route-metric 200
+			if [ "$2" == "up" ]; then
+				nmcli connection up uuid ${theuuid}
+			fi
+		fi
+
+		# take care of Reagent
+		echo "[$(date +%FT%T)] restarting reagent..."        >> "${LGFL}"
+		systemctl restart reagent
+		echo -e "[$(date +%FT%T)]\n$(systemctl status reagent)"  >> "${LGFL}"
+
+	fi
+fi
+
+#case "$1" in
+#    eth*)
+#        if [ "$2" == up ]; then
+#		logger "$1 $2 wifi off"
+#		nmcli radio wifi off
+#        elif [ "$2" == down ]; then
+#		logger "$1 $2 wifi on"
+#		nmcli radio wifi on
+#	fi
+#esac
+
