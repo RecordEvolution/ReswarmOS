@@ -27,19 +27,19 @@ echo "[$(date +%FT%T)] UUID:   ${theuuid}"   >> "${LGFL}"
 echo "[$(date +%FT%T)] DEVICE: ${thedevice}" >> "${LGFL}"
 echo "[$(date +%FT%T)] TYPE:   ${thetype}"   >> "${LGFL}"
 
-#if [ ! -z "${uuideth}" ]; then	
+#if [ ! -z "${uuideth}" ]; then
 #	echo "[$(date +%FT%T)] adjust routing for eth0 (${uuideth})" >> "${LGFL}"
 #	nmcli connection modify uuid ${uuideth} ipv4.route-metric 100
 #	nmcli connection modify uuid ${uuideth} ipv6.route-metric 100
 #fi
 #
-#if [ ! -z "${uuidwifi}" ]; then	
+#if [ ! -z "${uuidwifi}" ]; then
 #	echo "[$(date +%FT%T)] adjust routing for wlan0 (${uuidwifi})" >> "${LGFL}"
 #	nmcli connection modify uuid ${uuidwifi} ipv4.route-metric 200
 #	nmcli connection modify uuid ${uuidwifi} ipv6.route-metric 200
 #fi
 #
-#if [ ! -z "${uuidlte}" ]; then	
+#if [ ! -z "${uuidlte}" ]; then
 #	echo "[$(date +%FT%T)] adjust routing for ${ifacelte} (${uuidlte})" >> "${LGFL}"
 #	nmcli connection modify uuid ${uuidlte} ipv4.route-metric 300
 #	nmcli connection modify uuid ${uuidlte} ipv6.route-metric 300
@@ -59,23 +59,23 @@ if [ "$1" != "docker0" ] && [ "$1" != "none" ]; then
 			echo "[$(date +%FT%T)] adjust routing metric for ${thedevice}..."  >> "${LGFL}"
 			nmcli connection modify uuid ${theuuid} ipv4.route-metric 100
 			nmcli connection modify uuid ${theuuid} ipv6.route-metric 100
-			if [ "$2" == "up" ]; then
-				nmcli connection up uuid ${theuuid}
-			fi
+			# if [ "$2" == "up" ]; then
+			# 	nmcli connection up uuid ${theuuid}
+			# fi
 		elif [ "${thetype}" == "ethernet" ] && [ "${thedevice}" != "eth0" ]; then
 			echo "[$(date +%FT%T)] adjust routing metric for ${thedevice}..."  >> "${LGFL}"
 			nmcli connection modify uuid ${theuuid} ipv4.route-metric 300
 			nmcli connection modify uuid ${theuuid} ipv6.route-metric 300
-			if [ "$2" == "up" ]; then
-				nmcli connection up uuid ${theuuid}
-			fi
+			# if [ "$2" == "up" ]; then
+			# 	nmcli connection up uuid ${theuuid}
+			# fi
 		elif [ "${thetype}" == "wifi" ] && [ "${thedevice}" == "wlan0" ]; then
 			echo "[$(date +%FT%T)] adjust routing metric for ${thedevice}..."  >> "${LGFL}"
 			nmcli connection modify uuid ${theuuid} ipv4.route-metric 200
 			nmcli connection modify uuid ${theuuid} ipv6.route-metric 200
-			if [ "$2" == "up" ]; then
-				nmcli connection up uuid ${theuuid}
-			fi
+			# if [ "$2" == "up" ]; then
+			# 	nmcli connection up uuid ${theuuid}
+			# fi
 		fi
 
 		# take care of Reagent
@@ -96,4 +96,3 @@ fi
 #		nmcli radio wifi on
 #	fi
 #esac
-
