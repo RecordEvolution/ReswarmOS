@@ -36,6 +36,7 @@ compress-gzip:
 	cp -v $(IMG) ./
 	gzip $(NAM)
 	mv -v $(NAM).gz $(OUT)
+	@echo $(CDR)/$(OUT)$(NAM).gz
 
 compress-targz:
 	mv $(IMG) ./
