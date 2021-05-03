@@ -127,7 +127,7 @@ ls -lha ./reswarmos-build/buildroot/
 logging_message "image configuration"
 
 # employ genimage configuration for partitions and image
-cp -v "./img/${imcfg}" "./reswarmos-build/buildroot/board/${model}/"
+cp -v "./image/${imcfg}" "./reswarmos-build/buildroot/board/${model}/"
 
 # insert relative path of boot directory
 echo "employ post-build.sh"

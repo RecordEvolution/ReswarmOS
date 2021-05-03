@@ -30,7 +30,7 @@ RUN chmod 755 ./*.sh
 # copy configuration, rootfs overlay and boot directory
 COPY config ./config
 COPY config.yaml ./config.yaml
-COPY img/ ./img
+COPY image/ ./image
 COPY rootfs/ ./rootfs/
 COPY boot/ ./boot/
 COPY ./post-build.sh ./
