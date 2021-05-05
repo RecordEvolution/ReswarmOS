@@ -8,6 +8,9 @@ TNM = reswarmos-builder:latest
 CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
 
+#-----------------------------------------------------------------------------#
+# prepare container image for building
+
 setup: Dockerfile $(OUT)
 	./os-release.sh > rootfs/etc/os-release
 	docker build ./ --tag=$(TNM)
@@ -16,6 +19,9 @@ setup: Dockerfile $(OUT)
 $(OUT):
 	mkdir -pv $(OUT)
 	chmod -R 777 $(OUT)
+
+#-----------------------------------------------------------------------------#
+# manage build process
 
 build:
 	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
@@ -26,6 +32,9 @@ build-daemon:
 build-logs:
 	docker logs $(CNM)
 
+#-----------------------------------------------------------------------------#
+# compress final OS image for distribution
+#
 compress-zip:
 	mv $(IMG) ./
 	zip $(NAM).zip $(NAM)
@@ -53,17 +62,33 @@ compress-xz:
 uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
+#-----------------------------------------------------------------------------#
+
 prepare-gcloud:
 	cp $(IMG) ./disk.raw
 	tar --format=oldgnu -Sczf $(NAS)-gcloud.tar.gz disk.raw
 	rm ./disk.raw
 	mv $(NAS)-gcloud.tar.gz $(OUT)
 
+#-----------------------------------------------------------------------------#
+# clean up and remove build output and container image
+
 clean-output:
 	rm -r $(OUT)
 
 clean-docker:
 	docker image rm $(TNM)
+
+#-----------------------------------------------------------------------------#
+# manage update system
+
+ostree-build:
+	docker build update/ --tag=ostree:0.1
+
+ostree-run:
+	docker run -it --rm ostree:0.1 /bin/bash
+
+#-----------------------------------------------------------------------------#
 
 # analyse objects contributing to final root filesystem size
 OUTCL:=$(shell echo $(OUT) | sed 's/\///g')
