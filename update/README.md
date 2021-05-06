@@ -46,6 +46,8 @@ or a single file is called a _Slot_.
 
 - https://github.com/ostreedev/ostree
 - https://ostreedev.github.io/ostree/introduction/
+- https://github.com/ostreedev/ostree/issues/1801
+- https://github.com/ostreedev/ostree/issues/2223
 
 ## References
 

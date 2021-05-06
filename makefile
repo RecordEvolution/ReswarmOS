@@ -82,11 +82,11 @@ clean-docker:
 #-----------------------------------------------------------------------------#
 # manage update system
 
-ostree-build:
-	docker build update/ --tag=ostree:0.1
+update-server-build:
+	docker build update/ --tag=osupdater:0.1
 
-ostree-run:
-	docker run -it --rm ostree:0.1 /bin/bash
+update-server-run:
+	docker run -it --rm osupdater:0.1 /bin/bash
 
 #-----------------------------------------------------------------------------#
 
