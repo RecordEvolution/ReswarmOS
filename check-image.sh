@@ -4,7 +4,7 @@
 outbuild="output-build"
 
 # find image file
-imgpath=$(ls ${outbuild} | grep -Po "^ReswarmOS-.*.img$" | head -n1)
+imgpath=$(ls -t ${outbuild} | grep -Po "^ReswarmOS-.*.img$" | head -n1)
 
 if [ -z ${imgpath} ]; then
   echo "no image file found ${outbuild}" >&2
@@ -29,6 +29,7 @@ imgdev=$(losetup -a | grep ${outbuild}/${imgpath} | awk -F ':' '{print $1}')
 echo -e "...as ${imgdev}\n"
 
 # show partition table
+fdisk -l ${imgdev}
 parted ${imgdev} print
 
 # mount filesystems
