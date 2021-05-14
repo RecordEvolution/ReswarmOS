@@ -10,3 +10,4 @@ Restart=always
 
 [Install]
 WantedBy=sysinit.target
+#WantedBy=multi-user.target

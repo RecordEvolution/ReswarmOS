@@ -14,6 +14,6 @@ ExecStart=/usr/sbin/redocker.sh /opt/reagent/device-config.reswarm
 RemainAfterExit=no
 
 [Install]
-WantedBy=sysinit.target
 RequiredBy=docker.service
-# WantedBy=multi-user.target
+WantedBy=sysinit.target
+#WantedBy=multi-user.target

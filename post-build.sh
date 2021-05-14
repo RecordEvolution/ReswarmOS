@@ -21,3 +21,6 @@ ln -s /dev/null ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
 # disable/mask (preliminary) reagent upgrade services
 rm -vf ${TARGET_DIR}/etc/systemd/system/reagent-upgrade.service
 ln -s /dev/null ${TARGET_DIR}/etc/systemd/system/reagent-upgrade.service
+
+rm -vf ${TARGET_DIR}/etc/systemd/system/repart.service
+ln -s /dev/null ${TARGET_DIR}/etc/systemd/system/repart.service

@@ -24,3 +24,4 @@ Nice=-16
 
 [Install]
 WantedBy=sysinit.target
+#WantedBy=multi-user.target
