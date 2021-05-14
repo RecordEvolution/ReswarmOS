@@ -159,9 +159,16 @@ setup_filters()
   localnet=$(ip add | grep ${iface} -A 50 | grep inet -m1 | awk '{print $2}' | tr -d ' ')
   echo "local ip: ${localnet}"
 
+  # local network
+  #$TC filter add dev $iface protocol ip parent f010: prio 1 \
+  #  u32 match ip dst ${localnet} flowid f010:a1
+  #$TC filter add dev $iface protocol ip parent f010: prio 1 \
+  #  u32 match ip src ${localnet} flowid f010:a1
+
   # cgroup based filter
   #$TC filter add dev $IF parent f010: handle 7: protocol ip cgroup
 
+  # Reswarm device endpoint filter
   devendpoint=$(get_device_endpoint)
   if [ ! -z "${devendpoint}" ]; then
 
@@ -174,10 +181,6 @@ setup_filters()
       u32 match ip dst ${devendip}/32 flowid f010:a1
     $TC filter add dev $iface protocol ip parent f010: prio 1 \
       u32 match ip src ${devendip}/32 flowid f010:a1
-    $TC filter add dev $iface protocol ip parent f010: prio 1 \
-      u32 match ip dst ${localnet} flowid f010:a1
-    $TC filter add dev $iface protocol ip parent f010: prio 1 \
-      u32 match ip src ${localnet} flowid f010:a1
   #	  u32 match ip dst ${devendip}/32 flowid f010:a1
   #	  u32 match ip dst ${devendip} dport ${devendpt} flowid f010:a1
   else
