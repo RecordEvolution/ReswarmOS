@@ -15,10 +15,9 @@ ls /home/buildroot/boot/ -lh
 cp -v /home/buildroot/boot/* ${BINARIES_DIR}/
 
 # disable/mask ttyS0
-#rm -vf ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
-#ln -s /dev/null ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
+rm -vf ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
+ln -s /dev/null ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
 
 # disable/mask (preliminary) reagent upgrade services
 rm -vf ${TARGET_DIR}/etc/systemd/system/reagent-upgrade.service
 ln -s /dev/null ${TARGET_DIR}/etc/systemd/system/reagent-upgrade.service
-
