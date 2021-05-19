@@ -63,7 +63,7 @@ fi
 echo "using final image:$(tput setaf 2) ${fimage}$(tput sgr0)"
 fimagedir=$(dirname ${fimage})
 if [ ! -d ${fimagedir} ]; then
-  echo "$(tput setaf 1)directory for final image does not exist: ${fimagedir}, please place the final image in an existing directory" >&2
+  echo "$(tput setaf 1)directory for final image does not exist: ${fimagedir}, please place the final image in an existing directory$(tput sgr0)" >&2
   exit 1
 fi
 
@@ -96,7 +96,7 @@ udisksctl mount --block-device "${lpdevpath}p2"
 rootfsmntpnt=$(lsblk  -lo path,mountpoint | grep "${lpdevpath}p2" | awk '{print $2}')
 echo "mount point of root filesystem: ${rootfsmntpnt}"
 archtype=$(file ${rootfsmntpnt}/bin/bash | awk -F ',' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
-echo "image's architecture appears to be: ${archtype}"
+echo "image's architecture appears to be: $(tput setaf 2)${archtype}$(tput sgr0)"
 
 #-----------------------------------------------------------------------------#
 
@@ -205,6 +205,6 @@ echo -e "\ndetaching/unmouting image...\n"
 umount ${lpdevpath}*
 losetup -d ${lpdevpath}
 
-echo "$(tput setaf 1)successfully generated reswarmified version of ${bimage} as ${fimage}$(tput sgr0)" >&2
+echo -e "\n$(tput setaf 2)successfully generated reswarmified version\nof ${bimage}\nas ${fimage}$(tput sgr0)\n" >&2
 
 #-----------------------------------------------------------------------------#
