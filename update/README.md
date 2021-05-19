@@ -1,7 +1,7 @@
 
 # Update
 
-In order keep an already deployed device running _ReswarmOS_ up to date
+In order to keep an already deployed device running _ReswarmOS_ up to date
 we have to have a way to upgrade the running system _without_ having to
 reflash it. Generally speaking there a two approaches to the problem:
 
@@ -48,6 +48,18 @@ or a single file is called a _Slot_.
 - https://ostreedev.github.io/ostree/introduction/
 - https://github.com/ostreedev/ostree/issues/1801
 - https://github.com/ostreedev/ostree/issues/2223
+
+## Bootloader
+
+### U-Boot
+
+Most of the updater frameworks require some work flexibility during the boot process
+which is supported out of the box by e.g. a raspberry pi. Both _RAUC_ and _ostree_
+support the use of _u-boot_. 
+
+### References
+
+- https://andrei.gherzan.ro/linux/uboot-on-rpi/
 
 ## References
 
