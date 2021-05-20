@@ -273,15 +273,24 @@ for fl in ${rootfsfiles}; do
       echo "required directory ${rootfsfldir} does not exist, creating it"
       mkdir -pv ${rootfsfldir}
     fi
+    # add file to root filesystem
     cp -v ${fl} ${rootfsmntpnt}${rootfsfl}
-    if [ ! -z "$(echo ${fl} | grep "\.service$")" ]; then
-      echo "enable .service..."
-    elif [ ! -z "$(echo ${fl} | grep "\.socket$")" ]; then
-      echo "enable .socket..."
-    elif [ ! -z "$(echo ${fl} | grep "\.path$")" ]; then
-      echo "enable .path..."
-    elif [ ! -z "$(echo ${fl} | grep "\.timer$")" ]; then
-      echo "enable .timer..."
+    # deal with systemd units
+    if [ ! -z "$(echo ${fl} | grep "\.service$")" ] || [ ! -z "$(echo ${fl} | grep "\.socket$")" ] \
+       || [ ! -z "$(echo ${fl} | grep "\.path$")" ] || [ ! -z "$(echo ${fl} | grep "\.timer$")" ]; then
+      # basefile name
+      unitfl=$(basename ${fl})
+      echo "${fl} = ${unitfl} is systemd unit"
+      # extract target
+      unittarget=$(cat ${fl} | grep "[Install]" -A 400 | grep "^WantedBy=" | sed 's/WantedBy=//g' | sed 's/^ *//g' | sed 's/ *$//g')
+      if [ -z "${unittarget}" ]; then
+        echo "no install target given, no going to enable it"
+      else
+        echo "enabling for target ${unittarget}"
+        ln -s ${rootfsfl} ${rootfsmntpnt}/etc/systemd/system/${unittarget}.wants/${unitfl}
+        # check it
+        ls -lh ${rootfsmntpnt}/etc/systemd/system/${unittarget}.wants/${unitfl}
+      fi
     fi
   fi 
 done
