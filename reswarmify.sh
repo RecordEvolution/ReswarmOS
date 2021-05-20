@@ -364,14 +364,20 @@ echo -e "${etcshadow}\n${rootshadow}" > ${rootfsmntpnt}/etc/shadow
 echo -e "\n$(cat ${rootfsmntpnt}/etc/shadow)\n"
 
 echo -e "\nallow for ssh root login\n"
-echo "PermitRootLogin yes" >> ${rootfsmntpnt}/etc/ssh/sshd_config
+sshdcfg=$(cat ${rootfsmntpnt}/etc/ssh/sshd_config | grep -v "PasswordAuthentication no")
+sshdroot=$(cat << EOF
+PermitRootLogin yes
+PasswordAuthentication yes
+EOF
+)
+echo -e "\n${sshdcfg}\n${sshdroot}" > ${rootfsmntpnt}/etc/ssh/sshd_config
 cat ${rootfsmntpnt}/etc/ssh/sshd_config | grep -v "^#" | grep -v "^ *$"
 
 sleep 2
 
 #-----------------------------------------------------------------------------#
 
-echo -e "\nsame branding and versioning"
+echo -e "\nsome branding and versioning"
 echo "TODO"
 
 sleep 2
