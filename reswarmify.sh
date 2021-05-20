@@ -98,10 +98,19 @@ echo -e "\ntrying to determine the image's architecture..."
 sleep 2
 echo "mounting partition ${lpdevpath}p2"
 udisksctl mount --block-device "${lpdevpath}p2"
-rootfsmntpnt=$(lsblk  -lo path,mountpoint | grep "${lpdevpath}p2" | awk '{print $2}')
+rootfsmntpnt=$(lsblk  -lo path,mountpoint | grep "${lpdevpath}p2" | grep ext | awk '{print $2}')
 echo "mount point of root filesystem: ${rootfsmntpnt}"
 archtype=$(file ${rootfsmntpnt}/bin/bash | awk -F ',' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
 echo "image's architecture appears to be: $(tput setaf 2)${archtype}$(tput sgr0)"
+
+# get mount point of vfat "boot" partition
+bootmntpnt=$(lsblk  -lo path,mountpoint | grep "${lpdevpath}p1" | grep vfat | awk '{print $2}')
+echo "mount point of vfat filesystem: ${bootmntpnt}"
+
+if [ -z ${rootfsmntpnt} ] || [ -z ${bootmntpnt} ]; then
+  echo "$(tput setaf 1)base image ${bimage} does not feature both a vfat and ext4 partition)$(tput sgr0)" >&2
+  exit 1
+fi
 
 #-----------------------------------------------------------------------------#
 
@@ -294,6 +303,32 @@ for fl in ${rootfsfiles}; do
     fi
   fi 
 done
+
+#-----------------------------------------------------------------------------#
+
+echo -e "\nsetting up reagent/reswarm configuration"
+
+# create reagent directory
+mkdir -pv ${rootfsmntpnt}/opt/reagent/
+
+reswarmcfg="./config.yaml"
+reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
+reagenturl=$(echo "${reagentcfg}" | grep "^ *url-latest" | awk -F ': ' '{print $2}' | tr -d ' ')
+
+echo -e "\ngettting latest reagent"
+wget ${reagenturl} -P ${rootfsmntpnt}/opt/reagent/
+chmod u+x ${rootfsmntpnt}/opt/reagent/*
+
+# create link to point to .reswarm configuration or device.ini file
+echo -e "\ncreating symlink pointing to mountpoint of vfat partition"
+vfatmntpnt=$(cat ${rootfsmntpnt}/etc/fstab | grep vfat | awk '{print $2}' | tr -d ' ')
+ln -s ${vfatmntpnt} ${rootfsmntpnt}/opt/reagent/vfat-mount
+ls -lh ${rootfsmntpnt}/opt/reagent/vfat-mount
+
+# copy default device.ini configuration
+echo -e "\ncopy default device configuration"
+cp -v ./boot/device.ini ${bootmntpnt}
+ls -lh ${bootmntpnt}
 
 #-----------------------------------------------------------------------------#
 

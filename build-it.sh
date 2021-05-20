@@ -62,6 +62,10 @@ if [[ "${reagentinc}" == "true" ]]; then
   chmod 755 ./rootfs/opt/reagent/reagent-*
 fi
 
+# set up soft link pointing to mount point of vfat partition
+vfatlnk="/opt/reagent/vfat-mount"
+ln -s /boot/ ${vfatlnk}
+
 # --------------------------------------------------------------------------- #
 
 # extract buildroot commit required by particular configuration
