@@ -67,6 +67,8 @@ if [ ! -d ${fimagedir} ]; then
   exit 1
 fi
 
+sleep 2
+
 #-----------------------------------------------------------------------------#
 
 # copy baseimage as finalimage
@@ -93,24 +95,29 @@ lpdevname=$(echo ${lpdevpath} | awk -F '/' '{print $NF}')
 echo "mounted as ${lpdevpath}"
 lsblk | grep ${lpdevname}
 
+sleep 2
+
 # trying to determine the image's architecture
 echo -e "\ntrying to determine the image's architecture..."
-sleep 2
 echo "mounting partition ${lpdevpath}p2"
 udisksctl mount --block-device "${lpdevpath}p2"
-rootfsmntpnt=$(lsblk  -lo path,mountpoint | grep "${lpdevpath}p2" | grep ext | awk '{print $2}')
+rootfsmntpnt=$(lsblk -lo name,path,mountpoint,size,fstype | grep "${lpdevpath}p2" | grep ext | awk '{print $3}')
 echo "mount point of root filesystem: ${rootfsmntpnt}"
 archtype=$(file ${rootfsmntpnt}/bin/bash | awk -F ',' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
 echo "image's architecture appears to be: $(tput setaf 2)${archtype}$(tput sgr0)"
 
 # get mount point of vfat "boot" partition
-bootmntpnt=$(lsblk  -lo path,mountpoint | grep "${lpdevpath}p1" | grep vfat | awk '{print $2}')
+udisksctl mount --block-device "${lpdevpath}p1"
+bootmntpnt=$(lsblk -lo name,path,mountpoint,size,fstype | grep "${lpdevpath}p1" | grep vfat | awk '{print $3}')
 echo "mount point of vfat filesystem: ${bootmntpnt}"
 
+# overall check for consistent base image
 if [ -z ${rootfsmntpnt} ] || [ -z ${bootmntpnt} ]; then
   echo "$(tput setaf 1)base image ${bimage} does not feature both a vfat and ext4 partition)$(tput sgr0)" >&2
   exit 1
 fi
+
+sleep 2
 
 #-----------------------------------------------------------------------------#
 
@@ -265,6 +272,8 @@ ln -s /lib/systemd/system/docker.service ${rootfsmntpnt}/etc/systemd/system/mult
 ln -s /lib/systemd/system/docker.socket ${rootfsmntpnt}/etc/systemd/system/sockets.target.wants/docker.socket
 ls -lh ${rootfsmntpnt}/etc/systemd/system/{multi-user.target.wants,sockets.target.wants} | grep docker
 
+sleep 2
+
 #-----------------------------------------------------------------------------#
 
 echo -e "\ninstall root filesystem overlay...\n"
@@ -304,6 +313,8 @@ for fl in ${rootfsfiles}; do
   fi 
 done
 
+sleep 2
+
 #-----------------------------------------------------------------------------#
 
 echo -e "\nsetting up reagent/reswarm configuration"
@@ -327,15 +338,20 @@ ls -lh ${rootfsmntpnt}/opt/reagent/vfat-mount
 
 # copy default device.ini configuration
 echo -e "\ncopy default device configuration"
-cp -v ./boot/device.ini ${bootmntpnt}
-ls -lh ${bootmntpnt}
+cp -v ./boot/device.ini ${bootmntpnt}/
+ls -lh ${bootmntpnt}/
+
+sleep 2
 
 #-----------------------------------------------------------------------------#
 
 # unmount/detach loopback device
 echo -e "\ndetaching/unmouting image...\n"
-umount ${lpdevpath}*
+umount ${lpdevpath}p1
+umount ${lpdevpath}p2
 losetup -d ${lpdevpath}
+
+sleep 2
 
 echo -e "\n$(tput setaf 2)successfully generated reswarmified version\nof ${bimage}\nas ${fimage}$(tput sgr0)\n" >&2
 chmod 755 ${fimage}
