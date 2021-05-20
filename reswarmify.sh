@@ -345,6 +345,32 @@ sleep 2
 
 #-----------------------------------------------------------------------------#
 
+rootlogin="reswarm"
+# regenerate /etc/shadow entry for user "root"
+# openssl passwd --help
+# ...
+# -6                  SHA512-based password algorithm
+# -5                  SHA256-based password algorithm
+# -apr1               MD5-based password algorithm, Apache variant
+# -1                  MD5-based password algorithm
+# ...
+#
+rootshadow="root:$(echo "${rootlogin}" | openssl passwd -5 -salt M3654HFmkfj -stdin):::::::"
+etcshadow=$(cat ${rootfsmntpnt}/etc/shadow | grep -v "root")
+
+echo -e "\nregenerating root login with password \"${rootlogin}\""
+echo "=> ${rootshadow}"
+echo -e "${etcshadow}\n${rootshadow}" > ${rootfsmntpnt}/etc/shadow
+echo -e "\n$(cat ${rootfsmntpnt}/etc/shadow)\n"
+
+echo -e "\nallow for ssh root login\n"
+echo "PermitRootLogin yes" >> ${rootfsmntpnt}/etc/ssh/sshd_config
+cat ${rootfsmntpnt}/etc/ssh/sshd_config | grep -v "^#" | grep -v "^ *$"
+
+sleep 2
+
+#-----------------------------------------------------------------------------#
+
 # unmount/detach loopback device
 echo -e "\ndetaching/unmouting image...\n"
 umount ${lpdevpath}p1
@@ -354,6 +380,6 @@ losetup -d ${lpdevpath}
 sleep 2
 
 echo -e "\n$(tput setaf 2)successfully generated reswarmified version\nof ${bimage}\nas ${fimage}$(tput sgr0)\n" >&2
-chmod 755 ${fimage}
+chmod 644 ${fimage}
 
 #-----------------------------------------------------------------------------#
