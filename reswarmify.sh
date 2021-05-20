@@ -71,7 +71,12 @@ fi
 
 # copy baseimage as finalimage
 echo ""
-cp -v ${bimage} ${fimage}
+if [ -f ${fimage} ]; then
+  echo "$(tput setaf 1)${fimage} is already present, using existing version (or remove it before starting)$(tput sgr0)"
+else
+  echo "copying ${bimage} as ${fimage}"
+  cp -v ${bimage} ${fimage}
+fi
 
 # mount image as loopback device
 lpdev=$(losetup -a | grep ${fimage})
@@ -192,11 +197,94 @@ else
   exit 1 
 fi
 
-# TODO install and setup docker on root filesystem
+# download docker binaries
+dockerarch=$(basename ${dockerurl})
+datdir=$(dirname ${bimage})
+dockerarchpath="${datdir}/${dockerarch}"
+echo -e "\ndownloading ${dockerurl} to ${dockerarchpath}"
+if [ -f ${dockerarchpath} ]; then
+  echo "docker binary archive is already downloaded"
+else
+  wget ${dockerurl} -P ${datdir}
+fi
+
+echo "extracting archive to ${datdir}/docker-binaries/..."
+mkdir -pv "${datdir}/docker-binaries/"
+tar -xvzf ${dockerarchpath} -C "${datdir}/docker-binaries/"
+ls -lhR "${datdir}/docker-binaries/"
+
+# list and install binaries
+dockbindir=$(find ${datdir}/docker-binaries/ -name "docker" -type d)
+echo -e "\nbinaries are located in ${dockbindir}"
+dockbinlst=$(ls ${dockbindir})
+echo -e "\nlist of docker binaries:\n${dockbinlst}\n"
+echo -e "\ninstall docker binaries...\n"
+for bin in ${dockbinlst}; do
+  echo ${bin}
+  # check for binary in base image
+  if [ -f ${rootfsmntpnt}/usr/bin/${bin} ]; then
+    echo "$(tput setaf 1)/usr/bin/${bin} already installed, ignoring it$(tput sgr0)"
+  else
+    echo "installing ${bin} to ${rootfsmntpnt}/usr/bin/${bin}"
+    cp -v ${dockbindir}/${bin} ${rootfsmntpnt}/usr/bin/
+    chmod +x "${rootfsmntpnt}/usr/bin/${bin}"
+  fi
+done
+
+# check binaries
+echo -e "\ncheck installed docker binaries\n"
+ls -lh ${rootfsmntpnt}/usr/bin/ | grep "$(echo ${dockbinlst} | sed 's/ /\\|/g')"
+
+# remove docker data
+rm -rf "${datdir}/docker-binaries/"
+
+# check systemd on base image
+if [ ! -d ${rootfsmntpnt}/etc/systemd/system ]; then
+  echo "$(tput setaf 1)baseimage OS does not feature systemd$(tput sgr0)" >&2
+  exit 1
+fi
+
+# setup systemd stuff for docker
+echo -e "\nsetting up systemd for docker..."
+echo "${dockerservice}" > ${rootfsmntpnt}/lib/systemd/system/docker.service
+chmod 644 ${rootfsmntpnt}/lib/systemd/system/docker.service
+echo "${dockersocket}" > ${rootfsmntpnt}/lib/systemd/system/docker.socket
+chmod 644 ${rootfsmntpnt}/lib/systemd/system/docker.socket
+ls -lh ${rootfsmntpnt}/lib/systemd/system/docker.*
+echo -e "\nenabling docker..."
+ln -s /lib/systemd/system/docker.service ${rootfsmntpnt}/etc/systemd/system/multi-user.target.wants/docker.service
+ln -s /lib/systemd/system/docker.socket ${rootfsmntpnt}/etc/systemd/system/sockets.target.wants/docker.socket
+ls -lh ${rootfsmntpnt}/etc/systemd/system/{multi-user.target.wants,sockets.target.wants} | grep docker
 
 #-----------------------------------------------------------------------------#
 
-# TODO install customization overlay for root filesystem given in ./rootfs/
+echo -e "\ninstall root filesystem overlay...\n"
+
+rootfsfiles=$(find rootfs/ -name "*" -type f)
+for fl in ${rootfsfiles}; do
+  echo ${fl}
+  rootfsfl=$(echo ${fl} | sed 's/rootfs//g')
+  if [ -f ${rootfsmntpnt}${rootfsfl} ]; then
+    echo "$(tput setaf 1)file is already present in ${rootfsmntpnt}${rootfsfl}, ignoring it$(tput sgr0)" >&2
+  else
+    # check directory name first
+    rootfsfldir=$(dirname ${rootfsmntpnt}${rootfsfl})
+    if [ ! -d ${rootfsfldir} ]; then
+      echo "required directory ${rootfsfldir} does not exist, creating it"
+      mkdir -pv ${rootfsfldir}
+    fi
+    cp -v ${fl} ${rootfsmntpnt}${rootfsfl}
+    if [ ! -z "$(echo ${fl} | grep "\.service$")" ]; then
+      echo "enable .service..."
+    elif [ ! -z "$(echo ${fl} | grep "\.socket$")" ]; then
+      echo "enable .socket..."
+    elif [ ! -z "$(echo ${fl} | grep "\.path$")" ]; then
+      echo "enable .path..."
+    elif [ ! -z "$(echo ${fl} | grep "\.timer$")" ]; then
+      echo "enable .timer..."
+    fi
+  fi 
+done
 
 #-----------------------------------------------------------------------------#
 
@@ -206,5 +294,6 @@ umount ${lpdevpath}*
 losetup -d ${lpdevpath}
 
 echo -e "\n$(tput setaf 2)successfully generated reswarmified version\nof ${bimage}\nas ${fimage}$(tput sgr0)\n" >&2
+chmod 755 ${fimage}
 
 #-----------------------------------------------------------------------------#
