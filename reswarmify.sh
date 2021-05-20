@@ -371,6 +371,13 @@ sleep 2
 
 #-----------------------------------------------------------------------------#
 
+echo -e "\nsame branding and versioning"
+echo "TODO"
+
+sleep 2
+
+#-----------------------------------------------------------------------------#
+
 # unmount/detach loopback device
 echo -e "\ndetaching/unmouting image...\n"
 umount ${lpdevpath}p1
