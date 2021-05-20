@@ -3,9 +3,12 @@
 # include JSON parser
 # . /usr/sbin/reparse-json.sh
 
-# check for (latest) *.reswarm device configuration file on /boot partition
-reswarmfile=$(ls -t /boot/ | grep ".reswarm" | head -n1)
-reswarmcfg="/boot/${reswarmfile}"
+# symlink pointing to mount point of vfat partition keeping device configuration
+vfatlnk="/opt/reagent/vfat-mount"
+
+# check for (latest) *.reswarm device configuration file on vfat partition
+reswarmfile=$(ls -t ${vfatlnk} | grep ".reswarm" | head -n1)
+reswarmcfg="${vfatlnk}/${reswarmfile}"
 
 # define reswarm mode file and soft link to .reswarm configuration
 remode=/opt/reagent/reswarm-mode
@@ -68,7 +71,7 @@ if [ ! -z ${reswarmfile} ]; then
     exit 1
   fi
 
-  # insert host configuration into /boot/device.ini
+  # insert host configuration into ${vfatlnk}/device.ini
   # TODO inherit any non-default/additional values from device.ini
   deviceini=$(cat << EOF
 [device]
@@ -87,12 +90,12 @@ SSID     = ${wifissid}
 PASSWD   = ${wifipasswd}
 EOF
 )
-  echo -e "${deviceini}" > /boot/device.ini
+  echo -e "${deviceini}" > ${vfatlnk}/device.ini
 
 # standalone/free mode
 else
 
-  echo "no *.reswarm configuration found in /boot"
+  echo "no *.reswarm configuration found in ${vfatlnk}"
 
   # make sure reswarm mode is deactivated and config link removed
   rm -vf ${remode}
