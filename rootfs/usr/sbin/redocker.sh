@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# include JSON parser
+. /usr/sbin/reparse-json.sh
+
 # check configuration file argument
 configfile="$1"
 if [ -z ${configfile} ]; then
@@ -16,7 +19,9 @@ fi
 # extract docker daemon configuration
 # TODO *.reswarm configuration should feature its own "docker-daemon" key
 # including ALL daemon.json config!!
-insecreg=$(cat ${configfile} | /usr/bin/jq ' . | ."insecure-registries"')
+#insecreg=$(cat ${configfile} | /usr/bin/jq ' . | ."insecure-registries"')
+insecreg=$(parsejsongetkey ${configfile} insecure-registries)
+
 # TODO preliminary
 # get rid of outer quotes, replace any single quotes by double quotes
 insecreg=$(echo ${insecreg} | sed "s/\"\[/\[/g" | sed "s/\]\"/\]/g")
