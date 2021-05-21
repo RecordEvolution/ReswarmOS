@@ -17,9 +17,9 @@ EOF
 # get operating system info and version tag
 ostags()
 {
-  osname=$(cat /etc/os-release | grep "^NAME=" | awk -F '=' '{print $2}' | tr -d '\n ')
-  osversion=$(cat /etc/os-release  | grep "^VERSION=" | awk -F '=' '{print $2}' | tr -d '\n ')
-  echo "${osname}${osversion}"
+  osname=$(cat /etc/os-release | grep "^NAME=" | awk -F '=' '{print $2}' | tr -d '\n "')
+  osversion=$(cat /etc/os-release  | grep "^VERSION=" | awk -F '=' '{print $2}' | tr -d '\n "')
+  echo "${osname} ${osversion}"
 }
 
 # acquire subnet ip including its mask
@@ -45,6 +45,19 @@ boardhardware()
   echo "${boardmod} ${cpumodel}"
 }
 
+# CPU
+cpuinfo()
+{
+  cpuinfoA=$(cat /proc/cpuinfo | grep "model name" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
+  cpuinfoB=$(cat /proc/cpuinfo | grep "Hardware" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
+  if [ ! -z "${cpuinfoA}" ]; then
+    cpuinfo="${cpuinfoA}"
+  elif [ ! -z "${cpuinfoB}" ]; then
+    cpuinfo="${cpuinfoB}"
+  fi
+  echo "${cpuinfo}"
+}
+
 # geo location
 geolocation()
 {
@@ -65,7 +78,7 @@ ossysteminfo=$(cat << EOF
    date:      $(date)
    shell:     $(echo $SHELL)
    board:     $(boardhardware)
-   cpu:       $(cat /proc/cpuinfo | grep "model name" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
+   cpu:       $(cpuinfo)
    memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    subnet ip: $(subnetip)
    public ip: $(wget -qO- http://ipinfo.io/ip)
