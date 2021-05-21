@@ -12,5 +12,5 @@ ExecStart=/usr/sbin/rewifi.sh /boot/device.ini
 RemainAfterExit=no
 
 [Install]
-WantedBy=sysinit.target
-#WantedBy=multi-user.target
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

@@ -9,6 +9,6 @@ ExecStart=/usr/sbin/reswarm.sh
 RemainAfterExit=no
 
 [Install]
-WantedBy=sysinit.target
+#WantedBy=sysinit.target
 #WantedBy=multi-user.target
 RequiredBy=rehost.service rewifi.service redocker.service reagent.service

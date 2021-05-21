@@ -23,5 +23,5 @@ Nice=-16
 # IPAccounting=true
 
 [Install]
-WantedBy=sysinit.target
-#WantedBy=multi-user.target
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

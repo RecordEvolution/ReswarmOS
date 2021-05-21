@@ -9,5 +9,5 @@ RestartSec=30
 Restart=always
 
 [Install]
-WantedBy=sysinit.target
-#WantedBy=multi-user.target
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

@@ -302,7 +302,7 @@ for fl in ${rootfsfiles}; do
       # extract target
       unittarget=$(cat ${fl} | grep "[Install]" -A 400 | grep "^WantedBy=" | sed 's/WantedBy=//g' | sed 's/^ *//g' | sed 's/ *$//g')
       if [ -z "${unittarget}" ]; then
-        echo "no install target given, no going to enable it"
+        echo "no install target given, not going to enable it"
       else
         echo "enabling for target ${unittarget}"
         ln -s ${rootfsfl} ${rootfsmntpnt}/etc/systemd/system/${unittarget}.wants/${unitfl}
