@@ -41,6 +41,24 @@ apt-get update && apt-get install -y net-tools iproute2
 # install NetworkManager command line tool
 apt-get update && apt-get install -y network-manager
 
+# disable cloud-init
+systemctl disable cloud-config.service
+systemctl disable cloud-final.service
+systemctl disable cloud-init-local.service
+systemctl disable cloud-init.service
+
 # customize motd
+#
+# References:
+# https://motd.ubuntu.com
+# https://raymii.org/s/tutorials/Disable_dynamic_motd_and_motd_news_spam_on_Ubuntu_18.04.html
 # https://ownyourbits.com/2017/04/05/customize-your-motd-login-message-in-debian-and-ubuntu/
+systemctl disable motd-news.timer
+systemctl status motd-news.timer | cat
+cp -v rootfs/etc/profile.d/motd.sh /etc/profile.d/
+chmod 644 /etc/profile.d/motd.sh
+# rm -v /var/run/motd.dynamic
+# rm -rvf /etc/update-motd.d/
+sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news
+sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd
 
