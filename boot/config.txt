@@ -43,6 +43,10 @@ safe_mode_gpio=4
 # Temperature Sensor
 dtoverlay=w1-gpio,gpiopin=18
 
+# CAN Bus
+# https://www.embeddedpi.com/documentation/isolated-canbus/mypi-industrial-raspberry-pi-can-bus-card-configuration
+dtoverlay=mcp2515-can0
+
 # Light Sensor
 dtparam=i2c_arm=on,i2c1=on
 
