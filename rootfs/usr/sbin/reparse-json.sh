@@ -129,6 +129,13 @@ parsejsonvalid()
 #                                                   | sed 's/\" *: *{ *\"/\":{\"/g' \
 #                                                   | sed 's/\" *}/\"}/g' | sed 's/} *,/},/g')
 
+  # replace all inner escaped exclamation marks, like e.g. "somefield": "[\"myvalue\",\"2ndvalue\"]"
+  unimark=$(date +%FT%T.%N | base64)
+  cfgcltmp=${cfgcl}
+  cfgcl=$(echo ${cfgcltmp} | sed "s/\\\\\"/${unimark}/g")
+  # re-replace later by
+  # ... | sed "s/${token}/\\\\\"/g"
+
   # extract all regex patterns of key-value match
   elements=$(echo "${cfgcl}" | grep -Eo "\"[^,:{}]*\" *: *[\"]?[^,\"{}]*[\"]?")
 
@@ -185,8 +192,17 @@ parsejsonlistkeys()
   # clean the object
   cfgcl=$(parsejsonclean "${cfg}")
  
+  # replace all inner escaped exclamation marks with unique token
+  unimark=$(date +%FT%T.%N | base64)
+  cfgcltmp=${cfgcl}
+  cfgcl=$(echo ${cfgcltmp} | sed "s/\\\\\"/${unimark}/g")
+
   # find list of keys (keys may not contain the set of characters [,:{}] )
   keylist=$(echo "${cfgcl}" | grep -oE "\"[^,:{}]*\" *:" | tr -d '":')
+
+  # re-replace tokens
+  keylisttmp=${keylist}
+  keylist=$(echo "${keylisttmp}" | sed "s/${unimark}/\\\\\"/g")
 
   echo "${keylist}"
 }
@@ -230,6 +246,11 @@ parsejsongetkey()
   # clean the object
   cfgcl=$(parsejsonclean "${cfg}")
 
+  # replace all inner escaped exclamation marks with unique token
+  unimark=$(date +%FT%T.%N | base64)
+  cfgcltmp=${cfgcl}
+  cfgcl=$(echo ${cfgcltmp} | sed "s/\\\\\"/${unimark}/g")
+
   # extract value of key
   keyful=$(echo "${cfgcl}" | grep -oE "\" *${key} *\"")
   keyval=$(echo "${cfgcl}" | grep -oE "\" *${key} *\" *: *(\"[^\"]*\"|[0-9]*)" | awk -F "${keyful}:" '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
@@ -243,6 +264,10 @@ parsejsongetkey()
       return 1
     fi
   fi
+
+  # re-replace tokens
+  keyvaltmp=${keyval}
+  keyval=$(echo "${keyvaltmp}" | sed "s/${unimark}/\\\\\"/g")
 
   echo "${keyval}"
 }
