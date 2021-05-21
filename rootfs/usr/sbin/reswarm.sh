@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # include JSON parser
-# . /usr/sbin/reparse-json.sh
+. /usr/sbin/reparse-json.sh
 
 # symlink pointing to mount point of vfat partition keeping device configuration
 vfatlnk="/opt/reagent/vfat-mount"
@@ -41,16 +41,16 @@ if [ ! -z ${reswarmfile} ]; then
   ln -svf ${reswarmcfg} ${relink}
 
   # extract host configuration parameters from *.reswarm configuration file
-  # hostname=$(parsejsongetkey ${reswarmcfg} name)
-  # username=$(parsejsongetkey ${reswarmcfg} swarm_owner_name)
-  # userpasswd=$(parsejsongetkey ${reswarmcfg} secret)
-  # wifissid=$(parsejsongetkey ${reswarmcfg} wlanssid)
-  # wifipasswd=$(parsejsongetkey ${reswarmcfg} password)
-  hostname=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."name"')
-  username=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."swarm_owner_name"')
-  userpasswd=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."secret"')
-  wifissid=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."wlanssid"')
-  wifipasswd=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."password"')
+  hostname=$(parsejsongetkey ${reswarmcfg} name)
+  username=$(parsejsongetkey ${reswarmcfg} swarm_owner_name)
+  userpasswd=$(parsejsongetkey ${reswarmcfg} secret)
+  wifissid=$(parsejsongetkey ${reswarmcfg} wlanssid)
+  wifipasswd=$(parsejsongetkey ${reswarmcfg} password)
+  #hostname=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."name"')
+  #username=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."swarm_owner_name"')
+  #userpasswd=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."secret"')
+  #wifissid=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."wlanssid"')
+  #wifipasswd=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."password"')
   echo "hostname:   ${hostname}"
   echo "username:   ${username}"
   echo "userpasswd: ${userpasswd}"
