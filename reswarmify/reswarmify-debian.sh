@@ -20,14 +20,17 @@ usrshadwroot=$(cat ${usrshadwfl} | grep root)
 usrshadwrootent=$(echo ${usrshadwroot} | awk -F ':' -v var="$rootshadow" '{print $1":"var":"$3":"$4":"$5":"$6":"$7":"$8":"$9}')
 echo "root etc/shadow: ${usrshadwrootent}"
 echo -e "${usrshadwrootent}\n${usrshadw}" > ${usrshadwfl}
+systemctl restart sshd.service
+systemctl status sshd.service | cat
 
-# or simply to $ sudo passwd root ... manually 
+# or simply do $ sudo passwd root ... manually 
 
 # update system
 echo "update system"
 
 # disable unattended upgrades
 systemctl disable unattended-upgrades.service
+systemctl stop unattended-upgrades.service
 systemctl status unattended-upgrades.service | cat
 
 apt-get update && apt-get upgrade -y
@@ -61,4 +64,29 @@ chmod 644 /etc/profile.d/motd.sh
 # rm -rvf /etc/update-motd.d/
 sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd
+
+# update os-release
+if [ ! -f /etc/os-release-base ]; then
+  cp -v /etc/os-release /etc/os-release-base
+fi
+vrsn=$(cat config.yaml | grep version | awk -F ':' '{print $2}' | tr -d ' ')
+gthsh=$(git rev-parse HEAD)
+gthshshort=$(git rev-parse --short HEAD)
+gtbranch=$(git rev-parse --abbrev-ref HEAD)
+tsdate=$(date +%Y%m%dT%H%M%S)
+#basename=$(cat /etc/os-release-base | grep "^NAME=" | awk -F '=' '{print $2}' | tr -d '" ')
+#basevrsn=$(cat /etc/os-release-base | grep "^VERSION=" | awk -F '=' '{print $2}' | tr -d '" ')
+#NAME=ReswarmOS (based on ${basename} ${basevrsn})
+osrls=$(cat << EOF
+NAME=ReswarmOS
+VERSION=v${vrsn}-${gthshshort}-${tsdate}
+ID=reswarmos
+VERSION_ID=${gthsh}
+PRETTY_NAME="ReswarmOS-${vrsn}"
+EOF
+)
+echo -e "${osrls}" > /etc/os-release
+
+# set default device name
+hostnamectl set-hostname "reswarm-device"
 
