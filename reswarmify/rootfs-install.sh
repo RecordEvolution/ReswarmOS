@@ -32,7 +32,7 @@ logging_message "employing ./rootfs overlay"
 for fl in ${rootfsfiles}; do
 
   # strip base path in repository and compose full path in mount point of rootfs
-  rootfsfl=$(echo ${fl} | sed 's/rootfs//g')
+  rootfsfl=$(echo ${fl} | sed 's/^rootfs//g')
   rootfsflpath=$(echo "${rootfsmntpnt}${rootfsfl}" | sed 's/\/\//\//g')
   
   echo "${fl} -> ${rootfsflpath}"
