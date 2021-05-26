@@ -79,7 +79,6 @@ for fl in ${rootfsfiles}; do
 
 	  # enable service and check status
 	  systemctl enable ${unitfl}
-          ls -lh ${unitpath}
 	  systemctl status ${unitfl} | cat
 	
         else
