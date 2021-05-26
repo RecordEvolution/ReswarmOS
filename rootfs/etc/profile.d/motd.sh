@@ -19,7 +19,14 @@ ostags()
 {
   osname=$(cat /etc/os-release | grep "^NAME=" | awk -F '=' '{print $2}' | tr -d '\n "')
   osversion=$(cat /etc/os-release  | grep "^VERSION=" | awk -F '=' '{print $2}' | tr -d '\n "')
-  echo "${osname} ${osversion}"
+  if [ -f /etc/os-release-base ]; then
+    basename=$(cat /etc/os-release-base | grep "^NAME=" | awk -F '=' '{print $2}' | tr -d '" ')
+    basevrsn=$(cat /etc/os-release-base | grep "^VERSION=" | awk -F '=' '{print $2}' | tr -d '" ')
+    basetag=" (based on ${basename} ${basevrsn})"
+  else
+    basetag=""
+  fi
+  echo "${osname} ${osversion} ${basetag}"
 }
 
 # acquire subnet ip including its mask
@@ -58,6 +65,13 @@ cpuinfo()
   echo "${cpuinfo}"
 }
 
+rootfs()
+{
+  totalsize=$(df -h | grep " /$" | awk '{print $2}' | tr -d  ' ')
+  usedsize=$(df -h | grep " /$" | awk '{print $3}' | tr -d  ' ')
+  echo "${usedsize} / ${totalsize} used"
+}
+
 # geo location
 geolocation()
 {
@@ -80,6 +94,7 @@ ossysteminfo=$(cat << EOF
    board:     $(boardhardware)
    cpu:       $(cpuinfo)
    memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
+   rootfs:    $(rootfs)
    subnet ip: $(subnetip)
    public ip: $(wget -qO- http://ipinfo.io/ip)
    location:  $(geolocation)

@@ -1,0 +1,13 @@
+" show line numbers
+:set number
+
+" set theme
+colorscheme default
+
+" use syntax highlighting
+:syntax on
+
+" adjust indentation
+":set expandtab
+:set shiftwidth=2
+:set softtabstop=2

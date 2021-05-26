@@ -9,7 +9,7 @@ CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
 
 setup: Dockerfile $(OUT)
-	./os-release.sh > rootfs/etc/os-release
+	./reswarmify/os-release.sh > rootfs/etc/os-release
 	docker build ./ --tag=$(TNM)
 	rm -vf $(OUT)buildroot/output/target/etc/os-release
 
