@@ -1,14 +1,17 @@
 #!/bin/sh
 
+# JSON parser
+JQ=/usr/bin/jq
+
 # include JSON parser
-. /usr/sbin/reparse-json.sh
+#. /usr/sbin/reparse-json.sh
 
 # symlink pointing to mount point of vfat partition keeping device configuration
 vfatlnk="/opt/reagent/vfat-mount"
 
 # check for (latest) *.reswarm device configuration file on vfat partition
 reswarmfile=$(ls -t ${vfatlnk} | grep ".reswarm" | head -n1)
-reswarmcfg="${vfatlnk}/${reswarmfile}"
+reswarmcfg="$(readlink ${vfatlnk})/${reswarmfile}"
 
 # define reswarm mode file and soft link to .reswarm configuration
 remode=/opt/reagent/reswarm-mode
@@ -17,6 +20,9 @@ relink=/opt/reagent/device-config.reswarm
 # check reagent binary as well (get latest only)
 reagentdir=/opt/reagent/
 reagentbin=$(ls -t ${reagentdir} | grep "reagent-" | head -n1)
+
+# set up symlink to general device.ini configuration
+ln -svf $(readlink ${vfatlnk})/device.ini /opt/reagent/device-config.ini
 
 # reswarm mode
 if [ ! -z ${reswarmfile} ]; then
@@ -41,16 +47,16 @@ if [ ! -z ${reswarmfile} ]; then
   ln -svf ${reswarmcfg} ${relink}
 
   # extract host configuration parameters from *.reswarm configuration file
-  hostname=$(parsejsongetkey ${reswarmcfg} name)
-  username=$(parsejsongetkey ${reswarmcfg} swarm_owner_name)
-  userpasswd=$(parsejsongetkey ${reswarmcfg} secret)
-  wifissid=$(parsejsongetkey ${reswarmcfg} wlanssid)
-  wifipasswd=$(parsejsongetkey ${reswarmcfg} password)
-  #hostname=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."name"')
-  #username=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."swarm_owner_name"')
-  #userpasswd=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."secret"')
-  #wifissid=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."wlanssid"')
-  #wifipasswd=$(cat ${reswarmcfg} | /usr/bin/jq ' . | ."password"')
+  #hostname=$(parsejsongetkey ${reswarmcfg} name)
+  #username=$(parsejsongetkey ${reswarmcfg} swarm_owner_name)
+  #userpasswd=$(parsejsongetkey ${reswarmcfg} secret)
+  #wifissid=$(parsejsongetkey ${reswarmcfg} wlanssid)
+  #wifipasswd=$(parsejsongetkey ${reswarmcfg} password)
+  hostname=$(cat ${reswarmcfg} | $JQ ' . | ."name"')
+  username=$(cat ${reswarmcfg} | $JQ ' . | ."swarm_owner_name"')
+  userpasswd=$(cat ${reswarmcfg} | $JQ ' . | ."secret"')
+  wifissid=$(cat ${reswarmcfg} | $JQ ' . | ."wlanssid"')
+  wifipasswd=$(cat ${reswarmcfg} | $JQ ' . | ."password"')
   echo "hostname:   ${hostname}"
   echo "username:   ${username}"
   echo "userpasswd: ${userpasswd}"
@@ -102,3 +108,4 @@ else
   rm -vf ${relink}
 
 fi
+

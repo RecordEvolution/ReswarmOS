@@ -5,6 +5,9 @@ IP=/usr/sbin/iptables
 PF=/usr/bin/iperf3
 JQ=/usr/bin/jq
 
+# include JSON parser
+#. /usr/sbin/reparse-json.sh
+
 # reswarm configuration
 reconfig=/opt/reagent/device-config.reswarm
 
@@ -40,6 +43,7 @@ get_device_endpoint()
   fi
 
   devendpoint=$(cat ${reconfig} | $JQ ' . | ."device_endpoint_url"')
+  #devendpoint=$(parsejsongetkey ${reconfig} "device_endpoint_url")
   devendpoint=$(echo "${devendpoint}" | tr -d '"' | awk -F '//' '{print $2}')
   echo "${devendpoint}"
 }

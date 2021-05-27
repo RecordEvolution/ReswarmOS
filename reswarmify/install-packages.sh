@@ -26,8 +26,23 @@ apt-get update && apt-get install -y docker.io git
 # install net-tools, iproute, etc.
 logging_message "install net-tools, iproute2, ..."
 apt-get update && apt-get install -y net-tools iproute2
+apt-get update && apt-get install -y wget
 
 # install NetworkManager command line tool
 logging_message "install NetworkManager"
 apt-get update && apt-get install -y network-manager
+
+# install parsing auxiliaries
+apt-get update && apt-get install jq
+
+# make all network interfaces (including eth0) managed by NetworkManager
+# Ubuntu > 17.10
+# either remove:
+# apt remove netplan.io
+# or disable it
+if [ ! -d /etc/cloud/cloud.cfg.d/ ]; then
+  mkdir -pv /etc/cloud/cloud.cfg.d
+fi
+echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+systemctl disable systemd-networkd.service
 

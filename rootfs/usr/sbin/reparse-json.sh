@@ -85,38 +85,38 @@ parsejsonvalid()
   fi
 
   # check for consistent order of opening/closing brackets
-  allbrack=$(cat "${cfg}" | grep -o "{\|}") # | sed ':a;N;$!ba;s/\n/ /g')
-  numbr="0"
-  totalnumbr=$(echo "${allbrack}" | wc -l)
-  counter="0"
-  while read br; do
-    # open bracket
-    if [ "${br}" == "{" ]; then
-      #numbr=`expr $numbr + 1`
-      numbr=$((numbr + 1))
-    fi
-    # closed bracket
-    if [ "${br}" == "}" ]; then
-      numbr=$((numbr - 1))
-    fi
-    # increment counter
-    counter=$((counter + 1))
-    # no intermediate closing of all open brackets
-    if [ ${counter} -lt ${totalnumbr} ]; then
-      if [ "${numbr}" -lt "1" ]; then
-        echo "parsejsonvalid -> invalid json: intermediate closing of all brackets" >&2
-        echo 1
-        return 1
-      fi
-    else
-      # final check (equivalent to check for same number of opening/closing brackets)
-      if [ "${numbr}" != "0" ]; then
-        echo "parsejsonvalid -> invalid json: inconsistent brackets" >&2
-        echo 1
-        return 1
-      fi
-    fi
-  done < <(echo "${allbrack}")
+#  allbrack=$(cat "${cfg}" | grep -o "{\|}") # | sed ':a;N;$!ba;s/\n/ /g')
+#  numbr="0"
+#  totalnumbr=$(echo "${allbrack}" | wc -l)
+#  counter="0"
+#  while read br; do
+#    # open bracket
+#    if [ "${br}" == "{" ]; then
+#      #numbr=`expr $numbr + 1`
+#      numbr=$((numbr + 1))
+#    fi
+#    # closed bracket
+#    if [ "${br}" == "}" ]; then
+#      numbr=$((numbr - 1))
+#    fi
+#    # increment counter
+#    counter=$((counter + 1))
+#    # no intermediate closing of all open brackets
+#    if [ ${counter} -lt ${totalnumbr} ]; then
+#      if [ "${numbr}" -lt "1" ]; then
+#        echo "parsejsonvalid -> invalid json: intermediate closing of all brackets" >&2
+#        echo 1
+#        return 1
+#      fi
+#    else
+#      # final check (equivalent to check for same number of opening/closing brackets)
+#      if [ "${numbr}" != "0" ]; then
+#        echo "parsejsonvalid -> invalid json: inconsistent brackets" >&2
+#        echo 1
+#        return 1
+#      fi
+#    fi
+#  done < <(echo "${allbrack}")
 
   # check for key-value syntax
   #-------------------------------------------------------#
@@ -228,20 +228,20 @@ parsejsongetkey()
     return 1
   fi
 
-  # check validity of json file
-  valret=$(parsejsonvalid ${cfg})
-  if [ ! -z ${valret} ]; then
-    echo "invalid file"
-    return 1
-  fi
-
-  # check existence of key
-  keylist=$(parsejsonlistkeys ${cfg})
-  keyfind=$(echo "${keylist}" | grep "^${key}$")
-  if [ -z "${keyfind}" ]; then
-    echo "parsejsonkey -> key '${key}' does not exist" >&2
-    return 1
-  fi
+#  # check validity of json file
+#  valret=$(parsejsonvalid ${cfg})
+#  if [ ! -z ${valret} ]; then
+#    echo "invalid file"
+#    return 1
+#  fi
+#
+#  # check existence of key
+#  keylist=$(parsejsonlistkeys ${cfg})
+#  keyfind=$(echo "${keylist}" | grep "^${key}$")
+#  if [ -z "${keyfind}" ]; then
+#    echo "parsejsonkey -> key '${key}' does not exist" >&2
+#    return 1
+#  fi
 
   # clean the object
   cfgcl=$(parsejsonclean "${cfg}")
