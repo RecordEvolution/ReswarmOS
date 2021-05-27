@@ -23,6 +23,8 @@
 1. relabel the partitions:
    1. `e2label /dev/sdd2 rootfs`
    1. `fatlabel /dev/sdd1 ReswarmOS`
+   1. adjust root label in cmdline.txt
+     `sed -i 's/root=LABEL=writable/root=LABEL=rootfs/g' /media/mario/ReswarmOS/cmdline.txt`
 1. dd the entire SD card, i.e. its two partitions, and write it down as .img
    1. `sudo fdisk -l /dev/sdd`
    1. calculate total size of both partitions:
