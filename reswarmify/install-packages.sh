@@ -36,20 +36,6 @@ apt-get update && apt-get install -y network-manager
 logging_message "install jq JSON parser"
 apt-get update && apt-get install -y jq
 
-# make all network interfaces (including eth0) managed by NetworkManager
-# Ubuntu > 17.10
-# either remove:
-#apt remove netplan.io
-# or disable it
-if [ ! -d /etc/cloud/cloud.cfg.d/ ]; then
-  mkdir -pv /etc/cloud/cloud.cfg.d
-fi
-echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg
-#systemctl disable systemd-networkd.service
-#systemctl mask systemd-networkd.service
-#systemctl status systemd-networkd.service | cat
+sleep 2
 
-# adjust partition labels in /etc/fstab (ensure consistency with cmdline.txt and actual labels!!)
-sed -i 's/LABEL=writable/LABEL=rootfs/g' /etc/fstab
-sed -i 's/LABEL=system-boot/LABEL=ReswarmOS/g' /etc/fstab
-
+#-----------------------------------------------------------------------------#
