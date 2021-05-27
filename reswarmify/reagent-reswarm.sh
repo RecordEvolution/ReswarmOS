@@ -33,14 +33,28 @@ echo "bootmntpnt:   ${bootmntpnt}"
 reagentdir=$(echo ${rootfsmntpnt}/opt/reagent/ | sed 's/\/\//\//g')
 mkdir -pv ${reagentdir}
 
+# determine architecture
+archtype=$(file ${rootfsmntpnt}/bin/bash | awk -F ',' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+echo "image's architecture appears to be: $(tput setaf 2)${archtype}$(tput sgr0)"
+
 # get reagent configuration from config.yaml
 reswarmcfg="./config.yaml"
 reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
-reagenturl=$(echo "${reagentcfg}" | grep "^ *url-latest" | awk -F ': ' '{print $2}' | tr -d ' ')
 
-echo "gettting latest reagent"
-wget ${reagenturl} -P ${reagentdir}
-chmod u+x ${reagentdir}*
+# extract suitable URL for architecture and pull binary
+if [ ! -z "$(echo ${archtype} | grep 'x86-64')" ]; then
+  reagenturl=$(echo "${reagentcfg}" | grep "^ *url:" -A 5 | grep amd64 | awk '{print $2}' | tr -d ' ')
+elif [ ! -z "$(echo ${archtype} | grep 'aarch64')" ]; then
+  reagenturl=$(echo "${reagentcfg}" | grep "^ *url:" -A 5 | grep arm64 | awk '{print $2}' | tr -d ' ')
+elif [ ! -z "$(echo ${archtype} | grep 'ARM')" ]; then
+  reagenturl=$(echo "${reagentcfg}" | grep "^ *url:" -A 5 | grep armv7 | awk '{print $2}' | tr -d ' ')
+else
+  logging_error "$0: unexpected architecture: ${archtype}"
+  exit 1
+fi
+echo "gettting (latest) reagent binary"
+wget ${reagenturl} -O ${reagentdir}reagent-latest
+chmod u+x ${reagentdir}reagent-latest
 
 # create link to point to .reswarm configuration or device.ini file
 fstabpath=$(echo ${rootfsmntpnt}/etc/fstab | sed 's/\/\//\//g')
