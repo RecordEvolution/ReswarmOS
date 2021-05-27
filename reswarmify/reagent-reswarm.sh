@@ -39,7 +39,7 @@ echo "image's architecture appears to be: $(tput setaf 2)${archtype}$(tput sgr0)
 
 # get reagent configuration from config.yaml
 reswarmcfg="./config.yaml"
-reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
+reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A150)
 
 # extract suitable URL for architecture and pull binary
 if [ ! -z "$(echo ${archtype} | grep 'x86-64')" ]; then
@@ -53,6 +53,7 @@ else
   exit 1
 fi
 echo "gettting (latest) reagent binary"
+echo "URL: ${reagenturl}"
 wget ${reagenturl} -O ${reagentdir}reagent-latest
 chmod u+x ${reagentdir}reagent-latest
 
@@ -60,6 +61,8 @@ chmod u+x ${reagentdir}reagent-latest
 fstabpath=$(echo ${rootfsmntpnt}/etc/fstab | sed 's/\/\//\//g')
 echo "creating symlink pointing to mountpoint of vfat partition (given by ${fstabpath})"
 vfatmntpnt=$(cat ${fstabpath} | grep vfat | awk '{print $2}' | tr -d ' ')
+echo "boot partition mount point: ${vfatmntpnt}"
+rm -vf ${reagentdir}vfat-mount
 ln -s ${vfatmntpnt} ${reagentdir}vfat-mount
 ls -lh ${reagentdir}vfat-mount
 
