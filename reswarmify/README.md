@@ -16,6 +16,8 @@
    1. ./reswarmify/manage-users.sh <rootfsmntpnt>
    1. ./reswarmify/reagent-reswarm.sh / /boot/firmware/
    1. ./reswarmify/customize-motd.sh /
+1. remove ReswarmOS repo from home directory
+1. clear journal `journalctl --vacuum-time=1s --rotate`
 1. power off the device
 1. plug it into a different machine
 1. mount the boot partition and remove `growpart` disabling from `user-data`
