@@ -40,9 +40,16 @@ for fl in ${rootfsfiles}; do
   # check for existing files
   if [ -f ${rootfsflpath} ]; then
 
-    logging_error "file ${rootfsfl} is already present in ${rootfsflpath}, ignoring it"
-  
+    logging_message "file ${rootfsfl} is already present in ${rootfsflpath}"
+
+    echo "decide how to proceed with the existing file (choose overwrite/keep)"
+    read -p "" inpt
+
   else
+    inpt="overwrite"
+  fi
+
+  if [[ "${inpt}" == "overwrite" ]]; then
 
     # check directory name first
     rootfsfldir=$(dirname ${rootfsflpath})
