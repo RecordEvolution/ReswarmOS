@@ -33,7 +33,8 @@ logging_message "install NetworkManager"
 apt-get update && apt-get install -y network-manager
 
 # install parsing auxiliaries
-apt-get update && apt-get install jq
+logging_message "install jq JSON parser"
+apt-get update && apt-get install -y jq
 
 # make all network interfaces (including eth0) managed by NetworkManager
 # Ubuntu > 17.10
@@ -45,4 +46,6 @@ if [ ! -d /etc/cloud/cloud.cfg.d/ ]; then
 fi
 echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 systemctl disable systemd-networkd.service
+systemctl mask systemd-networkd.service
+systemctl status systemd-networkd.service | cat
 
