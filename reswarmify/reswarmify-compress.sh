@@ -2,7 +2,7 @@
 
 source logging.sh
 
-# 1st argument: block device path of SD card 
+# 1st argument: block device path of SD card
 imagedevpath="$1"
 # 2nd argument: path/name of final image
 imagename="$2"
@@ -55,8 +55,8 @@ e2fsck -f ${rootfsdev}
 
 # resize/shrink filesystem (include 200MiB of empty space)
 rootfssizesectors=$((rootfssize+200))
-echo "shrink filesystem" 
-# to ${rootfssizesectors}M" 
+echo "shrink filesystem"
+# to ${rootfssizesectors}M"
 #echo "resize2fs ${rootfsdev} ${rootfssizesectors}M"
 #resize2fs ${rootfsdev} ${rootfssizesectors}M
 # shrink filesystem to minimal size possible
@@ -86,6 +86,21 @@ resize2fs -M ${rootfsdev}
 #rootfsend=$((bootfssize+1+rootfssize))
 #echo "recreating partition ext4 from ${rootfssta} to ${rootfsend}"
 #parted ${fsdev} --script mkpart primary ext4 ${rootfssta}B ${rootfsend}B
+#
+# $ fdisk /dev/sda
+# delete ext4 partition
+# recreate partition
+# ...
+# take result of resize2fs, e.g.
+# resize2fs 1.45.6 (20-Mar-2020)
+# Resizing the filesystem on /dev/sda2 to 812454 (4k) blocks.
+# The filesystem on /dev/sda2 is now 812454 (4k) blocks long.
+# and translate number of sectors to number sectors with blocksize used by fdisk,
+# e.g. 812454*4096/512 = 6499632
+# ...
+# Partition number (2-4, default 2): 2
+# First sector (526336-124823551, default 526336):
+# Last sector, +/-sectors or +/-size{K,M,G,T,P} (526336-124823551, default 124823551): +6499632
 
 # create image of device
 echo "create image of device"
