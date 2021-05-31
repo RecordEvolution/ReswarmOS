@@ -20,8 +20,8 @@ logging_message "update system"
 apt-get update && apt-get upgrade -y
 
 # install docker and git
-logging_message "install docker and git"
-apt-get update && apt-get install -y docker.io git
+logging_message "install docker, vim and git"
+apt-get update && apt-get install -y docker.io vim git
 
 # install net-tools, iproute, etc.
 logging_message "install net-tools, iproute2, ..."

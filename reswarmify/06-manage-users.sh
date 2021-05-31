@@ -30,6 +30,14 @@ EOF
 echo "${sshd_conf_root}" > ${sshd_conf}
 echo -e "${sshd_conf}:\n $(cat ${sshd_conf})"
 
+# make sure to include the previous configuration in sshd_config
+sshdInc=$(cat ${rootfsmntpnt}/etc/ssh/sshd_config | grep "^Include")
+if [ -z "${sshdInc}" ]; then
+  echo "Include statement missing in sshd_config => adding it"
+  #echo "Include /etc/ssh/sshd_config.d/*.conf" | sudo tee -a /etc/ssh/sshd_config > /dev/null
+  echo -e "\nInclude /etc/ssh/sshd_config.d/*.conf\n" >> /etc/ssh/sshd_config
+fi
+
 # generate random salt
 salt=$(date +%FT%T.%N | md5sum | base64 | head -c12)
 echo "salt: ${salt}"
