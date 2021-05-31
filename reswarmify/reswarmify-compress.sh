@@ -98,9 +98,13 @@ resize2fs -M ${rootfsdev}
 # and translate number of sectors to number sectors with blocksize used by fdisk,
 # e.g. 812454*4096/512 = 6499632
 # ...
+# Select (default p): primary
 # Partition number (2-4, default 2): 2
 # First sector (526336-124823551, default 526336):
 # Last sector, +/-sectors or +/-size{K,M,G,T,P} (526336-124823551, default 124823551): +6499632
+# Created a new partition 2 of type 'Linux' and of size 2.6 GiB.
+# Partition #2 contains a ext4 signature.
+# Do you want to remove the signature? [Y]es/[N]o: N
 
 # create image of device
 echo "create image of device"
