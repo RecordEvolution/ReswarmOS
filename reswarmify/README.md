@@ -58,4 +58,9 @@
   - 07-customize-motd.sh
   - (is not required: 08-network-config.sh)
   - 09-reagent-reswarm.sh
+1. shutdown device
+1. insert SD card in another machine
+1. adjust `cmdline.txt`
+  - set new `partuuid` of rootfs according to `lsblk -lo name,path,fstype,label,partuuid`
+  - reset init script to regrow root partition, i.e. `quiet init=/usr/lib/raspi-config/init_resize.sh`
 
