@@ -44,20 +44,42 @@
 - hash: `c3687e9df7c62196a24f1cba1bc6f654  2021-05-07-raspios-buster-armhf-lite.img`
 
 1. flash image on SD card: `reflasher -d /dev/sda -i 2021-05-07-raspios-buster-armhf-lite.img`
-1. mount boo partition and activate ssh: `udisksctl mount --block-device && touch /../../boot/ssh`
+1. mount boot partition and activate ssh: `udisksctl mount --block-device && touch /../../boot/ssh`
 1. insert SD card into Pi and start it up
 1. perform ssh login with `pi` and `raspberry`
 1. install `git` and `vim` with `apt-get install git vim`
 1. clone ReswarmOS repository: `git clone https://github.com/RecordEvolution/ReswarmOS
 1. run `sudo raspi-config`, set localization options to enable WiFi and reboot, generate/initialize locale
-1. increase strength of default `pi` account password: `passwd pi`
+   or simply uncomment required locales in `/etc/locale.gen` and do `locale-gen`
+1. unblock wireless device:
+  ```
+  rfkill list
+  rfkill unblock 0
+  rfkill list
+  ```
+  check visibility of device: `ifconfig`
+1. `/etc/NetworkManager/NetworkManager.conf`: 
+   ```
+  [ifupdown]
+  managed=yes
+  ```
+1. disable `dhcpcd` by `systemctl disable dhcpcd.service`, reboot and make sure only one single `wpa_supplicant`
+   process is active in order to not interfere with NetworkManager managing `wlan0`
+  (see issue https://wiki.archlinux.org/title/NetworkManager#DHCP_client)
 1. run layer script:
   - 04-install-packages.sh
   - 05-rootfs-install.sh
-  - 06-manage-users.sh (RaspberrypiOS does not seem to accept `Include` in `sshd_config`, hence, add `root.conf` directly to `sshd_config`)
+  - 06-manage-users.sh (RaspberrypiOS does not seem to accept `Include` in `sshd_config`, hence add `root.conf` directly to `sshd_config`)
   - 07-customize-motd.sh
   - (is not required: 08-network-config.sh)
   - 09-reagent-reswarm.sh
+1. make sure binary `dhclient` is installed and add `/etc/NetworkManager/conf.d/17-dhcp-client.conf` with
+  ```
+  [main]
+  dhcp=dhclient
+  ```
+1. remove `max-download-attempts` option from `/etc/docker/daemon.json` due to old docker version that does not know about this key yet
+1. increase strength of default `pi` account password: `passwd pi`
 1. shutdown device
 1. insert SD card in another machine
 1. adjust `cmdline.txt`

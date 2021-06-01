@@ -26,3 +26,14 @@ echo "using hostname ${hostnm}"
 #hostname "${hostnm}"
 hostnamectl set-hostname "${hostnm}"
 hostnamectl
+
+# eventually adjust /etc/hosts
+ltshst=$(cat /etc/hosts | grep -P "^127.0.1.1[ \t]*${hostnm}$")
+if [ -z "${ltshst}" ]; then
+  echo "updating hostname in /etc/hosts"
+  sed -i "s/^127.0.1.1/# 127.0.1.1/g" /etc/hosts
+  echo "127.0.1.1\t${hostnm}" >> /etc/hosts
+else
+  echo "hostname already updated in /etc/hosts"
+fi
+cat /etc/hosts
