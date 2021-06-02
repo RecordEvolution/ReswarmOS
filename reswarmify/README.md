@@ -85,4 +85,12 @@
 1. adjust `cmdline.txt`
   - set new `partuuid` of rootfs according to `lsblk -lo name,path,fstype,label,partuuid`
   - reset init script to regrow root partition, i.e. `quiet init=/usr/lib/raspi-config/init_resize.sh`
+  - resizing the filesystem is done by (re)adding `resize2fs_once` to `/etc/init.d/`:
+  ```
+  chmod +x /etc/init.d/resize2fs_once
+  systemctl enable resize2fs_once
+  ```
+  for reference: see
+  - https://raspberrypi.stackexchange.com/questions/87534/expand-raspbian-file-system-on-first-boot
+  - https://www.raspberrypi.org/forums/viewtopic.php?t=253531
 
