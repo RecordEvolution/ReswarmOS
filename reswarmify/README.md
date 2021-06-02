@@ -78,6 +78,7 @@
   [main]
   dhcp=dhclient
   ```
+1. to allow for listing of ethernet interface `eth0` by NetworkManager (in particular in Reswarm frontend): set `EXCLUDE_INTERFACES=eth0` in `/etc/init.d/networking`
 1. remove `max-download-attempts` option from `/etc/docker/daemon.json` due to old docker version that does not know about this key yet
 1. increase strength of default `pi` account password: `passwd pi`
 1. shutdown device
