@@ -27,6 +27,7 @@ apt-get update && apt-get install -y docker.io vim git
 logging_message "install net-tools, iproute2, ..."
 apt-get update && apt-get install -y net-tools iproute2
 apt-get update && apt-get install -y wget
+apt-get update && apt-get install -y dnsutils
 
 # install NetworkManager command line tool
 logging_message "install NetworkManager"
