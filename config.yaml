@@ -14,7 +14,8 @@
     include: true
     url-latest: https://storage.googleapis.com/re-agent/reagent-latest
     url:
-      amd64: https://storage.googleapis.com/re-agent/linux/amd64/0.6.2.5/reagent
-      arm64: https://storage.googleapis.com/re-agent/linux/arm64/0.6.2.5/reagent
-      armv7: https://storage.googleapis.com/re-agent/linux/armv7/0.6.2.5/reagent
+      amd64: https://storage.googleapis.com/re-agent/linux/amd64/0.6.2.6/reagent
+      arm64: https://storage.googleapis.com/re-agent/linux/arm64/0.6.2.6/reagent
+      armv6: https://storage.googleapis.com/re-agent/linux/armv6/0.6.2.6/reagent
+      armv7: https://storage.googleapis.com/re-agent/linux/armv7/0.6.2.6/reagent
 ...
