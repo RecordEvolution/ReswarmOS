@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # define reagent directory
-#reagentdir=/opt/reagent/
-reagentdir=/root/reagent-bin/
+reagentdir=/opt/reagent/
+#reagentdir=/root/reagent-bin/
 
 # name of symlink to active reagent binary
 reagentact=Reagent-active
