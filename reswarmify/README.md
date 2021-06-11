@@ -50,7 +50,7 @@
 1. install `git` and `vim` with `apt-get install git vim`
 1. clone ReswarmOS repository: `git clone https://github.com/RecordEvolution/ReswarmOS
 1. run `sudo raspi-config`, set localization options to enable WiFi and reboot, generate/initialize locale
-   or simply uncomment required locales in `/etc/locale.gen` and do `locale-gen`
+   (activate at least de_DE.UTF-8, en_GB.UTF-8, en_US.UTF-8) or simply uncomment required locales in `/etc/locale.gen` and do `locale-gen`
 1. unblock wireless device:
   ```
   rfkill list
