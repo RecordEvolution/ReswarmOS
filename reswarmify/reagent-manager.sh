@@ -39,9 +39,9 @@ check_latest() {
 
   # find latest reagent binary in given directory
   reagentupgr=$(ls -t ${reagentdir} | grep ${reagentbin} | grep -v ${reagentlin} | head -n1)
-  if [ -z ${reagentupgr} ]; then
-    #echo "no upgraded reagent binary ${reagentdir}/${reagentbin}* found"
-  else
+  if [ ! -z ${reagentupgr} ]; then
+  #echo "no upgraded reagent binary ${reagentdir}/${reagentbin}* found"
+  #else
     # get full path
     reagentupgr="${reagentdir}/${reagentupgr}"
     # make sure new binary is executable
