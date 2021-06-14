@@ -1,6 +1,6 @@
 [Unit]
 Description=WiFi configuration
-After=reswarm.service 
+After=reswarm.service NetworkManager.service
 Requires=NetworkManager.service
 
 [Service]
