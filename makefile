@@ -1,3 +1,4 @@
+#-----------------------------------------------------------------------------#
 
 OUT = output-build/
 CDR = $(shell pwd)
@@ -7,6 +8,8 @@ NAS = $(shell echo $(NAM) | sed 's/.img//g')
 TNM = reswarmos-builder:latest
 CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
+
+#-----------------------------------------------------------------------------#
 
 setup: Dockerfile $(OUT)
 	./reswarmify/os-release.sh > rootfs/etc/os-release
@@ -25,6 +28,8 @@ build-daemon:
 
 build-logs:
 	docker logs $(CNM)
+
+#-----------------------------------------------------------------------------#
 
 compress-zip:
 	mv $(IMG) ./
@@ -53,6 +58,8 @@ compress-xz:
 uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
+#-----------------------------------------------------------------------------#
+
 prepare-gcloud:
 	cp $(IMG) ./disk.raw
 	tar --format=oldgnu -Sczf $(NAS)-gcloud.tar.gz disk.raw
@@ -78,3 +85,4 @@ analyse:
 	du -sh $(OUT)buildroot/output/target/lib/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
 	du -sh $(OUT)buildroot/output/target/lib/modules/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
 
+#-----------------------------------------------------------------------------#
