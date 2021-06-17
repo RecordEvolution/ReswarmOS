@@ -10,6 +10,7 @@ CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
 
 #-----------------------------------------------------------------------------#
+# prepare container image for building
 
 setup: Dockerfile $(OUT)
 	./reswarmify/os-release.sh > rootfs/etc/os-release
@@ -19,6 +20,9 @@ setup: Dockerfile $(OUT)
 $(OUT):
 	mkdir -pv $(OUT)
 	chmod -R 777 $(OUT)
+
+#-----------------------------------------------------------------------------#
+# manage build process
 
 build:
 	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
@@ -30,6 +34,7 @@ build-logs:
 	docker logs $(CNM)
 
 #-----------------------------------------------------------------------------#
+# compress final OS image for distribution
 
 compress-zip:
 	mv $(IMG) ./
@@ -66,13 +71,27 @@ prepare-gcloud:
 	rm ./disk.raw
 	mv $(NAS)-gcloud.tar.gz $(OUT)
 
+#-----------------------------------------------------------------------------#
+# clean up and remove build output and container image
+
 clean-output:
 	rm -r $(OUT)
 
 clean-docker:
 	docker image rm $(TNM)
 
+#-----------------------------------------------------------------------------#
+# manage update system
+
+update-server-build:
+	docker build update/ --tag=osupdater:0.1
+
+update-server-run:
+	docker run -it --rm osupdater:0.1 /bin/bash
+
+#-----------------------------------------------------------------------------#
 # analyse objects contributing to final root filesystem size
+
 OUTCL:=$(shell echo $(OUT) | sed 's/\///g')
 analyse:
 	du -sh $(OUT)buildroot/output/target/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
