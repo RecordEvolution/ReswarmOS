@@ -59,7 +59,11 @@ support the use of _u-boot_.
 
 ### References
 
+- https://source.denx.de/u-boot/u-boot
+- https://github.com/u-boot/u-boot
+- https://www.denx.de/wiki/U-Boot/WebHome
 - https://andrei.gherzan.ro/linux/uboot-on-rpi/
+- https://www.youtube.com/watch?v=5E0sdYkvq-Q
 
 ## References
 

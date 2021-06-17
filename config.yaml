@@ -1,6 +1,6 @@
 ---
   os-name: "ReswarmOS"
-  version: 0.3.7
+  version: 0.3.8
   # general board description
   board: raspberrypi
   # specific board model
