@@ -1,0 +1,4 @@
+# The enable_uart setting is required because U-Boot assumes the VideoCore 
+# firmware is configured to use the mini UART (rather than PL011) for the 
+# serial console. Without this, U-Boot will not boot at all.
+enable_uart=1

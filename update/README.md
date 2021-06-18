@@ -49,22 +49,6 @@ or a single file is called a _Slot_.
 - https://github.com/ostreedev/ostree/issues/1801
 - https://github.com/ostreedev/ostree/issues/2223
 
-## Bootloader
-
-### U-Boot
-
-Most of the updater frameworks require some work flexibility during the boot process
-which is supported out of the box by e.g. a raspberry pi. Both _RAUC_ and _ostree_
-support the use of _u-boot_. 
-
-### References
-
-- https://source.denx.de/u-boot/u-boot
-- https://github.com/u-boot/u-boot
-- https://www.denx.de/wiki/U-Boot/WebHome
-- https://andrei.gherzan.ro/linux/uboot-on-rpi/
-- https://www.youtube.com/watch?v=5E0sdYkvq-Q
-
 ## References
 
 - https://github.com/ostreedev/ostree
