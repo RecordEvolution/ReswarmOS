@@ -19,6 +19,13 @@ U-boot is injected into the second step of the process and usually involves two 
 1. U-boot SPL (secondary programm loader)
 2. U-boot
 
+Both bootscript _boot.txt_ and the linux kernel _kernelx.img_ have to be converted into a
+format readable by U-boot by
+
+```
+mkimage ....
+```
+
 ### RaspberryPi
 
 Using _U-boot_ on a RaspberryPi it is introduced by the configuration file `config.txt` in the 
@@ -42,4 +49,4 @@ into _kernel<x>.img_ since this will be loaded by the SOC first stage bootloader
 - https://www.golem.de/news/raspberry-pi-der-mit-dem-64-bit-kernel-tanzt-1611-124475-4.html
 - https://kernelnomicon.org/?p=682
 - https://blog.christophersmart.com/2016/10/27/building-and-booting-upstream-linux-and-u-boot-for-raspberry-pi-23-arm-boards/
-
+- https://linux.die.net/man/1/mkimage
