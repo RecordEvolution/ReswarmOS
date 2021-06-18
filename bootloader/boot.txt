@@ -1,4 +1,4 @@
 fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
-fatload mmc 0:1 ${kernel_addr_r} Image.4.8
+fatload mmc 0:1 ${kernel_addr_r} uImage
 setenv bootargs console=ttyS0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait rw
-booti ${kernel_addr_r} - ${fdt_addr_r}
+bootm ${kernel_addr_r} - ${fdt_addr_r}

@@ -12,7 +12,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && apt-get upgrade -y && apt-get install -y \
     git make python3 python3-yaml \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
-    wget cpio unzip rsync bc
+    wget cpio unzip rsync bc \
+    u-boot-tools
 
 # clone buildroot repository (at certain commit)
 #RUN git clone https://github.com/buildroot/buildroot --single-branch --depth=1 /home/buildroot
@@ -33,6 +34,7 @@ COPY config.yaml ./config.yaml
 COPY image/ ./image
 COPY rootfs/ ./rootfs/
 COPY boot/ ./boot/
+COPY bootloader/ ./bootloader/
 COPY ./post-build.sh ./
 
 # create directory (make sure to match directory/path given in makefile) to 
