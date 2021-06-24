@@ -11,6 +11,7 @@ tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/ini
 fi
 
 # convert boot-script and kernel into U-boot image format
+# TODO don't use any architecture specifics like 'arm' here!! => increase abstraction!!
 rm -vf /home/buildroot/bootloader/boot.scr.uimg
 mkimage -A arm -O linux -T script -C none -d /home/buildroot/bootloader/boot.txt ${BINARIES_DIR}/boot.scr.uimg
 mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux kernel" -d ${BINARIES_DIR}/zImage ${BINARIES_DIR}/uImage
