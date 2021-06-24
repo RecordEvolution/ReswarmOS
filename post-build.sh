@@ -12,13 +12,12 @@ fi
 
 # convert boot-script and kernel into U-boot image format
 rm -vf /home/buildroot/bootloader/boot.scr.uimg
-mkimage -A arm -O linux -T script -C none -d /home/buildroot/bootloader/boot.txt /home/buildroot/bootloader/boot.scr.uimg
+mkimage -A arm -O linux -T script -C none -d /home/buildroot/bootloader/boot.txt ${BINARIES_DIR}/boot.scr.uimg
 mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux kernel" -d ${BINARIES_DIR}/zImage ${BINARIES_DIR}/uImage
 
 # include all customized boot directory files
 ls /home/buildroot/boot/ -lh
 cp -v /home/buildroot/boot/* ${BINARIES_DIR}/
-cp -v /home/buildroot/bootloader/boot.scr.uimg ${BINARIES_DIR}/
 
 # disable/mask ttyS0
 rm -vf ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
