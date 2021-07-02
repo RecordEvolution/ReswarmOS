@@ -23,7 +23,7 @@ ls -lh ./reswarmos-build/
 
 logging_message "ReswarmOS configuration"
 
-reswarmcfg="./config.yaml"
+reswarmcfg="./setup.yaml"
 cat ${reswarmcfg}
 
 # extra some information from .yaml configuration file
