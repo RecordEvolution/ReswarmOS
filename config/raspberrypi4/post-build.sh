@@ -12,12 +12,12 @@ fi
 
 # convert boot-script and kernel into U-boot image format
 # TODO don't use any architecture specifics like 'arm' here!! => increase abstraction!!
-rm -vf /home/buildroot/bootloader/boot.scr.uimg
-mkimage -A arm -O linux -T script -C none -d /home/buildroot/bootloader/boot.txt ${BINARIES_DIR}/boot.scr.uimg
+rm -vf /home/buildroot/boot/uboot/boot.scr.uimg
+mkimage -A arm -O linux -T script -C none -d /home/buildroot/boot/uboot/boot.txt ${BINARIES_DIR}/boot.scr.uimg
 mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux kernel" -d ${BINARIES_DIR}/zImage ${BINARIES_DIR}/uImage
 
 # include all customized boot directory files
-ls /home/buildroot/boot/ -lh
+ls /home/buildroot/boot/ -lhR
 cp -v /home/buildroot/boot/* ${BINARIES_DIR}/
 
 # disable/mask ttyS0

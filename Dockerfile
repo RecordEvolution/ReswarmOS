@@ -29,13 +29,10 @@ COPY ./logging.sh ./
 RUN chmod 755 ./*.sh
 
 # copy configuration, rootfs overlay and boot directory
-COPY config ./config
-COPY config.yaml ./config.yaml
-COPY image/ ./image
+COPY setup.yaml ./setup.yaml
+COPY config/ ./config
 COPY rootfs/ ./rootfs/
 COPY boot/ ./boot/
-COPY bootloader/ ./bootloader/
-COPY ./post-build.sh ./
 
 # create directory (make sure to match directory/path given in makefile) to 
 # be mounted as volume and transfer ownership
