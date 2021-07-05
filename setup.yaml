@@ -1,14 +1,15 @@
 ---
+  # OS name and version
   os-name: "ReswarmOS"
   version: 0.3.8
   # general board description
   board: raspberrypi
-  # specific board model
-  model: raspberrypi
-  # custom configuration file
-  config: config
-  # name of image configuration file
-  image: genimage-raspberrypi4.cfg
+  # specific model
+  model: raspberrypi4
+  # custom configuration file (default: "config/<board>/<model>/config")
+  config:
+  # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")
+  image:
   # reagent
   reagent:
     include: true

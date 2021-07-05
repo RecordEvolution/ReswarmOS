@@ -28,9 +28,12 @@ fi
 imgdev=$(losetup -a | grep ${outbuild}/${imgpath} | awk -F ':' '{print $1}')
 echo -e "...as ${imgdev}\n"
 
-# show partition table
+sleep 2
+
+# show partition table and partition details
 fdisk -l ${imgdev}
 parted ${imgdev} print
+lsblk -lo name,path,size,fstype,label,partlabel ${imgdev}
 
 # mount filesystems
 # udisksctl mount --block-device ${imgdev}p1
