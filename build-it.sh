@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit immediately on a non-zero status
+set -e
+
 source logging.sh
 
 logging_header "starting to build ReswarmOS"
@@ -38,7 +41,24 @@ osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr
 imgname=$(echo "${osname}-${osversion}-${board}.img")
 
 # buildroot configuration file
-cfgfile="./${confg}"
+if [ ! -z ${confg} ]; then
+  echo -e "custom configuration specified:"
+  cfgfile="./${confg}"
+else
+  echo "no custom configuration specified: using default:"
+  cfgfile="./config/${board}/${model}/config"
+fi
+echo "${cfgfile}"
+
+# image configuration file
+if [ ! -z ${imcfg} ]; then
+  echo -e "custom image configuration specified:"
+  imcfgfile="./${imcfg}"
+else
+  echo "no custom image configuration specified: using default:"
+  imcfgfile="./config/${board}/${model}/genimage.cfg"
+fi
+echo "${imcfgfile}"
 
 # determine relative path of rootfs overlay directory
 rfsovly=$(realpath --relative-to=./reswarmos-build/buildroot ./rootfs)
@@ -127,11 +147,12 @@ ls -lha ./reswarmos-build/buildroot/
 logging_message "image configuration"
 
 # employ genimage configuration for partitions and image
-cp -v "./image/${imcfg}" "./reswarmos-build/buildroot/board/${model}/"
+cp -v "${imcfgfile}" "./reswarmos-build/buildroot/board/${board}/genimage-${model}.cfg" 
+# output-build/buildroot/board/raspberrypi/genimage-raspberrypi4.cfg
 
 # insert relative path of boot directory
 echo "employ post-build.sh"
-cp -v ./post-build.sh "./reswarmos-build/buildroot/board/${model}/"
+cp -v ./config/${board}/${model}/post-build.sh "./reswarmos-build/buildroot/board/${model}/"
 
 # generate/update os-version file in rootfs overlay directory
 echo "${osname}-${osversion}" > ./rootfs/etc/reswarmos

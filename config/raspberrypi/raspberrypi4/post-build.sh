@@ -18,7 +18,9 @@ mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux 
 
 # include all customized boot directory files
 ls /home/buildroot/boot/ -lhR
-cp -v /home/buildroot/boot/* ${BINARIES_DIR}/
+cp -v /home/buildroot/boot/cmdline.txt ${BINARIES_DIR}/
+cp -v /home/buildroot/boot/config.txt ${BINARIES_DIR}/
+cp -v /home/buildroot/boot/device.ini ${BINARIES_DIR}/
 
 # disable/mask ttyS0
 rm -vf ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
