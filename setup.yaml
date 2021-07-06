@@ -5,7 +5,7 @@
   # general board description
   board: raspberrypi
   # specific model
-  model: raspberrypi4
+  model: raspberrypi3
   # custom configuration file (default: "config/<board>/<model>/config")
   config:
   # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")
