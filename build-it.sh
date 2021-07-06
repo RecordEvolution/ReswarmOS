@@ -38,7 +38,8 @@ imcfg=$(cat ${reswarmcfg} | grep "^ *image" | awk -F ':' '{print $2}' | tr -d ' 
 # construct image file name
 osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
 osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\" ")
-imgname=$(echo "${osname}-${osversion}-${board}.img")
+#imgname=$(echo "${osname}-${osversion}-${board}-${model}.img")
+imgname=$(echo "${osname}-${osversion}-${model}.img")
 
 # buildroot configuration file
 if [ ! -z ${confg} ]; then
