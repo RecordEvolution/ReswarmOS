@@ -11,6 +11,7 @@ tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/ini
 fi
 
 # convert boot-script and kernel into U-boot image format
+# for reference also see: https://rauc.readthedocs.io/en/latest/integration.html#set-up-u-boot-boot-script-for-rauc
 mkimage -A arm -O linux -T script -C none -n "U-boot script" -d /home/buildroot/boot/uboot/boot.txt ${BINARIES_DIR}/boot.scr.uimg
 mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux kernel" -d ${BINARIES_DIR}/zImage ${BINARIES_DIR}/uImage
 
@@ -35,4 +36,8 @@ bootmnt=$(cat ${TARGET_DIR}/etc/fstab | grep -i vfat | awk '{print $2}' | tr -d 
 echo "linking ${vfatlnk} to ${bootmnt}"
 rm -vf ${vfatlnk}
 ln -s ${bootmnt} ${vfatlnk}
+
+# make sure /var/lock exists
+echo "ensure existence of /var/lock directory"
+mkdir -pv ${TARGET_DIR}/var/lock/
 
