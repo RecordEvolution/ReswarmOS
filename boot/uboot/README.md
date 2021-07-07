@@ -26,6 +26,12 @@ format readable by U-boot by
 mkimage ....
 ```
 
+### Configure build of uboot binary
+
+#### References
+
+- https://www.vdoo.com/blog/setting-up-u-boot-to-harden-the-boot-process
+
 ### RaspberryPi
 
 Using _U-boot_ on a RaspberryPi it is introduced by the configuration file `config.txt` in the 
@@ -50,3 +56,5 @@ into _kernel<x>.img_ since this will be loaded by the SOC first stage bootloader
 - https://kernelnomicon.org/?p=682
 - https://blog.christophersmart.com/2016/10/27/building-and-booting-upstream-linux-and-u-boot-for-raspberry-pi-23-arm-boards/
 - https://linux.die.net/man/1/mkimage
+- https://www.youtube.com/watch?v=rJtlAi8rxgs
+

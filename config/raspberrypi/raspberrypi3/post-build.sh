@@ -11,7 +11,7 @@ tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/ini
 fi
 
 # convert boot-script and kernel into U-boot image format
-mkimage -A arm -O linux -T script -C none -d /home/buildroot/boot/uboot/boot.txt ${BINARIES_DIR}/boot.scr.uimg
+mkimage -A arm -O linux -T script -C none -n "U-boot script" -d /home/buildroot/boot/uboot/boot.txt ${BINARIES_DIR}/boot.scr.uimg
 mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux kernel" -d ${BINARIES_DIR}/zImage ${BINARIES_DIR}/uImage
 
 # include all customized boot directory files
@@ -19,6 +19,7 @@ ls /home/buildroot/boot/ -lhR
 cp -v /home/buildroot/boot/cmdline.txt ${BINARIES_DIR}/
 cp -v /home/buildroot/boot/config.txt ${BINARIES_DIR}/
 cp -v /home/buildroot/boot/device.ini ${BINARIES_DIR}/
+cp -v /home/buildroot/boot/uboot/uboot.env ${BINARIES_DIR}/
 
 # disable/mask ttyS0
 rm -vf ${TARGET_DIR}/etc/systemd/system/serial-getty@ttyS0.service
