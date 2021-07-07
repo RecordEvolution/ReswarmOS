@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vrsn=$(cat setup.yaml | grep version | awk -F ':' '{print $2}' | tr -d ' ')
+vrsn=$(cat setup.yaml | grep version | awk -F ':' '{print $2}' | tr -d ' \n')
 gthsh=$(git rev-parse HEAD)
 gthshshort=$(git rev-parse --short HEAD)
 gtbranch=$(git rev-parse --abbrev-ref HEAD)
