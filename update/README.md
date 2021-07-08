@@ -24,6 +24,11 @@ consists of a
 RAUC incorporates all that stuff in a _SquashFS_ image. Every RAUC _Bundle_ must
 be _signed_ with a given certificate.
 
+### Interfacing with U-Boot
+
+- https://rauc.readthedocs.io/en/latest/integration.html#set-up-u-boot-boot-script-for-rauc
+- https://rauc.readthedocs.io/en/latest/reference.html#u-boot
+
 ### Slots
 
 In RAUC language everything that can be updated like i.a. an entire device, a partition
