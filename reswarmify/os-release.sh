@@ -9,9 +9,9 @@ tsdate=$(date +%Y%m%dT%H%M%S)
 
 osrls=$(cat << EOF
 NAME=ReswarmOS
-VERSION=v${vrsn}-${gthshshort}-${tsdate}
+VERSION=v${vrsn}-g${gthshshort}-${tsdate}
 ID=reswarmos
-VERSION_ID=${gthsh}
+VERSION_ID=g${gthsh}
 PRETTY_NAME="ReswarmOS-${vrsn}"
 EOF
 )
