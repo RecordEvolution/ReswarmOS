@@ -49,7 +49,8 @@ boardhardware()
 {
   cpumodel=$(lscpu | grep "Model name" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
   boardmod=$(cat /proc/cpuinfo | grep "Model" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
-  echo "${boardmod} ${cpumodel}"
+  hardware=$(cat /proc/cpuinfo | grep "Hardware" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
+  echo "${boardmod} ${cpumodel} ${hardware}"
 }
 
 # CPU
