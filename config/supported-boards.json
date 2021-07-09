@@ -1,0 +1,51 @@
+{
+  "latest-update": "2021-07-09T02:34:01",
+  "boards": [
+    {
+      "board": "raspberrypi",
+      "board-name": "RaspberryPi",
+      "description": "",
+      "model": "raspberrypi3",
+      "model-name": "Raspberry Pi 3",
+      "variant": "3B",
+      "architecture": "armv7l",
+      "cpu": "BROADCOM BCM2573",
+      "latest-image": {
+        "file": "ReswarmOS-v0.3.8-raspberrypi3.img",
+        "sha256": "c48a52e719c7a10f302c97018df3f781a67a8e2f8e667f194302033ae8d1",
+        "build-time": "2021-07-07T14.34.21"
+      }
+    },
+    {
+      "board": "raspberrypi",
+      "board-name": "RaspberryPi",
+      "description": "",
+      "model": "raspberrypi4",
+      "model-name": "Raspberry Pi 4",
+      "variant": "4B",
+      "architecture": "armv7l",
+      "cpu": "BROADCOM BCM2573",
+      "latest-image": {
+        "file": "ReswarmOS-v0.3.8-raspberrypi4.img",
+        "sha256": "c48a52e719c7a10f302c97018df3f781a67a8e2f8e667f194302033ae8d1",
+        "build-time": "2021-07-07T14.34.21"
+      }
+    },
+    {
+      "board": "raspberrypi",
+      "board-name": "RaspberryPi",
+      "description": "",
+      "model": "raspberrypizerow",
+      "model-name": "Raspberry Zero W",
+      "variant": "",
+      "architecture": "armv6",
+      "cpu": "BROADCOM BCM2573",
+      "latest-image": {
+        "file": "ReswarmOS-v0.3.8-raspberrypizerow.img",
+        "sha256": "c48a52e719c7a10f302c97018df3f781a67a8e2f8e667f194302033ae8d1",
+        "build-time": "2021-07-07T14.34.21"
+      }
+    }
+  ]
+}
+
