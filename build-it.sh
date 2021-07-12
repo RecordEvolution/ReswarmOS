@@ -72,16 +72,16 @@ cat ${cfgfile} | grep BR2_ROOTFS_OVERLAY
 # Reagent
 
 # check reagent configuration
-reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
-reagenturl=$(echo "${reagentcfg}" | grep "^ *url-latest" | awk -F ': ' '{print $2}' | tr -d ' ')
-reagentinc=$(echo "${reagentcfg}" | grep "^ *include" | awk -F ': ' '{print $2}' | tr -d ' ')
+#reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
+#reagenturl=$(echo "${reagentcfg}" | grep "^ *url-latest" | awk -F ': ' '{print $2}' | tr -d ' ')
+#reagentinc=$(echo "${reagentcfg}" | grep "^ *include" | awk -F ': ' '{print $2}' | tr -d ' ')
 
-if [[ "${reagentinc}" == "true" ]]; then
-  logging_message "preparing and adding Reagent"
-  # reagenturl="https://storage.googleapis.com/re-agent/reagent-latest"
-  wget ${reagenturl} -P ./rootfs/opt/reagent/
-  chmod 755 ./rootfs/opt/reagent/reagent-*
-fi
+#if [[ "${reagentinc}" == "true" ]]; then
+#  logging_message "preparing and adding Reagent"
+#  # reagenturl="https://storage.googleapis.com/re-agent/reagent-latest"
+#  wget ${reagenturl} -P ./rootfs/opt/reagent/
+#  chmod 755 ./rootfs/opt/reagent/reagent-*
+#fi
 
 # --------------------------------------------------------------------------- #
 
