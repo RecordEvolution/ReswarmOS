@@ -20,7 +20,6 @@ mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux 
 
 # include all customized boot directory files
 ls ${BUILD_DIR}/boot/ -lhR
-#cp -v ${BUILD_DIR}/boot/cmdline.txt ${BINARIES_DIR}/
 cp -v ${BUILD_DIR}/boot/config.txt ${BINARIES_DIR}/
 cp -v ${BUILD_DIR}/boot/device.ini ${BINARIES_DIR}/
 cp -v ${BUILD_DIR}/boot/uboot/uboot.env ${BINARIES_DIR}/
