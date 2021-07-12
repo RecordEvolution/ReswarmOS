@@ -13,7 +13,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     git make python3 python3-yaml \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
     wget cpio unzip rsync bc \
-    u-boot-tools
+    u-boot-tools \
+    genext2fs
 
 # clone buildroot repository (at certain commit)
 #RUN git clone https://github.com/buildroot/buildroot --single-branch --depth=1 /home/buildroot
@@ -25,6 +26,7 @@ WORKDIR /home/buildroot
 
 # copy build scripts
 COPY ./build-it.sh ./
+COPY ./build-agent.sh ./
 COPY ./logging.sh ./
 RUN chmod 755 ./*.sh
 
