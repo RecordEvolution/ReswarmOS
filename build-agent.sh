@@ -33,6 +33,7 @@ if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
 fi
 
 # copy binary to rootfs
+mkdir -pv ${TARGET_DIR}/opt/reagent/
 cp -v ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ${TARGET_DIR}/opt/reagent/
 
 # --------------------------------------------------------------------------- #
