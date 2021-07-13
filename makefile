@@ -63,6 +63,10 @@ compress-xz:
 uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
+gcloud-upload: $(OUT)$(NAM).gz
+	gsutil ls gs://reflasher/
+	#gsutil cp $< gs://reswarm/
+
 #-----------------------------------------------------------------------------#
 
 prepare-gcloud:
