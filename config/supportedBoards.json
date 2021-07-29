@@ -1,0 +1,18 @@
+{
+    "latestUpdate": "2021-07-29T13:58:19",
+    "boards": [
+        {
+            "board": "raspberrypi",
+            "boardname": "Raspberry Pi",
+            "model": "raspberrypi3",
+            "modelname": "Raspberry Pi 3",
+            "architecture": "arm",
+            "cpu": "cortex-a53",
+            "latestImage": {
+                "file": "ReswarmOS-0.3.8-raspberrypi3.img.gz",
+                "sha256": "8abe474ca46ae8a9c2af8a93617bf66c1a0ea6cd5a52f86b45b0a93e6d142ef0",
+                "buildtime": "20210729T125438"
+            }
+        }
+    ]
+}
