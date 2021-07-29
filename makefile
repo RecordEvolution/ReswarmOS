@@ -5,6 +5,7 @@ CDR = $(shell pwd)
 IMG = $(shell ls -t $(OUT)*.img | head -n1)
 NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
+BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')
 TNM = reswarmos-builder:latest
 CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
@@ -34,7 +35,7 @@ build-logs:
 	docker logs $(CNM)
 
 #-----------------------------------------------------------------------------#
-# compress final OS image for distribution
+# compress final OS image
 
 compress-zip:
 	mv $(IMG) ./
@@ -63,9 +64,18 @@ compress-xz:
 uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
-gcloud-upload: $(OUT)$(NAM).gz
+#-----------------------------------------------------------------------------#
+# deploy image and meta-data
+
+image-meta:
+	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
+
+gcloud-upload: $(OUT)$(NAM).gz image-meta
+	@echo uploading image archive $<
+	#gsutil cp $< gs://reswarmos/$(BRD)/
+	gsutil ls gs://reswarmos/$(BRD)/
+	gsutil cp config/supportedBoards.json gs://reswarmos/supportedImages.json
 	gsutil ls gs://reswarmos/
-	gsutil cp $< gs://reswarmos/
 
 #-----------------------------------------------------------------------------#
 
