@@ -1,5 +1,5 @@
 {
-    "latestUpdate": "2021-07-29T13:58:19",
+    "latestUpdate": "2021-07-30T13:10:45",
     "boards": [
         {
             "board": "raspberrypi",
@@ -9,9 +9,22 @@
             "architecture": "arm",
             "cpu": "cortex-a53",
             "latestImage": {
-                "file": "ReswarmOS-0.3.8-raspberrypi3.img.gz",
-                "sha256": "8abe474ca46ae8a9c2af8a93617bf66c1a0ea6cd5a52f86b45b0a93e6d142ef0",
-                "buildtime": "20210729T125438"
+                "file": "ReswarmOS-0.3.7-raspberrypi.img.gz",
+                "sha256": "5171aac9138ddcdee972d5f6f9e8de03b4a67a254ed5a1e849b1447921673a38",
+                "buildtime": "20210728T131636"
+            }
+        },
+        {
+            "board": "raspberrypi",
+            "boardname": "Raspberry Pi",
+            "model": "raspberrypi4",
+            "modelname": "Raspberry Pi 4",
+            "architecture": "arm",
+            "cpu": "cortex-a72",
+            "latestImage": {
+                "file": "ReswarmOS-0.3.7-raspberrypi.img.gz",
+                "sha256": "5171aac9138ddcdee972d5f6f9e8de03b4a67a254ed5a1e849b1447921673a38",
+                "buildtime": "20210728T131636"
             }
         }
     ]
