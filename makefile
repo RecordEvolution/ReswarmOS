@@ -68,6 +68,7 @@ uncompress-xz:
 # deploy image and meta-data
 
 image-meta:
+	gsutil cp gs://reswarmos/supportedImages.json config/supportedBoards.json
 	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
 
 gcloud-upload: $(OUT)$(NAM).gz image-meta
