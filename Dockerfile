@@ -12,7 +12,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && apt-get upgrade -y && apt-get install -y \
     git make python3 python3-yaml \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
-    wget cpio unzip rsync bc \
+    wget cpio unzip rsync bc iproute2 \
     u-boot-tools \
     genext2fs
 

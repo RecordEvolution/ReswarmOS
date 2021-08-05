@@ -89,8 +89,10 @@ prepare-gcloud:
 #-----------------------------------------------------------------------------#
 # clean up and remove build output and container image
 
+clean: clean-output clean-docker
+
 clean-output:
-	rm -r $(OUT)
+	rm -rf $(OUT)
 
 clean-docker:
 	docker image rm $(TNM)
