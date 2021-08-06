@@ -11,7 +11,7 @@ CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
 
 #-----------------------------------------------------------------------------#
-# prepare container image for building
+# container image hosting build process
 
 setup: Dockerfile $(OUT)
 	./reswarmify/os-release.sh > rootfs/etc/os-release
@@ -65,15 +65,12 @@ uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
 #-----------------------------------------------------------------------------#
-# deploy image and meta-data
+# deploy ReswarmOS image and meta-data
 
-image-meta:
+release: $(OUT)$(NAM).gz 
 	gsutil cp gs://reswarmos/supportedImages.json config/supportedBoards.json
 	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
-
-gcloud-upload: $(OUT)$(NAM).gz image-meta
-	@echo uploading image archive $<
-	#gsutil cp $< gs://reswarmos/$(BRD)/
+	gsutil cp $< gs://reswarmos/$(BRD)/
 	gsutil ls gs://reswarmos/$(BRD)/
 	gsutil cp config/supportedBoards.json gs://reswarmos/supportedImages.json
 	gsutil ls gs://reswarmos/
