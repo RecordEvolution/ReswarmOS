@@ -30,14 +30,14 @@ reswarmcfg="./setup.yaml"
 cat ${reswarmcfg}
 
 # extra some information from .yaml configuration file
-board=$(cat ${reswarmcfg} | grep "^ *board:" | awk -F ':' '{print $2}' | tr -d ' ')
-model=$(cat ${reswarmcfg} | grep "^ *model:" | awk -F ':' '{print $2}' | tr -d ' ')
-confg=$(cat ${reswarmcfg} | grep "^ *config:" | awk -F ':' '{print $2}' | tr -d ' ')
-imcfg=$(cat ${reswarmcfg} | grep "^ *image:" | awk -F ':' '{print $2}' | tr -d ' ')
+board=$(cat ${reswarmcfg} | grep "^ *board:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
+model=$(cat ${reswarmcfg} | grep "^ *model:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
+confg=$(cat ${reswarmcfg} | grep "^ *config:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
+imcfg=$(cat ${reswarmcfg} | grep "^ *image:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
 
 # construct image file name
-osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\" ")
-osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\" ")
+osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\"\' ")
+osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\"\' ")
 #imgname=$(echo "${osname}-${osversion}-${board}-${model}.img")
 imgname=$(echo "${osname}-${osversion}-${model}.img")
 
