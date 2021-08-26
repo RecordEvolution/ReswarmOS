@@ -1,5 +1,5 @@
 {
-    "latestUpdate": "2021-08-26T16:58:09",
+    "latestUpdate": "2021-08-26T17:52:38",
     "boards": [
         {
             "board": "raspberrypi",
@@ -36,8 +36,8 @@
             "cpu": "arm1176jzf-s",
             "latestImage": {
                 "file": "ReswarmOS-0.3.8-raspberrypi0w.img.gz",
-                "sha256": "d5e17de78e550ef9d94943cc4434e2b5a3f3325e302c5c567ccd734f2154af91",
-                "buildtime": "20210826T153858"
+                "sha256": "beac4e66cbb0d2afb9c88b98d4a44e3778c56aefe0d593be263e8b8ac8675371",
+                "buildtime": "20210826T173943"
             }
         }
     ]
