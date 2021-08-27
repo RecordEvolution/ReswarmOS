@@ -32,7 +32,7 @@ ltshst=$(cat /etc/hosts | grep -P "^127.0.1.1[ \t]*${hostnm}$")
 if [ -z "${ltshst}" ]; then
   echo "updating hostname in /etc/hosts"
   sed -i "s/^127.0.1.1/# 127.0.1.1/g" /etc/hosts
-  echo "127.0.1.1\t${hostnm}" >> /etc/hosts
+  printf "127.0.1.1\t${hostnm}\n" >> /etc/hosts
 else
   echo "hostname already updated in /etc/hosts"
 fi

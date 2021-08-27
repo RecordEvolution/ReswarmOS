@@ -5,7 +5,7 @@ set -e
 
 # --------------------------------------------------------------------------- #
 
-echo "build Reagent..."
+echo "building (latest) Reagent..."
 echo "current user: $(whoami)"
 echo "working directory: $(pwd)"
 
@@ -28,12 +28,12 @@ echo "building for architecture: ${ARCH}"
 if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
   pushd ${BASE_DIR}/build/DeviceManagementAgent/src/
   ${GOC} get .
-  GOOS=linux GOARCH=${ARCH} ${GOC} build .
+  GOOS=linux GOARCH=${ARCH} CGO_ENABLED=1 ${GOC} build .
   popd
 fi
 
-# copy binary to rootfs
+# copy binary to rootfs as 'reagent-latest'
 mkdir -pv ${TARGET_DIR}/opt/reagent/
-cp -v ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ${TARGET_DIR}/opt/reagent/
+cp -v ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ${TARGET_DIR}/opt/reagent/reagent-latest
 
 # --------------------------------------------------------------------------- #
