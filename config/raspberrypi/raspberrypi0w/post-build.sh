@@ -17,6 +17,7 @@ BUILD_DIR=/home/buildroot/
 ${BUILD_DIR}./build-agent.sh
 
 # convert boot-script and kernel into U-boot image format
+echo "converting/preparing U-boot scripts and images"
 # for reference also see: https://rauc.readthedocs.io/en/latest/integration.html#set-up-u-boot-boot-script-for-rauc
 mkimage -A arm -O linux -T script -C none -n "U-boot script" -d ${BUILD_DIR}/config/raspberrypi/raspberrypi0w/uboot.sh ${BINARIES_DIR}/boot.scr.uimg
 mkimage -A arm -O linux -T kernel -C none -a 0x00008000 -e 0x00008000 -n "Linux kernel" -d ${BINARIES_DIR}/zImage ${BINARIES_DIR}/uImage
