@@ -26,8 +26,8 @@ ARCV=$(cat ${BR2_CONFIG} | grep 'BR2_arm1176j' | grep -v "^#" | awk -F '=' '{pri
 echo "building for architecture: ${ARCH} (${ARCV})"
 
 # build agent binary
-#if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
-if [ 0 == 0 ]; then
+if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
+#if [ 0 == 0 ]; then
   pushd ${BASE_DIR}/build/DeviceManagementAgent/src/
   ${GOC} get .
   # for reference, see:
@@ -47,5 +47,8 @@ fi
 # copy binary to rootfs as 'reagent-latest'
 mkdir -pv ${TARGET_DIR}/opt/reagent/
 cp -v ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ${TARGET_DIR}/opt/reagent/reagent-latest
+
+# check binary
+file ${TARGET_DIR}/opt/reagent/reagent-latest
 
 # --------------------------------------------------------------------------- #
