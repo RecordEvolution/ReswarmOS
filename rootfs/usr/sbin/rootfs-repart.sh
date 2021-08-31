@@ -1,11 +1,16 @@
 #!/bin/sh
 
-rootpart="$(findmnt -n -o SOURCE /)"
-rootdev="/dev/$(lsblk -no pkname "$rootpart")"
+#rootpart="$(findmnt -n -o SOURCE /)"
+#rootdev="/dev/$(lsblk -no pkname "$rootpart")"
 
-flock $rootdev sfdisk -f $rootdev -N 2 <<EOF
-,+
-EOF
+#flock $rootdev sfdisk -f $rootdev -N 2 <<EOF
+#,+
+#EOF
+
+# resize partition(s)
+flock /dev/mmcblk0 parted --script /dev/mmcblk0 resizepart 2 10%
+flock /dev/mmcblk0 parted --script /dev/mmcblk0 resizepart 3 10%
+flock /dev/mmcblk0 parted --script /dev/mmcblk0 resizepart 4 80%
 
 sleep 5
 
@@ -15,9 +20,15 @@ sleep 5
 
 flock $rootdev partprobe $rootdev
 
-mount -o remount,rw $rootpart
+#mount -o remount,rw $rootpart
+#resize2fs $rootpart
 
-resize2fs $rootpart
+mount -o remount,rw /dev/mmcblk0p2
+resize2fs /dev/mmcblk0p2
+#mount -o remount,rw /dev/mmcblk0p3
+resize2fs /dev/mmcblk0p3
+mount -o remount,rw /dev/mmcblk0p4
+resize2fs /dev/mmcblk0p4
 
 exit 0
 
