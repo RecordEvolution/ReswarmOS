@@ -7,7 +7,7 @@ description=RAUC update bundle for ReswarmOS
 build=
 
 #[bundle]
-#format=verity
+#format=verity plain
 # following three fields are left unspecified and will later be calculated automatically by RAUC
 #verity-hash=
 #verity-salt=
