@@ -44,6 +44,7 @@ or a single file is called a _Slot_.
 - https://www.konsulko.com/getting-started-with-rauc-on-raspberry-pi-2/
 - https://elinux.org/RPi_U-Boot
 - https://pretalx.com/media/yocto-project-summit-2020/submissions/JJYPH3/resources/leon-anavi-rauc-yocto-2020_RSRhxRE.pdf
+- https://github.com/rauc/rauc/blob/master/docs/reference.rst
 
 ## OSTree
 

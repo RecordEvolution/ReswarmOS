@@ -99,6 +99,7 @@ clean-docker:
 #
 # RAUC:
 # - https://rauc.readthedocs.io/en/v1.5.1/advanced.html#single-key
+# - https://rauc.readthedocs.io/en/latest/examples.html#pki-setup
 
 $(OUT)key.pem $(OUT)cert.pem:
 	openssl req -new -x509 -newkey rsa:4096 -nodes \
