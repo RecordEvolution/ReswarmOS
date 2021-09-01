@@ -1,4 +1,4 @@
-/dev/mmcblk0p2  /               auto    rw              0       1
-#/dev/root       /               auto    rw              0       1
+#/dev/mmcblk0p2  /               auto    rw              0       1
+/dev/root       /               auto    rw              0       1
 /dev/mmcblk0p1  /boot           vfat    defaults        0       2
 /dev/mmcblk0p4  /apps           ext4    defaults        0       2
