@@ -11,7 +11,8 @@ Type=oneshot
 TimeoutSec=infinity
 #ExecStartPre=/usr/sbin/rootfsAB-repart.sh
 #ExecStart=/usr/sbin/appfs-repart.sh
-ExecStart=/usr/sbin/rootfs-repart.sh
+#ExecStart=/usr/sbin/rootfs-repart.sh
+ExecStart=/usr/sbin/repart-mmcblk0.sh
 ExecStart=/bin/systemctl --no-reload disable %n
 
 [Install]
