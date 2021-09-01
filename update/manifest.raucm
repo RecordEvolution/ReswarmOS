@@ -2,16 +2,16 @@
 
 [update]
 compatible=ReswarmDevice
-#version=2021-07-08.1
-#description=A new bundle with whatever description you like
-#build=g39a8978-20210827T170242
+version=
+description=RAUC update bundle for ReswarmOS
+build=
 
-[bundle]
-format=verity
+#[bundle]
+#format=verity
 # following three fields are left unspecified and will later be calculated automatically by RAUC
-verity-hash=
-verity-salt=
-verity-size=
+#verity-hash=
+#verity-salt=
+#verity-size=
 
 #[hooks]
 #filename=
@@ -31,14 +31,14 @@ verity-size=
 
 [image.rootfs]
 filename=rootfs.ext4
-size=419430400
-sha256=b14c1457dc10469418b4154fef29a90e1ffb4dddd308bf0f2456d436963ef5b3
+#size=419430400
+#sha256=b14c1457dc10469418b4154fef29a90e1ffb4dddd308bf0f2456d436963ef5b3
 # hooks=
 
-[image.appfs]
-filename=appfs.ext4
-size=219430400
-sha256=ecf4c031d01cb9bfa9aa5ecfce93efcf9149544bdbf91178d2c2d9d1d24076ca
+#[image.appfs]
+#filename=appfs.ext4
+#size=219430400
+#sha256=ecf4c031d01cb9bfa9aa5ecfce93efcf9149544bdbf91178d2c2d9d1d24076ca
 # hooks=
 
 #-----------------------------------------------------------------------------#

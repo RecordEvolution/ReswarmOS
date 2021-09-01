@@ -13,7 +13,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     git make python3 python3-yaml \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
     wget cpio unzip rsync bc iproute2 \
-    u-boot-tools \
+    rauc u-boot-tools \
     genext2fs
 
 # clone buildroot repository (at certain commit)
