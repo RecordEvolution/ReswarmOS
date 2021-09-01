@@ -96,12 +96,41 @@ clean-docker:
 
 #-----------------------------------------------------------------------------#
 # manage update system
+#
+# RAUC:
+# - https://rauc.readthedocs.io/en/v1.5.1/advanced.html#single-key
+
+$(OUT)key.pem $(OUT)cert.pem:
+	openssl req -new -x509 -newkey rsa:4096 -nodes \
+	-keyout $(OUT)/key.pem -out $(OUT)/cert.pem \
+	-subj "/C=DE/ST=Hesse/L=Frankfurt am Main/O=RecordEvolutionGmbH/CN=www.record-evolution.com"
+
+$(OUT)rauc-bundle/:
+	mkdir -pv $@
+
+$(OUT)rauc-bundle/manifest.raucm: update/manifest.raucm
+	#upvertag = $(shell cat rootfs/etc/os-release | grep ^VERSION= | awk -F '=' '{print $2}')
+	#upbldtag = $(shell cat rootfs/etc/os-release | grep ^VERSION_ID= | awk -F '=' '{print $2}')
+	#cat $< | grep -v "^#" | sed "s/UPDATEVERSIONTAG/$(upvertag)/g" | sed "s/UPDATEBUILDTAG/$(upbldtag)/g" > $@
+	cat $< | grep -v "^#" > $@
+
+$(OUT)rauc-bundle/rootfs.ext4:
+	cp -v $(OUT)buildroot/output/images/rootfs.ext2 $@
+
+$(OUT)ReswarmOS-update-bundle.raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
+	rauc bundle --cert=$(word 3,$^) --key=$(word 4,$^) $< $@
+	rauc info --no-verify $@
 
 update-server-build:
 	docker build update/ --tag=osupdater:0.1
 
 update-server-run:
 	docker run -it --rm osupdater:0.1 /bin/bash
+
+update-clean:
+	rm -vf $(OUT)cert.pem $(OUT)key.pem
+	rm -vf $(OUT)ReswarmOS-update-bundle.raucb
+	rm -rvf $(OUT)rauc-bundle
 
 #-----------------------------------------------------------------------------#
 # analyse objects contributing to final root filesystem size
