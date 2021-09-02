@@ -13,10 +13,12 @@ VLP = /home/buildroot/reswarmos-build
 #-----------------------------------------------------------------------------#
 # container image hosting build process
 
-setup: Dockerfile $(OUT)
+setup: Dockerfile $(OUT) $(OUT)key.pem $(OUT)cert.pem
 	./reswarmify/os-release.sh > rootfs/etc/os-release
 	docker build ./ --tag=$(TNM)
 	rm -vf $(OUT)buildroot/output/target/etc/os-release
+	# add certificate for verification of RAUC bundle
+	cp -v $(word 4,$^) rootfs/etc/cert.pem
 
 $(OUT):
 	mkdir -pv $(OUT)
@@ -25,10 +27,10 @@ $(OUT):
 #-----------------------------------------------------------------------------#
 # manage build process
 
-build:
+build: rootfs/etc/cert.pem
 	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
 
-build-daemon:
+build-daemon: rootfs/etc/cert.pem
 	docker run -it -d --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
 
 build-logs:
@@ -86,7 +88,7 @@ prepare-gcloud:
 #-----------------------------------------------------------------------------#
 # clean up and remove build output and container image
 
-clean: clean-output clean-docker
+clean: clean-output clean-docker clean-rauc
 
 clean-output:
 	rm -rf $(OUT)
@@ -106,6 +108,10 @@ $(OUT)key.pem $(OUT)cert.pem:
 	-keyout $(OUT)/key.pem -out $(OUT)/cert.pem \
 	-subj "/C=DE/ST=Hesse/L=Frankfurt am Main/O=RecordEvolutionGmbH/CN=www.record-evolution.com"
 
+# add certificate to rootfs for verification of RAUC bundle
+rootfs/etc/cert.pem: $(OUT)cert.pem
+	cp -v $< $@
+
 $(OUT)rauc-bundle/:
 	mkdir -pv $@
 
@@ -119,19 +125,15 @@ $(OUT)rauc-bundle/rootfs.ext4:
 	cp -v $(OUT)buildroot/output/images/rootfs.ext2 $@
 
 $(OUT)ReswarmOS-update-bundle.raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
+	rm -vf $@
 	rauc bundle --cert=$(word 3,$^) --key=$(word 4,$^) $< $@
 	rauc info --no-verify $@
 
-update-server-build:
-	docker build update/ --tag=osupdater:0.1
-
-update-server-run:
-	docker run -it --rm osupdater:0.1 /bin/bash
-
-update-clean:
+clean-rauc:
 	rm -vf $(OUT)cert.pem $(OUT)key.pem
 	rm -vf $(OUT)ReswarmOS-update-bundle.raucb
 	rm -rvf $(OUT)rauc-bundle
+	rm -vf rootfs/etc/rauc/cert.pem
 
 #-----------------------------------------------------------------------------#
 # analyse objects contributing to final root filesystem size
