@@ -1,4 +1,7 @@
 # https://github.com/rauc/rauc/blob/master/contrib/uboot.sh
+# https://www.denx.de/wiki/U-Bootdoc/BasicCommandSet
+# https://www.digi.com/resources/documentation/digidocs/PDFs/90000852.pdf
+# https://rauc.readthedocs.io/en/latest/integration.html#set-up-u-boot-boot-script-for-rauc
 
 test -n "${BOOT_ORDER}" || setenv BOOT_ORDER "A B"
 test -n "${BOOT_A_LEFT}" || setenv BOOT_A_LEFT 3
