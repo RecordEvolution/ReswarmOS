@@ -69,7 +69,7 @@ mount -o remount,rw /dev/mmcblk0p2
 resize2fs /dev/mmcblk0p2
 
 # recreate filesystems on partitions p3 and p4
-mkfs.ext4 /dev/mmcblk0p3 -L rootfsB
+mkfs.ext4 /dev/mmcblk0p3 -L rootfs
 mkfs.ext4 /dev/mmcblk0p4 -L appfs
 
 showLayout

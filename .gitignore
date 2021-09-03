@@ -5,3 +5,4 @@ output-build/
 *.img.gz
 rootfs/etc/os-release
 rootfs/etc/rauc/cert.pem
+rootfs/etc/setup.yaml

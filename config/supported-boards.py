@@ -13,6 +13,7 @@ parser.add_argument('setupFile',type=str,help='ReswarmOS setup.yaml file')
 parser.add_argument('boardsFile',type=str,help='path to supported boards JSON file')
 parser.add_argument('--timeFormat',type=str,default='%Y-%m-%dT%H:%M:%S',help='timestamp format')
 parser.add_argument('--boardSchema',type=str,default='{"latestUpdate":"","boards":[{"board":"","boardname":"","model":"","modelname":"","architecture":"","cpu":"","latestImage":{"file":"","sha256":"","buildtime":""}}]}',help='JSON schema of board/image list')
+parser.add_argument('--baseURL',type=str,default='https://storage.googleapis.com/reswarmos/',help='public base URL of images')
 parser.add_argument('--newFile',type=str,default=None,help='different output file')
 
 args = parser.parse_args()
@@ -180,6 +181,8 @@ if __name__ == '__main__' :
     bldtm = list(filter(reg.match,osrls))
     bldtm = bldtm[0].split('-')[-1].replace('\"','') if len(bldtm) == 1 else ''
     builtBoardImage['latestImage']['buildtime'] = bldtm
+    builtBoardImage['latestImage']['download'] = args.baseURL + setupConfig['board'] + '/' + imgName
+    builtBoardImage['latestImage']['update'] = args.baseURL + setupConfig['board'] + '/' + imgName.replace('.img.gz','.raucb')
     
     print('updated/new board/image object:\n'+json.dumps(builtBoardImage,indent=4)+'\n')
 
