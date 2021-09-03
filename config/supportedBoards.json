@@ -1,5 +1,5 @@
 {
-    "latestUpdate": "2021-08-30T12:18:53",
+    "latestUpdate": "2021-09-03T15:36:16",
     "boards": [
         {
             "board": "raspberrypi",
@@ -10,8 +10,10 @@
             "cpu": "cortex-a53",
             "latestImage": {
                 "file": "ReswarmOS-0.3.8-raspberrypi3.img.gz",
-                "sha256": "0c3596de5bd300d11607f0b96775bf8aabe7a551b4e7659c38d75a849e719c63",
-                "buildtime": "20210827T170242"
+                "sha256": "c0b7bbba233052c644856193e3c6dd5f4dd190413647d16cc1849547cbf91eb6",
+                "buildtime": "20210903T142409",
+                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.img.gz",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.raucb"
             }
         },
         {

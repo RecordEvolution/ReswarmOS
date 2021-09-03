@@ -6,6 +6,8 @@ IMG = $(shell ls -t $(OUT)*.img | head -n1)
 NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
 BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')
+MDL = $(shell cat setup.yaml | grep "model:" | sed 's/model://g' | tr -d '\n ')
+VSN = $(shell cat setup.yaml | grep "version:" | sed 's/version://g' | tr -d '\n ')
 TNM = reswarmos-builder:latest
 CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
@@ -15,6 +17,7 @@ VLP = /home/buildroot/reswarmos-build
 
 setup: Dockerfile $(OUT) $(OUT)key.pem $(OUT)cert.pem
 	./reswarmify/os-release.sh > rootfs/etc/os-release
+	cp -v setup.yaml rootfs/etc/setup.yaml
 	docker build ./ --tag=$(TNM)
 	rm -vf $(OUT)buildroot/output/target/etc/os-release
 	# add certificate for verification of RAUC bundle
@@ -67,12 +70,13 @@ uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
 #-----------------------------------------------------------------------------#
-# deploy ReswarmOS image and meta-data
+# deploy ReswarmOS image/update and meta-data
 
-release: $(OUT)$(NAM).gz 
+release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb
 	gsutil cp gs://reswarmos/supportedImages.json config/supportedBoards.json
 	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
 	gsutil cp $< gs://reswarmos/$(BRD)/
+	gsutil cp $(word 2,$^) gs://reswarmos/$(BRD)/
 	gsutil ls gs://reswarmos/$(BRD)/
 	gsutil cp config/supportedBoards.json gs://reswarmos/supportedImages.json
 	gsutil ls gs://reswarmos/
@@ -123,8 +127,9 @@ $(OUT)rauc-bundle/manifest.raucm: update/manifest.raucm
 
 $(OUT)rauc-bundle/rootfs.ext4:
 	cp -v $(OUT)buildroot/output/images/rootfs.ext2 $@
+	#e2label $@ rootfsB
 
-$(OUT)ReswarmOS-update-bundle.raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
+$(OUT)ReswarmOS-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
 	rm -vf $@
 	rauc bundle --cert=$(word 3,$^) --key=$(word 4,$^) $< $@
 	rauc info --no-verify $@
