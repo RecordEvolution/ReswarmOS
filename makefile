@@ -77,9 +77,9 @@ release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb
 	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
 	gsutil cp $< gs://reswarmos/$(BRD)/
 	gsutil cp $(word 2,$^) gs://reswarmos/$(BRD)/
-	gsutil ls gs://reswarmos/$(BRD)/
+	gsutil ls -lh gs://reswarmos/$(BRD)/
 	gsutil cp config/supportedBoards.json gs://reswarmos/supportedImages.json
-	gsutil ls gs://reswarmos/
+	gsutil ls -lh gs://reswarmos/
 
 #-----------------------------------------------------------------------------#
 
