@@ -4,3 +4,4 @@ output-build/
 *.img.zip
 *.img.gz
 rootfs/etc/os-release
+rootfs/etc/rauc/cert.pem
