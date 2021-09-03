@@ -18,7 +18,7 @@ setup: Dockerfile $(OUT) $(OUT)key.pem $(OUT)cert.pem
 	docker build ./ --tag=$(TNM)
 	rm -vf $(OUT)buildroot/output/target/etc/os-release
 	# add certificate for verification of RAUC bundle
-	cp -v $(word 4,$^) rootfs/etc/cert.pem
+	cp -v $(word 4,$^) rootfs/etc/rauc/cert.pem
 
 $(OUT):
 	mkdir -pv $(OUT)
@@ -27,10 +27,10 @@ $(OUT):
 #-----------------------------------------------------------------------------#
 # manage build process
 
-build: rootfs/etc/cert.pem
+build: rootfs/etc/rauc/cert.pem
 	docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
 
-build-daemon: rootfs/etc/cert.pem
+build-daemon: rootfs/etc/rauc/cert.pem
 	docker run -it -d --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
 
 build-logs:
