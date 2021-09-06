@@ -1,0 +1,12 @@
+[Unit]
+Description=Check for ReswarmOS updates
+Requires=reswarmos-update-check.service
+
+[Timer]
+Unit=reswarmos-update-check.service
+#OnCalender=Year-Month-Day Hour:Minute:Second
+OnCalender=*-*-* *:00:00
+Persistent=True
+
+[Install]
+WantedBy=timers.target

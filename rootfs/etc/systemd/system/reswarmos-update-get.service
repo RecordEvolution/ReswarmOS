@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Download ReswarmOS updates
+
+[Service]
+Type=oneshot
+ExecStart=wget $(cat /etc/reswarmos-update | awk -F ':' '{print $3 ":" $4}') -P /tmp/
+ExecStop=rauc info /tmp/*.raucb
+
+[Install]
+

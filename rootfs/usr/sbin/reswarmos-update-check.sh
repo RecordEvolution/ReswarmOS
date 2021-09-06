@@ -16,8 +16,11 @@ mdl=$(cat /etc/setup.yaml | grep "^  model:" | awk -F ':' '{print $2}' | tr -d '
 echo "looking for release for ${brd}:${mdl}"
 
 # obtain build time of latest ReswarmOS image supporting this board/model
+latestImage=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[] | select(.model == $mdl and .board == $brd) | .latestImage')
+echo -e "${latestImage}"
 latestImageBldTime=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[]  | select(.model == $mdl and .board == $brd) | .latestImage | .buildtime' | tr -d '"')
 latestImageUpdate=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[]  | select(.model == $mdl and .board == $brd) | .latestImage | .update' | tr -d '"')
+latestImageVersion=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[]  | select(.model == $mdl and .board == $brd) | .latestImage | .version' | tr -d '"')
 
 # remove any release file
 rm -vf ${relFile}.*
@@ -40,9 +43,9 @@ thsBldTime=$(echo ${thisBldTime} | tr -d 'T')
 echo $lstBldTime
 echo $thsBldTime
 if [ $lstBldTime -gt $thsBldTime ]; then
-  echo "update available"
+  echo "update available (version ${latestImageVersion})"
   touch "/etc/reswarmos-update"
-  echo "${latestImageBldTime}:${latestImageUpdate}" > /etc/reswarmos-update
+  echo "${latestImageVersion}:${latestImageBldTime}:${latestImageUpdate}" > /etc/reswarmos-update
 else
   echo "running system is up to date"
 fi
