@@ -1,0 +1,12 @@
+
+[Unit]
+Description=Check for ReswarmOS updates
+Wants=reswarmos-update-check.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/reswarmos-update-check.sh
+
+[Install]
+WantedBy=multi-user.target
+

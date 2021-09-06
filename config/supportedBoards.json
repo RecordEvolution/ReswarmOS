@@ -1,46 +1,47 @@
 {
-    "latestUpdate": "2021-09-03T16:06:19",
     "boards": [
         {
+            "architecture": "arm",
             "board": "raspberrypi",
             "boardname": "Raspberry Pi",
-            "model": "raspberrypi3",
-            "modelname": "Raspberry Pi 3",
-            "architecture": "arm",
             "cpu": "cortex-a53",
             "latestImage": {
-                "file": "ReswarmOS-0.3.8-raspberrypi3.img.gz",
-                "sha256": "8a2f9244c211a705c2639367e42aaf129864593db7baf0539438a16fb3924069",
                 "buildtime": "20210903T160011",
                 "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.img.gz",
-                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.raucb"
-            }
+                "file": "ReswarmOS-0.3.8-raspberrypi3.img.gz",
+                "sha256": "8a2f9244c211a705c2639367e42aaf129864593db7baf0539438a16fb3924069",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.raucb",
+                "version": "0.3.8"
+            },
+            "model": "raspberrypi3",
+            "modelname": "Raspberry Pi 3"
         },
         {
+            "architecture": "arm",
             "board": "raspberrypi",
             "boardname": "Raspberry Pi",
-            "model": "raspberrypi4",
-            "modelname": "Raspberry Pi 4",
-            "architecture": "arm",
             "cpu": "cortex-a72",
             "latestImage": {
+                "buildtime": "20210728T131636",
                 "file": "ReswarmOS-0.3.7-raspberrypi.img.gz",
-                "sha256": "5171aac9138ddcdee972d5f6f9e8de03b4a67a254ed5a1e849b1447921673a38",
-                "buildtime": "20210728T131636"
-            }
+                "sha256": "5171aac9138ddcdee972d5f6f9e8de03b4a67a254ed5a1e849b1447921673a38"
+            },
+            "model": "raspberrypi4",
+            "modelname": "Raspberry Pi 4"
         },
         {
+            "architecture": "arm",
             "board": "raspberrypi",
             "boardname": "Raspberry Pi",
-            "model": "raspberrypi0w",
-            "modelname": "Raspberry Pi Zero W",
-            "architecture": "arm",
             "cpu": "arm1176jzf-s",
             "latestImage": {
+                "buildtime": "20210830T121543",
                 "file": "ReswarmOS-0.3.8-raspberrypi0w.img.gz",
-                "sha256": "78bda42c94f28bf643a79f9961d95de904bb71851d43f9eb65b6db98685f49c7",
-                "buildtime": "20210830T121543"
-            }
+                "sha256": "78bda42c94f28bf643a79f9961d95de904bb71851d43f9eb65b6db98685f49c7"
+            },
+            "model": "raspberrypi0w",
+            "modelname": "Raspberry Pi Zero W"
         }
-    ]
+    ],
+    "latestUpdate": "2021-09-06T11:01:53"
 }

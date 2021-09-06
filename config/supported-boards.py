@@ -183,6 +183,7 @@ if __name__ == '__main__' :
     builtBoardImage['latestImage']['buildtime'] = bldtm
     builtBoardImage['latestImage']['download'] = args.baseURL + setupConfig['board'] + '/' + imgName
     builtBoardImage['latestImage']['update'] = args.baseURL + setupConfig['board'] + '/' + imgName.replace('.img.gz','.raucb')
+    builtBoardImage['latestImage']['version'] = setupConfig['version']
     
     print('updated/new board/image object:\n'+json.dumps(builtBoardImage,indent=4)+'\n')
 
@@ -206,13 +207,13 @@ if __name__ == '__main__' :
     # update update-timestamp
     boards["latestUpdate"] = getTimeStamp()
 
-    print('resulting board/image object:\n'+json.dumps(boards,indent=4)+'\n')
+    print('resulting board/image object:\n'+json.dumps(boards,indent=4,sort_keys=True)+'\n')
     
     # write resulting schema to file
     outFile = args.newFile if args.newFile else args.boardsFile
     print('writing object to file: '+str(outFile)+'\n')
     with open(outFile,'w') as fou :
-        fou.write(json.dumps(boards,indent=4) + "\n")
+        fou.write(json.dumps(boards,indent=4,sort_keys=True) + "\n")
 
 #-----------------------------------------------------------------------------#
 

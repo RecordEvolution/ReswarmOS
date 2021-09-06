@@ -29,6 +29,21 @@ ostags()
   echo "${osname} ${osversion} ${basetag}"
 }
 
+# ReswarmOS updates
+osupdates()
+{
+  updatestate=/etc/reswarmos-update
+  osupdate="system is up-to-date"
+  if [ -f ${updatestate} ]; then
+    osupdateversion=$(cat ${updatestate} | awk -F ':' '{print $1}')
+    osupdatebldtime=$(cat ${updatestate} | awk -F ':' '{print $2}')
+    if [ ! -z "${osupdateversion}" ]; then
+      osupdate="update available: v${osupdateversion} (${osupdatebldtime})"
+    fi
+  fi
+  echo "${osupdate}"
+}
+
 # acquire subnet ip including its mask
 subnetip()
 {
@@ -66,10 +81,17 @@ cpuinfo()
   echo "${cpuinfo}"
 }
 
+# filesystem free/used
 rootfs()
 {
   totalsize=$(df -h | grep " /$" | awk '{print $2}' | tr -d  ' ')
   usedsize=$(df -h | grep " /$" | awk '{print $3}' | tr -d  ' ')
+  echo "${usedsize} / ${totalsize} used"
+}
+appfs()
+{
+  totalsize=$(df -h | grep " /apps$" | awk '{print $2}' | tr -d  ' ')
+  usedsize=$(df -h | grep " /apps$" | awk '{print $3}' | tr -d  ' ')
   echo "${usedsize} / ${totalsize} used"
 }
 
@@ -88,6 +110,7 @@ ossysteminfo=$(cat << EOF
    $(uname -a)
 
    os:        $(ostags)
+   update:    $(osupdates)
    user:      $(whoami)
    host:      $(hostname)
    date:      $(date)
@@ -96,6 +119,7 @@ ossysteminfo=$(cat << EOF
    cpu:       $(cpuinfo)
    memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
    rootfs:    $(rootfs)
+   appfs:     $(appfs)
    subnet ip: $(subnetip)
    public ip: $(wget -qO- http://ipinfo.io/ip)
    location:  $(geolocation)
