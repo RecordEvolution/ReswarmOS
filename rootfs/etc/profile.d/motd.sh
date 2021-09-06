@@ -106,23 +106,28 @@ geolocation()
 
 # add system information
 ossysteminfo=$(cat << EOF
+   $(date)
    $(uptime | sed 's/^ *//g')
    $(uname -a)
 
-   os:        $(ostags)
-   update:    $(osupdates)
-   user:      $(whoami)
-   host:      $(hostname)
-   date:      $(date)
-   shell:     $(echo $SHELL)
-   board:     $(boardhardware)
-   cpu:       $(cpuinfo)
-   memory:    $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
-   rootfs:    $(rootfs)
-   appfs:     $(appfs)
-   subnet ip: $(subnetip)
-   public ip: $(wget -qO- http://ipinfo.io/ip)
-   location:  $(geolocation)
+   os:         $(ostags)
+   update:     $(osupdates)
+
+   user:       $(whoami)
+   host:       $(hostname)
+   shell:      $(echo $SHELL)
+
+   board:      $(boardhardware)
+   cpu:        $(cpuinfo)
+   memory:     $(cat /proc/meminfo | grep "memtotal" -i -m1 | awk -F ':' '{print $2}' | sed 's/^ *//g')
+   rootfs:     $(rootfs)
+   appfs:      $(appfs)
+
+   subnet ip:  $(subnetip)
+   public ip:  $(wget -qO- http://ipinfo.io/ip)
+   location:   $(geolocation)
+
+   containers: $(docker ps | grep -v '^CONTAINER' | wc -l) running, $(docker ps -a | grep -v '^CONTAINER' | wc -l) stopped
 EOF
 )
 
