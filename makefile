@@ -2,7 +2,7 @@
 
 OUT = output-build/
 CDR = $(shell pwd)
-IMG = $(shell ls -t $(OUT)*.img | head -n1)
+IMG = $(OUT)$(shell ls -t $(OUT) | grep '.img')
 NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
 BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')
@@ -95,7 +95,7 @@ prepare-gcloud:
 clean: clean-output clean-docker clean-rauc
 
 clean-output:
-	rm -rf $(OUT)
+	rm -rf $(OUT)buildroot/
 
 clean-docker:
 	docker image rm $(TNM)
@@ -135,7 +135,7 @@ $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs
 	rauc info --no-verify $@
 
 clean-rauc:
-	rm -vf $(OUT)cert.pem $(OUT)key.pem
+	#rm -vf $(OUT)cert.pem $(OUT)key.pem
 	rm -vf $(OUT)ReswarmOS-update-bundle.raucb
 	rm -rvf $(OUT)rauc-bundle
 	rm -vf rootfs/etc/rauc/cert.pem
