@@ -30,7 +30,7 @@ flock /dev/mmcblk0 partprobe /dev/mmcblk0
 
 # resize partition rootfsA
 echo "resizing partition 2"
-parted /dev/mmcblk0 --script resizepart 2 20%
+parted /dev/mmcblk0 --script resizepart 2 16%
 udevadm settle
 flock /dev/mmcblk0 partprobe /dev/mmcblk0
 
