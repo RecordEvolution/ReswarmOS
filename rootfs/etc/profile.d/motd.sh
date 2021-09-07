@@ -35,8 +35,8 @@ osupdates()
   updatestate=/etc/reswarmos-update
   osupdate="system is up-to-date"
   if [ -f ${updatestate} ]; then
-    osupdateversion=$(cat ${updatestate} | awk -F ':' '{print $1}')
-    osupdatebldtime=$(cat ${updatestate} | awk -F ':' '{print $2}')
+    osupdateversion=$(cat ${updatestate} | awk -F ',' '{print $1}')
+    osupdatebldtime=$(cat ${updatestate} | awk -F ',' '{print $2}')
     if [ ! -z "${osupdateversion}" ]; then
       osupdate="update available: v${osupdateversion} (${osupdatebldtime})"
     fi
@@ -107,6 +107,7 @@ geolocation()
 # add system information
 ossysteminfo=$(cat << EOF
    $(date)
+
    $(uptime | sed 's/^ *//g')
    $(uname -a)
 

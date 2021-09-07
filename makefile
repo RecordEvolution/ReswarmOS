@@ -15,13 +15,11 @@ VLP = /home/buildroot/reswarmos-build
 #-----------------------------------------------------------------------------#
 # container image hosting build process
 
-setup: Dockerfile $(OUT) $(OUT)key.pem $(OUT)cert.pem
+setup: Dockerfile $(OUT) $(OUT)key.pem $(OUT)cert.pem rootfs/etc/rauc/cert.pem
 	./reswarmify/os-release.sh > rootfs/etc/os-release
 	cp -v setup.yaml rootfs/etc/setup.yaml
 	docker build ./ --tag=$(TNM)
 	rm -vf $(OUT)buildroot/output/target/etc/os-release
-	# add certificate for verification of RAUC bundle
-	cp -v $(word 4,$^) rootfs/etc/rauc/cert.pem
 
 $(OUT):
 	mkdir -pv $(OUT)
@@ -96,6 +94,7 @@ clean: clean-output clean-docker clean-rauc
 
 clean-output:
 	rm -rf $(OUT)buildroot/
+	rm -vf $(OUT)$(NAM) $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb
 
 clean-docker:
 	docker image rm $(TNM)
@@ -109,11 +108,12 @@ clean-docker:
 
 $(OUT)key.pem $(OUT)cert.pem:
 	openssl req -new -x509 -newkey rsa:4096 -nodes \
-	-keyout $(OUT)/key.pem -out $(OUT)/cert.pem \
+	-keyout $(OUT)key.pem -out $(OUT)cert.pem \
 	-subj "/C=DE/ST=Hesse/L=Frankfurt am Main/O=RecordEvolutionGmbH/CN=www.record-evolution.com"
+	#chown mario:mario $(OUT)key.pem $(OUT)cert.pem
 
 # add certificate to rootfs for verification of RAUC bundle
-rootfs/etc/cert.pem: $(OUT)cert.pem
+rootfs/etc/rauc/cert.pem: $(OUT)cert.pem
 	cp -v $< $@
 
 $(OUT)rauc-bundle/:
