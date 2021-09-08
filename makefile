@@ -117,7 +117,7 @@ $(OUT)key.pem $(OUT)cert.pem:
 	openssl req -new -x509 -newkey rsa:4096 -nodes \
 	-keyout $(OUT)key.pem -out $(OUT)cert.pem \
 	-subj "/C=DE/ST=Hesse/L=Frankfurt am Main/O=RecordEvolutionGmbH/CN=www.record-evolution.com"
-	#chown mario:mario $(OUT)key.pem $(OUT)cert.pem
+	chmod +rx $(OUT)key.pem $(OUT)cert.pem
 
 # add certificate to rootfs for verification of RAUC bundle
 rootfs/etc/rauc/cert.pem: $(OUT)cert.pem
