@@ -9,7 +9,7 @@ Requires=network-online.target
 [Service]
 Type=simple
 ExecStartPre=/usr/sbin/reagent-setup.sh
-ExecStart=/opt/reagent/Reagent-active -config /opt/reagent/device-config.reswarm -debug
+ExecStart=/opt/reagent/Reagent-active -config /opt/reagent/device-config.reswarm -appsDir /apps -debug
 ExecStartPost=/usr/sbin/reagent-traffic.sh
 # RestartSec=30
 Restart=no

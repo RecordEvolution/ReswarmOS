@@ -47,10 +47,14 @@ osupdates()
 # acquire subnet ip including its mask
 subnetip()
 {
-  iface=$(route | grep default | awk -F ' ' '{print $NF}')
-  #ipsub=$(ip address | grep "${iface}" -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk -F ' ' '{print $2}')
-  ipsub=$(echo "${iface}" | while read f; do echo $f | ip address | grep $f -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk -F  ' ' '{print $2}'; done;)
-  echo ${ipsub}
+  #iface=$(route | grep default | sort | head -n1 | awk '{print $NF}')
+  #ipsub=$(ip address | grep ${iface} -A30 | grep "^[0-9]:" -m2 -B30 | grep "inet " | awk '{print $2}')
+  #echo "${ipsub} (${iface})"
+
+  ifaces=$(route | grep default | sort | awk '{print $NF}')
+  ipsubs=$(echo "${ifaces}" | while read if; do echo "$(ip address | grep ${if} -A30 | grep "^[0-9]: " -B 30 -m2 | grep "inet " | awk '{print $2}') ($if)"; done | sed 's/$/ /g' | tr -d '\n')
+  echo "${ipsubs}"
+
 }
 
 # get value of JSON key
