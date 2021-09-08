@@ -6,12 +6,12 @@
             "boardname": "Raspberry Pi",
             "cpu": "cortex-a53",
             "latestImage": {
-                "buildtime": "20210903T160011",
-                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.img.gz",
-                "file": "ReswarmOS-0.3.8-raspberrypi3.img.gz",
-                "sha256": "8a2f9244c211a705c2639367e42aaf129864593db7baf0539438a16fb3924069",
-                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.3.8-raspberrypi3.raucb",
-                "version": "0.3.8"
+                "buildtime": "20210908T154459",
+                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.0-raspberrypi3.img.gz",
+                "file": "ReswarmOS-0.4.0-raspberrypi3.img.gz",
+                "sha256": "415079629fd827f18e7ee8b3bedc82dff473b849b3cc38ad52ff0682fd0f9017",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.0-raspberrypi3.raucb",
+                "version": "0.4.0"
             },
             "model": "raspberrypi3",
             "modelname": "Raspberry Pi 3"
@@ -43,5 +43,5 @@
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2021-09-06T11:01:53"
+    "latestUpdate": "2021-09-08T16:01:56"
 }
