@@ -2,7 +2,7 @@
 
 OUT = output-build/
 CDR = $(shell pwd)
-IMG = $(OUT)$(shell ls -t $(OUT) | grep '.img')
+IMG = $(OUT)$(shell ls -t $(OUT) | grep -v 'img.gz' | grep '.img')
 NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
 BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')
@@ -68,6 +68,12 @@ compress-xz:
 uncompress-xz:
 	tar -xJf $(OUT)$(NAM).xz
 
+$(OUT)$(NAM).gz: $(OUT)$(NAM)
+	cp -v $(IMG) ./
+	gzip $(NAM)
+	mv -v $(NAM).gz $(OUT)
+	@echo $(CDR)/$(OUT)$(NAM).gz
+
 #-----------------------------------------------------------------------------#
 # deploy ReswarmOS image/update and meta-data
 
@@ -126,8 +132,8 @@ $(OUT)rauc-bundle/manifest.raucm: update/manifest.raucm
 	#cat $< | grep -v "^#" | sed "s/UPDATEVERSIONTAG/$(upvertag)/g" | sed "s/UPDATEBUILDTAG/$(upbldtag)/g" > $@
 	cat $< | grep -v "^#" | sed "s/^version=/version=$(VSN)/g" | sed "s/^build=/build=$(BLT)/g" > $@
 
-$(OUT)rauc-bundle/rootfs.ext4:
-	cp -v $(OUT)buildroot/output/images/rootfs.ext2 $@
+$(OUT)rauc-bundle/rootfs.ext4: $(OUT)buildroot/output/images/rootfs.ext2
+	cp -v $< $@
 	#e2label $@ rootfsB
 
 $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
