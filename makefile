@@ -8,6 +8,7 @@ NAS = $(shell echo $(NAM) | sed 's/.img//g')
 BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')
 MDL = $(shell cat setup.yaml | grep "model:" | sed 's/model://g' | tr -d '\n ')
 VSN = $(shell cat setup.yaml | grep "version:" | sed 's/version://g' | tr -d '\n ')
+BLT = $(shell cat rootfs/etc/os-release | grep "^VERSION=" | sed 's/VERSION=v[^-]*-[^-]*-//g')
 TNM = reswarmos-builder:latest
 CNM = reswarmos-builder
 VLP = /home/buildroot/reswarmos-build
@@ -123,7 +124,7 @@ $(OUT)rauc-bundle/manifest.raucm: update/manifest.raucm
 	#upvertag = $(shell cat rootfs/etc/os-release | grep ^VERSION= | awk -F '=' '{print $2}')
 	#upbldtag = $(shell cat rootfs/etc/os-release | grep ^VERSION_ID= | awk -F '=' '{print $2}')
 	#cat $< | grep -v "^#" | sed "s/UPDATEVERSIONTAG/$(upvertag)/g" | sed "s/UPDATEBUILDTAG/$(upbldtag)/g" > $@
-	cat $< | grep -v "^#" > $@
+	cat $< | grep -v "^#" | sed "s/^version=/version=$(VSN)/g" | sed "s/^build=/build=$(BLT)/g" > $@
 
 $(OUT)rauc-bundle/rootfs.ext4:
 	cp -v $(OUT)buildroot/output/images/rootfs.ext2 $@
