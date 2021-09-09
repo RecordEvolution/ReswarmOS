@@ -16,10 +16,14 @@ system for embedded devices in the IoT context and is specifically designed to
 meet the requirements of the IoT Development Studio
 _[Reswarm](https://www.record-evolution.de/reswarm/)_.
 
-- Hardware (Rasbperry Pi Models)
-- Container support (Docker)
-- Size
-- Architecture
+## Overview
+
+* [Introduction](#Introduction)
+* [Usage](#Usage)
+* [Build](#Build)
+* [References](#References)
+
+## Introduction
 
 ## Usage
 
@@ -68,7 +72,7 @@ the _ssh login_ looks like this:
 ssh <swarm_owner_name>@<name> # password: <secret>
 ```   
 
-## Build Process
+## Build
 
 The development of _ReswarmOS_ relies on [Buildroot](https://buildroot.org)
 as its build system. To build _ReswarmOS_ yourself, all you need is a
@@ -76,9 +80,35 @@ _docker-able_ host machine (with at least 4 threads and 4GB of RAM and
 20GB free disk space). Clone the repository, customize _device-config.yaml_
 to your needs, build the docker image and start the container by
 
-```
+```Shell
 git clone https://github.com/RecordEvolution/ReswarmOS.git
 cd ReswarmOS
+```
+
+Open up the main configuration file `setup.yaml` and choose i.a. the 
+desired target hardware the resulting operating system image is supposed
+to run on:
+
+```
+  # OS name and version
+  os-name: 'ReswarmOS'
+  version: 0.4.0
+  # general board description
+  board: raspberrypi
+  boardname: 'Raspberry Pi'
+  # specific model
+  model: raspberrypi4
+  modelname: 'Raspberry Pi 4'
+  # custom configuration file (default: "config/<board>/<model>/config")
+  config:
+  # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")
+  image:
+```
+
+After making the required adjustments save and close the file and proceed with
+setting up the build environment and launching the actual build process:
+
+```Shell
 make setup
 make build
 ```
@@ -93,46 +123,19 @@ run stats:
 | Intel(R) Core(TM) i7-8700T CPU @ 2.40GHz | Ubuntu 20.04.1 LTS  | Host            | 31:02           | 12830624      |
 | Intel(R) Core(TM) i5-7500T CPU @ 2.70GHz | Ubuntu 20.10        | Container       | 69:48           | 12855272      |
 
-### Root Filesystem
 
-To decrease the overall size of the root filesystem, we first have to analyse
-the size accumulation of objects contributing to the final extend. The analysis
-of the root filesystem built with configuration [v0.0.4](configs/raspberrypi4/config_v0.0.4)
-shows the following main contributions:
+## References
 
-| Size | Dir   | Size   | Dir               | Size | Dir                          |
-|------|-------|--------|-------------------|------|------------------------------|
-| 175M | /usr  | 115M   | /usr/bin          | 37M  | /usr/bin/dockerd             |
-|      |       |        |                   | 33M  | /usr/bin/docker              |
-|      |       |        |                   | 26M  | /usr/bin/containerd          |
-|      |       |        |                   | 7,0M | /usr/bin/runc                |
-|      |       |        |                   | 5,4M | /usr/bin/containerd-shim     |
-|      |       |        |                   | 1,8M | /usr/bin/vim                 |
-|      |       | 36M    | /usr/lib          | 25M  | /usr/lib/python3.9           |
-|      |       |        |                   | 2,3M | /usr/lib/libpython3.9.so.1.0 |
-|      |       |        |                   | 1,9M | /usr/lib/libcrypto.so.1.1    |
-|      |       |        |                   | 1,2M | /usr/lib/libstdc++.so.6.0.28 |
-|      |       | 21M    | /usr/share        |      |                              |
-|      |       | 3,2M   | /usr/sbin         |      |                              |
-|      |       | 1,2M   | /usr/libexec      |      |                              |
-| 63M  | /lib  | 59M    | /lib/modules      |      |                              |
-|      |       | 1,3M   | /lib/libc-2.31.so |      |                              |
-|      |       | 1,1M   | /lib/firmware     |      |                              |
-| 2,3M | /sbin |        |                   |      |                              |
-| 1,7M | /bin  |        |                   |      |                              |
-| 1,6M | /etc  |        |                   |      |                              |
-| 16K  | /var  |        |                   |      |                              |
-
-### References
-
-#### Buildroot
+### Buildroot
 
 - https://github.com/buildroot/buildroot
 - https://buildroot.org/downloads/manual/manual.html
 - https://elinux.org/images/2/2a/Using-buildroot-real-project.pdf
 
-#### Image
+### Image
 
 - https://github.com/pengutronix/genimage
 - https://books.google.de/books/about/Instant_Buildroot.html?id=dZL9AAAAQBAJ&redir_esc=y
 - http://lists.busybox.net/pipermail/buildroot/2016-April/160030.html
+
+
