@@ -14,16 +14,18 @@
 _ReswarmOS_ represents a lightweight, customizable and efficient host operating
 system for embedded devices in the IoT context and is specifically designed to
 meet the requirements of the IoT Development Studio
-_[Reswarm](https://www.record-evolution.de/reswarm/)_.
+_[Reswarm](https://www.record-evolution.de/reswarm/)_. It was designed with the 
+following objectives in mind: _minimal footprint/size_ of the root-filesystem
+to ensure quick flashing and easy setup for a myriad of devices, _container support_
+for having a robust solution to dynamically run a huge variety of apps on the 
+device and _security standards_ matching the latest industry requirements
+regarding data safety and network security.
 
 ## Overview
 
-* [Introduction](#Introduction)
 * [Usage](#Usage)
 * [Build](#Build)
 * [References](#References)
-
-## Introduction
 
 ## Usage
 
@@ -71,6 +73,15 @@ the _ssh login_ looks like this:
 ```
 ssh <swarm_owner_name>@<name> # password: <secret>
 ```   
+
+### !! Temporary development workaround !!
+
+To simplify the testing process for team members in a local network 
+environment the default standard ssh-login is
+
+```
+ssh root@<local-subnet-device-ip> # password: 'reswarm'
+```
 
 ## Build
 
