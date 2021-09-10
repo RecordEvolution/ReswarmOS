@@ -137,7 +137,11 @@ EOF
 )
 
 echo ""
-echo "${bannerA}"
+if [ -f /opt/reagent/reswarm-mode ]; then
+  echo -e "\033[0;32m${bannerA}\033[0m"
+else
+  echo -e "\033[0;31m${bannerA}\033[0m"
+fi
 echo ""
 echo "${ossysteminfo}"
 echo ""
