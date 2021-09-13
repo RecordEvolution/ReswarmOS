@@ -44,6 +44,18 @@ osupdates()
   echo "${osupdate}"
 }
 
+# Reswarm vs. standalone mode
+reswarmmode()
+{
+  if [ -f /opt/reagent/reswarm-mode ]; then
+	  devEndpoint=$(cat /opt/reagent/device-config.reswarm |  jq '.|."device_endpoint_url"' | tr -d '"')
+	  reagentState=$(systemctl show reagent | grep ActiveState | awk -F '=' '{print $2}')
+	  echo "Reswarm (device-endpoint: ${devEndpoint} , Reagent: ${reagentState})"
+  else
+    echo "standalone"
+  fi
+}
+
 # acquire subnet ip including its mask
 subnetip()
 {
@@ -117,6 +129,7 @@ ossysteminfo=$(cat << EOF
 
    os:         $(ostags)
    update:     $(osupdates)
+   mode:       $(reswarmmode)
 
    user:       $(whoami)
    host:       $(hostname)
@@ -137,11 +150,12 @@ EOF
 )
 
 echo ""
-if [ -f /opt/reagent/reswarm-mode ]; then
-  echo -e "\033[0;32m${bannerA}\033[0m"
-else
-  echo -e "\033[0;31m${bannerA}\033[0m"
-fi
+echo "${bannerA}"
+#if [ -f /opt/reagent/reswarm-mode ]; then
+#  echo -e "\033[0;32m${bannerA}\033[0m"
+#else
+#  echo -e "\033[0;31m${bannerA}\033[0m"
+#fi
 echo ""
 echo "${ossysteminfo}"
 echo ""
