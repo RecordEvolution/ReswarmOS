@@ -7,7 +7,7 @@ bannerA=$(cat << 'EOF'
         Welcome to
   ____  _____ ______        ___    ____  __  __  ___  ____
  |  _ \| ____/ ___\ \      / / \  |  _ \|  \/  |/ _ \/ ___|
- | |_) |  _| \___ \\ \ /\ / / _ \ | |_) | |\/| | | | \___ \
+ | |_) |  _| \___ \\ \ /\ / / _ \ | |_) | |\/| | | | \___ \ 
  |  _ <| |___ ___) |\ V  V / ___ \|  _ <| |  | | |_| |___) |
  |_| \_\_____|____/  \_/\_/_/   \_\_| \_\_|  |_|\___/|____/
 
@@ -81,7 +81,7 @@ boardhardware()
   cpumodel=$(lscpu | grep "Model name" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
   boardmod=$(cat /proc/cpuinfo | grep "Model" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
   hardware=$(cat /proc/cpuinfo | grep "Hardware" | awk -F ':' '{print $2}' | sed 's/^ *//g' | sed 's/ *$//g')
-  echo "${boardmod} ${cpumodel} ${hardware}"
+  echo "${boardmod} ${cpumodel} ${hardware}" | sed 's/^ //g' | sed 's/  / /g' | sed 's/ $//g'
 }
 
 # CPU
@@ -94,7 +94,7 @@ cpuinfo()
   elif [ ! -z "${cpuinfoB}" ]; then
     cpuinfo="${cpuinfoB}"
   fi
-  echo "${cpuinfo}"
+  echo "${cpuinfo}" | sed 's/^ //g' | sed 's/  / /g' | sed 's/ $//g'
 }
 
 # filesystem free/used
