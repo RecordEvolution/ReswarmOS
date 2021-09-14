@@ -60,12 +60,10 @@ Follow the setup steps given in the documentation at
       wget https://developer.nvidia.com/embedded/l4t/r32_release_v6.1/t186/jetson_linux_r32.6.1_aarch64.tbz2 -P ~/Downloads/
       wget https://developer.nvidia.com/embedded/l4t/r32_release_v6.1/t186/tegra_linux_sample-root-filesystem_r32.6.1_aarch64.tbz2 -P ~/Downloads/
     ```
-  1. expand both archives by `tar xf` where the L4T drivers expand to the new 
-     directory `Linux_for_Tegra/` while for the rootfs a newly created directory
-     is highly recommended to expand the contents of the rootfs filesytem to.
-  1. move the rootfs filesystem contents into the directory `Linux_for_Tegra/rootfs` 
-     as stated in the corresponding README.txt while making sure to perform this operation
-     as root, i.e. the file system is supposed to have owner root
+  1. expand the archive `jetson_linux_r32...` by `tar xf` producing the new directory `Linux_for_Tegra/
+  1. move to `Linux_for_Tegra/rootfs` as the current working directory and expand the root filesystem from there by:
+     `tar xpf ../../tegra_linux_sample_root_filesystem...` where the `p` option is ESSENTIAL to get the right 
+     file ownerships, permissions and suid bits.
   1. move to the directory `Linux_for_Tegra` and execute the script `apply_binares.sh` as root
 1. put the developer board a.k.a. the Nvidia Jetson AGX Xavier into _FORCE RECOVERY MODE_ by
    1. press and hold the force recovery button (the button in the center)
@@ -82,6 +80,14 @@ ISSUE: since in even in 2018 python3 is already the default while python2 has al
    `/usr/bin/python` pointing to `/usr/bin/python2.7` if it does not exist.
 1. wait for the flash process to finish succesfully, after it's done the board will reboot automatically
 1. make sure the Jetson board has ethernet connection, attach keyboard/mouse and follow the GUI setup
+
+A list of known issues and what to do:
+
+- https://forums.developer.nvidia.com/t/jetpack-4-2-flashing-issues-and-how-to-resolve/73387
+
+To build Nvidia kernel and DTB from source:
+
+- https://developer.ridgerun.com/wiki/index.php?title=Jetson_Nano/Development/Building_the_Kernel_from_Source
 
 ## Jetpack
 
