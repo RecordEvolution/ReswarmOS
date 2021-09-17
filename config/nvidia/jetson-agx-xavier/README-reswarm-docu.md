@@ -130,6 +130,14 @@ Depending on your host machine this may take up to about five minutes to complet
 After the script is succesfully finished the NVIDIA board will automatically 
 reboot and start to show the initial user setup on the connected HDMI screen.
 
+<p align="center">
+  <img
+    alt="NVIDIAJetsonAGXXavier_Setup3.jpg"
+    src="./IMG_20210917_124638168.jpg"
+    width="400"
+  />
+</p>
+
 ## Reswarm Connection
 
 1. run idempotent script to transform the board into a Reswarm device
