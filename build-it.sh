@@ -69,21 +69,6 @@ sed -i "s/BR2_ROOTFS_OVERLAY=\"\"/BR2_ROOTFS_OVERLAY=\"${rfsovly}\"/g" ${cfgfile
 cat ${cfgfile} | grep BR2_ROOTFS_OVERLAY
 
 # --------------------------------------------------------------------------- #
-# Reagent
-
-# check reagent configuration
-#reagentcfg=$(cat ${reswarmcfg} | grep -i "^ *reagent" -A5)
-#reagenturl=$(echo "${reagentcfg}" | grep "^ *url-latest" | awk -F ': ' '{print $2}' | tr -d ' ')
-#reagentinc=$(echo "${reagentcfg}" | grep "^ *include" | awk -F ': ' '{print $2}' | tr -d ' ')
-
-#if [[ "${reagentinc}" == "true" ]]; then
-#  logging_message "preparing and adding Reagent"
-#  # reagenturl="https://storage.googleapis.com/re-agent/reagent-latest"
-#  wget ${reagenturl} -P ./rootfs/opt/reagent/
-#  chmod 755 ./rootfs/opt/reagent/reagent-*
-#fi
-
-# --------------------------------------------------------------------------- #
 
 # extract buildroot commit required by particular configuration
 logging_message "extracting required buildroot commit from buildroot configuration"
@@ -138,6 +123,14 @@ else
   exit 1
 fi
 
+# inserting external packages
+logging_message "adding external packages"
+
+cp -rv ./packages/* ./reswarmos-build/buildroot/package/
+./packages/add-to-config.sh ./reswarmos-build/buildroot/package/Config.in > ./Config.in
+mv -v ./Config.in ./reswarmos-build/buildroot/package/Config.in
+
+# show and check buildroot directory
 logging_message "listing buildroot directory"
 
 ls -lhd ./reswarmos-build/buildroot/
