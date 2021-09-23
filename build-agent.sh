@@ -36,10 +36,10 @@ if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
   # TODO use proper a build-system in DeviceManagementAgent
   if [ -z "${ARCV}" ]; then
     echo "building for GOARM=7"
-    CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} GOARM=7 ${GOC} build .
+    CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} GOARM=7 ${GOC} build -ldflags "-X 'reagent/system.BuildArch=armv7'" .
   else
     echo "building for GOARM=6"
-    CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} GOARM=6 ${GOC} build .
+    CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} GOARM=6 ${GOC} build -ldflags "-X 'reagent/system.BuildArch=armv6'" .
   fi
   popd
 fi
