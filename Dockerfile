@@ -14,7 +14,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
     wget cpio unzip rsync bc iproute2 \
     rauc u-boot-tools \
-    genext2fs
+    genext2fs \
+    xsltproc
 
 # clone buildroot repository (at certain commit)
 #RUN git clone https://github.com/buildroot/buildroot --single-branch --depth=1 /home/buildroot
@@ -33,6 +34,7 @@ RUN chmod 755 ./*.sh
 # copy configuration, rootfs overlay and boot directory
 COPY setup.yaml ./setup.yaml
 COPY config/ ./config
+COPY packages/ ./packages
 COPY rootfs/ ./rootfs/
 COPY boot/ ./boot/
 
