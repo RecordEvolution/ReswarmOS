@@ -56,6 +56,14 @@ reswarmmode()
   fi
 }
 
+# shell and its version
+theshell()
+{
+  whichOne=$SHELL
+  shellVersion=$(${whichOne} --version | grep version | grep bash | grep -oP "version [0-9]+.[0-9]+.[0-9]+(\([0-9]\))?")
+  echo "${whichOne} ${shellVersion}"
+}
+
 # acquire subnet ip including its mask
 subnetip()
 {
@@ -133,7 +141,7 @@ ossysteminfo=$(cat << EOF
 
    user:       $(whoami)
    host:       $(hostname)
-   shell:      $(echo $SHELL)
+   shell:      $(theshell)
 
    board:      $(boardhardware)
    cpu:        $(cpuinfo)
