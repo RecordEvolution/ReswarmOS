@@ -98,6 +98,13 @@ EOF
 )
   echo -e "${deviceini}" > ${vfatlnk}/device.ini
 
+  # extract private key from reswarm file
+  echo -e $(cat ${reswarmcfg} | $JQ ' .authentication.key' | tr -d '"') > /root/key.pem
+
+  # generate corresponding public key
+  chmod 600 /root/key.pem
+  ssh-keygen -y -f /root/key.pem > /root/id.pub
+
 # standalone/free mode
 else
 

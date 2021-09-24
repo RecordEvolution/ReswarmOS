@@ -26,36 +26,58 @@ if [ -z "${passwd}" ]; then
   echo "empty PASSWD found" >&2
   exit 1
 fi
-echo "setting up account for user ${usernm} with password ${passwd}"
-homedir=$(readini ${configfile} user HOME)
-#group=$(readini ${configfile} user GROUP)
-dfshell=$(readini ${configfile} user SHELL)
-groups=$(readini ${configfile} user GROUPS)
-echo "homedir:${homedir}"
-echo "shell:${dfshell}"
-echo "groups:${groups}"
 
-# generate random salt for encrypted password in /etc/shadow
-salt=$(head -c 128 /dev/urandom | base64 | tr -d '=/+' | head -c12)
-echo "using salt $salt"
-passwdshadw=$(echo $passwd | openssl passwd -6 -salt $salt -stdin)
-echo "${passwdshadw}"
+# check for existing user
+userExst=$(cat /etc/shadow | grep ${usernm})
+if [ -z "${userExst}" ]; then
 
-# create actual user account with required home directory, group, shell, etc.
-#if [ -z "${group}" ]; then
-#  useradd --home-dir ${homedir} --groups ${groups} --create-home --password \'${passwdshadw}\' --shell ${dfshell} ${usernm}
-#else
-useradd --home-dir ${homedir} --groups ${groups} --create-home --password "${passwdshadw}" --shell ${dfshell} --user-group ${usernm}
-#fi
+  echo "setting up account for user ${usernm} with password ${passwd}"
+  homedir=$(readini ${configfile} user HOME)
+  #group=$(readini ${configfile} user GROUP)
+  dfshell=$(readini ${configfile} user SHELL)
+  groups=$(readini ${configfile} user GROUPS)
+  echo "homedir:${homedir}"
+  echo "shell:${dfshell}"
+  echo "groups:${groups}"
 
-# check for new user
-cat /etc/shadow | grep ${usernm}
-ls -lhd ${homedir}
+  # generate random salt for encrypted password in /etc/shadow
+  salt=$(head -c 128 /dev/urandom | base64 | tr -d '=/+' | head -c12)
+  echo "using salt $salt"
+  passwdshadw=$(echo $passwd | openssl passwd -6 -salt $salt -stdin)
+  echo "${passwdshadw}"
 
-# enable ssh login for this user
-echo "AllowUsers ${usernm}" >> /etc/ssh/sshd_config
-cat /etc/ssh/sshd_config | grep ${usernm}
+  # create actual user account with required home directory, group, shell, etc.
+  #if [ -z "${group}" ]; then
+  #  useradd --home-dir ${homedir} --groups ${groups} --create-home --password \'${passwdshadw}\' --shell ${dfshell} ${usernm}
+  #else
+  useradd --home-dir ${homedir} --groups ${groups} --create-home --password "${passwdshadw}" --shell ${dfshell} --user-group ${usernm}
+  #fi
 
-# employ .vimrc configuration
-cp -v /root/.vimrc ${homedir}/.vimrc
+  # check for new user
+  cat /etc/shadow | grep ${usernm}
+  ls -lhd ${homedir}
+
+  # enable ssh login for this user
+  sshdcnf="/etc/ssh/sshd_config"
+  cat ${sshdcnf} | grep -v AllowUsers > "${sshdcnf}.tmp"
+  echo "AllowUsers ${usernm}" >> "${sshdcnf}.tmp"
+  mv -v "${sshdcnf}.tmp" ${sshdcnf}
+
+  # if reswarm-mode is enabled => require public-key for authentication
+  if [ -f /opt/reagent/reswarm-mode ]; then
+    mkdir -pv ${homedir}/.ssh/
+    cat /root/id.pub > ${homedir}/.ssh/authorized_keys
+    chmod 600 ${homedir}/.ssh/authorized_keys
+    echo -e "$(cat /etc/ssh/sshd_config | grep -v 'PubkeyAuthentication\|PasswordAuthentication')\nPubkeyAuthentication yes\nPasswordAuthentication no\n" > /etc/ssh/sshd_config.tmp
+    mv /etc/ssh/sshd_config.tmp /etc/ssh/sshd_config
+  fi
+
+  # employ .vimrc configuration
+  cp -v /root/.vimrc ${homedir}/.vimrc
+
+else
+
+  echo "user ${usernm} already exists"
+
+fi
 
