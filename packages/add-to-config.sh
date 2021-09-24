@@ -28,25 +28,32 @@ addEntry()
     return 1
   fi
 
-  # extract required menu section
-  sectionList=$(echo -e "${fullConfig}" | grep "${menuConfig}" -A 99999 | grep "endmenu" -m1 -B 99999)
-  # remove prefix/postfix 'menu'/'endmenu'
-  cleanList=$(echo -e "${sectionList}" | grep -v '^menu' | grep -v '^endmenu')
-  # append new entry and sort all entries
-  newList=$(echo -e "${cleanList}\n\t${menuEntry}")
-  newListSorted=$(echo -e "${newList}" | sort)
+  # check for existing entry
+  exstEntry=$(echo -e "${fullConfig}" | grep "${menuEntry}")
 
-  # replace newlines with some other entity in both original and new list
-  clnList=$(echo -e "${cleanList}" | tr '\n' '\Z' | sed 's/\//\\\//g')
-  sedList=$(echo -e "${newListSorted}" | tr '\n' '\Z' | sed 's/\//\\\//g')
+  if [ -z "${exstEntry}" ]; then
+    # extract required menu section
+    sectionList=$(echo -e "${fullConfig}" | grep "${menuConfig}" -A 99999 | grep "endmenu" -m1 -B 99999)
+    # remove prefix/postfix 'menu'/'endmenu'
+    cleanList=$(echo -e "${sectionList}" | grep -v '^menu' | grep -v '^endmenu')
+    # append new entry and sort all entries
+    newList=$(echo -e "${cleanList}\n\t${menuEntry}")
+    newListSorted=$(echo -e "${newList}" | sort)
 
-  # replace newlines in full Config.in
-  fullList=$(echo -e "${fullConfig}" | tr '\n' '\Z')
+    # replace newlines with some other entity in both original and new list
+    clnList=$(echo -e "${cleanList}" | tr '\n' '\Z' | sed 's/\//\\\//g')
+    sedList=$(echo -e "${newListSorted}" | tr '\n' '\Z' | sed 's/\//\\\//g')
 
-  # perform replacement of old with new package list in specific menu section
-  fullListRepl=$(echo "${fullList}" | sed "s/${clnList}/${sedList}/g" | tr '\Z' '\n')
+    # replace newlines in full Config.in
+    fullList=$(echo -e "${fullConfig}" | tr '\n' '\Z')
 
-  echo -e "${fullListRepl}"
+    # perform replacement of old with new package list in specific menu section
+    fullListRepl=$(echo "${fullList}" | sed "s/${clnList}/${sedList}/g" | tr '\Z' '\n')
+
+    echo -e "${fullListRepl}"
+  else
+    echo -e "${fullConfig}"
+  fi
 }
 
 # --------------------------------------------------------------------------- #

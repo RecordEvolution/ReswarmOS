@@ -152,8 +152,6 @@ ossysteminfo=$(cat << EOF
    subnet ip:  $(subnetip)
    public ip:  $(wget -qO- http://ipinfo.io/ip)
    location:   $(geolocation)
-
-   containers: $(docker ps | grep -v '^CONTAINER' | wc -l) running, $(docker ps -a | grep -v '^CONTAINER' | wc -l) stopped
 EOF
 )
 
