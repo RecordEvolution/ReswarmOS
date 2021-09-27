@@ -27,12 +27,17 @@ if [ -z "${passwd}" ]; then
   exit 1
 fi
 
+# cleaning up username to agree with NAME_REGEX (/etc/adduser.conf)
+usernm=$(echo "${usernm}" | sed -e 's/\(.*\)/\L\1/g' | sed -e 's/^[^a-z]//g' | grep -oP "[a-z0-9-]" | tr -d '\n' | sed 's/$/\n/g')
+echo "using cleaned username '${usernm}' agreeing with NAME_REGEX"
+
 # check for existing user
 userExst=$(cat /etc/shadow | grep ${usernm})
 if [ -z "${userExst}" ]; then
 
   echo "setting up account for user ${usernm} with password ${passwd}"
-  homedir=$(readini ${configfile} user HOME)
+  #homedir=$(readini ${configfile} user HOME)
+  homedir="/home/${usernm}/"
   #group=$(readini ${configfile} user GROUP)
   dfshell=$(readini ${configfile} user SHELL)
   groups=$(readini ${configfile} user GROUPS)
@@ -51,6 +56,7 @@ if [ -z "${userExst}" ]; then
   #  useradd --home-dir ${homedir} --groups ${groups} --create-home --password \'${passwdshadw}\' --shell ${dfshell} ${usernm}
   #else
   useradd --home-dir ${homedir} --groups ${groups} --create-home --password "${passwdshadw}" --shell ${dfshell} --user-group ${usernm}
+  chown ${usernm}:${usernm} ${homedir}
   #fi
 
   # check for new user
@@ -66,7 +72,9 @@ if [ -z "${userExst}" ]; then
   # if reswarm-mode is enabled => require public-key for authentication
   if [ -f /opt/reagent/reswarm-mode ]; then
     mkdir -pv ${homedir}/.ssh/
+    chown ${usernm}:${usernm} ${homedir}/.ssh
     cat /root/id.pub > ${homedir}/.ssh/authorized_keys
+    chown ${usernm}:${usernm} ${homedir}/.ssh/authorized_keys
     chmod 600 ${homedir}/.ssh/authorized_keys
     echo -e "$(cat /etc/ssh/sshd_config | grep -v 'PubkeyAuthentication\|PasswordAuthentication')\nPubkeyAuthentication yes\nPasswordAuthentication no\n" > /etc/ssh/sshd_config.tmp
     mv /etc/ssh/sshd_config.tmp /etc/ssh/sshd_config
@@ -74,6 +82,7 @@ if [ -z "${userExst}" ]; then
 
   # employ .vimrc configuration
   cp -v /root/.vimrc ${homedir}/.vimrc
+  chown ${usernm}:${usernm} ${homedir}/.vimrc
 
 else
 
