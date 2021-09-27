@@ -69,15 +69,16 @@ individual Reswarm user account the _ssh login_ is more customized and
 secure. During the initial boot process ReswarmOS will set up a personalized
 user account on the device corresponding to the `swarm_owner_name` as user.
 Note, that this username may be modified in order to comply to the
-`NAME_REGEX` rule `^[a-z][-a-z0-9]*$`.
-Furthermore, the device will show up in the local network with its _hostname_
-according to the Reswarm device name. To ensure maximal security, by default,
-this user is the only one able to access the device directly using publickey
-authentication. The required identity is consequently provided by the
-_.reswarm_ file of the device and the key may, for example, be prepared by
+`NAME_REGEX` rule `^[a-z][-a-z0-9]*$`. The device will show up in the local
+network with its _hostname_ according to the Reswarm device name. To ensure
+maximal security, by default, this user is the only one able to access the
+device directly using publickey authentication. The required identity is
+consequently provided by the _.reswarm_ file of the device andmay, for example,
+be prepared by
 
 ```
 echo -e $(cat /path/to/mydevice/config.reswarm | jq .authentication.key) | tr -d '"' | grep -v "^ *$" > id_rsa
+chmod 600 id_rsa
 ```
 
 Henceforth, performing an _ssh login_ on the Reswarm device looks like this:
