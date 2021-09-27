@@ -66,21 +66,22 @@ _Reswarm_ are by default equipped with the latest version of _ReswarmOS_
 and automatically configured to securely connect and communicate with
 the Reswarm server cloud instance. Since this setup is coupled to your
 individual Reswarm user account the _ssh login_ is more customized and
-corresponds to the `swarm_owner_name` as user and `secret` as password,
-while the _hostname_ is given by the Reswarm device name. Henceforth,
-the _ssh login_ looks like this:
+secure. During the initial boot process ReswarmOS will set up a personalized
+user account on the device corresponding to the `swarm_owner_name` as user.
+Furthermore, the device will show up in the local network with its _hostname_
+according to the Reswarm device name. To ensure maximal security, by default,
+this user is the only one able to access the device directly using publickey
+authentication. The required identity is consequently provided by the
+_.reswarm_ file of the device and the key may, for example, be prepared by
 
 ```
-ssh <swarm_owner_name>@<name> # password: <secret>
-```   
+echo -e $(cat /path/to/mydevice/config.reswarm | jq .authentication.key) | tr -d '"' | grep -v "^ *$" > id_rsa
+```
 
-### !! Temporary development workaround !!
-
-To simplify the testing process for team members in a local network 
-environment the default standard ssh-login is
+Henceforth, performing an _ssh login_ on the Reswarm device looks like this:
 
 ```
-ssh root@<local-subnet-device-ip> # password: 'reswarm'
+ssh -i id_rsa <swarm_owner_name>@<device-name/corresponding local ip>
 ```
 
 ## Build
