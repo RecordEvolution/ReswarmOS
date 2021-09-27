@@ -29,6 +29,7 @@ echo "building for architecture: ${ARCH} (${ARCV})"
 if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
 #if [ 0 == 0 ]; then
   pushd ${BASE_DIR}/build/DeviceManagementAgent/src/
+  git pull
   ${GOC} get .
   # for reference, see:
   # - https://github.com/goreleaser/goreleaser/issues/36
