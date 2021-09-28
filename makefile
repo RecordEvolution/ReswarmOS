@@ -139,8 +139,7 @@ $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs
 	rauc info --no-verify $@
 
 clean-rauc:
-	#rm -vf $(OUT)cert.pem $(OUT)key.pem
-	rm -vf $(OUT)ReswarmOS-update-bundle.raucb
+	rm -vf $(OUT)ReswarmOS-*.raucb
 	rm -rvf $(OUT)rauc-bundle
 	rm -vf rootfs/etc/rauc/cert.pem
 
