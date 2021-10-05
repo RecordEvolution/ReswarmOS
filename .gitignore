@@ -7,3 +7,4 @@ rootfs/etc/os-release
 rootfs/etc/rauc/cert.pem
 rootfs/etc/setup.yaml
 config/*.log
+cfg*
