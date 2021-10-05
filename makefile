@@ -146,6 +146,19 @@ clean-rauc:
 #-----------------------------------------------------------------------------#
 # analyse objects contributing to final root filesystem size
 
+analyze-depends:
+	cd $(OUT)buildroot/ && make graph-depends && cd -
+	cp -v $(OUT)buildroot/output/graphs/graph-depends.pdf $(OUT)
+
+analyze-build:
+	cd $(OUT)buildroot/ && make graph-build && cd -
+	cp -v $(OUT)buildroot/output/graphs/build.*.pdf $(OUT)
+
+analyze-size:
+	cd $(OUT)buildroot/ && make graph-size && cd -
+	cp -v $(OUT)buildroot/output/graphs/graph-size.pdf $(OUT)
+	cp -v $(OUT)buildroot/output/graphs/package-size-stats.csv $(OUT)
+
 OUTCL:=$(shell echo $(OUT) | sed 's/\///g')
 analyse:
 	du -sh $(OUT)buildroot/output/target/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
