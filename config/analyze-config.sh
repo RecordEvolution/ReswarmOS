@@ -5,10 +5,11 @@ configpath="$1"
 # include timestamp in logfile
 #tmstmp=$(date +%FT%H-%M-%S)
 tmstmp=$(date +%F)
-clncfg="./cfg_clean_${tmstmp}.log"
-brtype="./cfg_types_${tmstmp}.log"
-analog="./cfg_analy_${tmstmp}.log"
-analst="./cfg_detai_${tmstmp}.log"
+#clncfg="./config_clean_${tmstmp}.log"
+clncfg="./config_clean.log"
+brtype="./config_types.log"
+analog="./config_analy.log"
+analst="./config_detai.log"
 
 # check CLI argument, i.e. configuration file path
 if [ -z "${configpath}" ]; then

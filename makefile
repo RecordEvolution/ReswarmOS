@@ -159,6 +159,17 @@ analyze-size:
 	cp -v $(OUT)buildroot/output/graphs/graph-size.pdf $(OUT)
 	cp -v $(OUT)buildroot/output/graphs/package-size-stats.csv $(OUT)
 
+analyze-zip: analyze-depends analyze-build analyze-size
+	zip $(OUT)analyze-build.zip $(OUT)*.pdf $(OUT)*.csv
+	echo $(CDR)/$(OUT)analyze-build.zip
+
+clean-analyze:
+	rm -vf $(OUT)graph-depends.pdf
+	rm -vf $(OUT)build.*.pdf
+	rm -vf $(OUT)graph-size.pdf
+	rm -vf $(OUT)package-size-stats.csv
+	rm -vf $(OUT)analyze-build.zip
+
 OUTCL:=$(shell echo $(OUT) | sed 's/\///g')
 analyse:
 	du -sh $(OUT)buildroot/output/target/* | sort -rh | head -n6 | sed 's/$(OUTCL)\/buildroot\/output\/target//g'
