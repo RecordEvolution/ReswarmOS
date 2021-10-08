@@ -49,5 +49,6 @@ if [ $lstBldTime -gt $thsBldTime ]; then
   echo "${latestImage}" > /etc/os-release-latest.json
 else
   echo "running system is up to date"
+  echo "${latestImage}" > /etc/os-release-latest.json
 fi
 
