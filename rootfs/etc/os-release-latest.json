@@ -1,0 +1,8 @@
+{
+                "buildtime": "19610201T121423",
+                "download": "https://dummy.me",
+                "file": "ReswarmOS-0.0.0-deviceX.img.gz",
+                "sha256": "b69dac44336df026a567a031a66536f74119cd5b92dc8a476fc9799ab423a939",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.0.0-deviceX.raucb",
+                "version": "0.0.0"
+}
