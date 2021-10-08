@@ -14,7 +14,12 @@ AGNTREP=https://github.com/RecordEvolution/DeviceManagementAgent.git
 git config --global credentials.helper store
 
 if [ ! -d ${BASE_DIR}/build/DeviceManagementAgent ]; then
-  git clone --single-branch --depth=1 ${AGNTREP} ${BASE_DIR}/build/DeviceManagementAgent
+  git clone ${AGNTREP} ${BASE_DIR}/build/DeviceManagementAgent
+  sleep 2
+else
+  pushd ${BASE_DIR}/build/DeviceManagementAgent/src/
+  git pull
+  popd
 fi
 
 # golang (cross-) compiler path
@@ -26,11 +31,22 @@ ARCV=$(cat ${BR2_CONFIG} | grep 'BR2_arm1176j' | grep -v "^#" | awk -F '=' '{pri
 echo "building for architecture: ${ARCH} (${ARCV})"
 
 # build agent binary
-if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
-#if [ 0 == 0 ]; then
+#if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
+if [ 0 == 0 ]; then
+
   pushd ${BASE_DIR}/build/DeviceManagementAgent/src/
-  git pull
+
+  # manage git
+  git log -1
+  git status
+
+  # get dependencies
   ${GOC} get .
+
+  # AUXILIARY: build independently outside of ReswarmOS build container (given you have arm cross-compiler installed on your host)
+  # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm GOARM=7 go get .
+  # CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm GOARM=7 go build -ldflags "-X 'reagent/system.BuildArch=armv7'" .
+
   # for reference, see:
   # - https://github.com/goreleaser/goreleaser/issues/36
   #GOOS=linux GOARCH=${ARCH} CGO_ENABLED=1 GOARM=6(Pi A,B,...,Zero),7(Pi 2,3,4) ${GOC} build .
@@ -42,6 +58,7 @@ if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
     echo "building for GOARM=6"
     CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} GOARM=6 ${GOC} build -ldflags "-X 'reagent/system.BuildArch=armv6'" .
   fi
+
   popd
 fi
 
