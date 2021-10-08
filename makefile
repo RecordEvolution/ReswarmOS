@@ -97,14 +97,14 @@ prepare-gcloud:
 #-----------------------------------------------------------------------------#
 # clean up and remove build output and container image
 
-clean: clean-output clean-docker clean-rauc
+clean: clean-output clean-docker clean-rauc clean-analyze
 
 clean-output:
 	rm -rf $(OUT)buildroot/
 	rm -vf $(OUT)$(NAM) $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb
 
 clean-docker:
-	docker image rm $(TNM)
+	docker image rm --force $(TNM)
 
 #-----------------------------------------------------------------------------#
 # manage update system
