@@ -7,137 +7,85 @@ ensuring quick inference times. NVIDIA provides a nice
 [overview](https://developer.nvidia.com/embedded/jetson-nano-2gb-developer-kit)
 providing all the technical details and specifications of the board.
 
+## SD card preparation
+
+NVIDIA provides ready-made [SD card images](https://developer.nvidia.com/embedded/downloads#?search=Jetson%20Nano%20Developer%20Kit%20User%20Guide) 
+including a suitable Ubuntu based operating
+system including drivers for NVIDIA hardware support. This image is available as 
+[Jetson Nano SD card image](https://developer.nvidia.com/jetson-nano-2gb-sd-card-image).
+Download the image - which may take a few minutes depending on your internet connection -
+and extract the zip archive by e.g.
+
+```
+unzip jetson-nano-2gb-jp46-sd-card-image.zip
+```
+
+The resulting image file `sd-blob.img` has to be written to the micro SD card (at least 
+32GB size). For instance, this can be accomplished with the
+[Record Evolution Reflasher](https://www.record-evolution.de/en/introducing-the-record-evolution-reflasher-or-how-we-built-the-worlds-best-flashing-app-for-iot-devices/),
+which not only works as a GUI based tool but also on CLI level, i.e.
+
+```
+sudo reflasher-cli -d </dev/sdX> -i sd-blob.img
+```
+
+where `/dev/sdX` has to be replaced by the device corresponding to your micro SD card 
+connected to the host machine. The available external flash drives may be listed
+by `reflasher-cli -l`. Since the `sd-blob.img` is about 13GB of size this process may
+take about 10-15 minutes depending on the performance of your SD card. Make sure to 
+wait until the image write process is successfully finished and the image is succesfully
+validated.
+
 ## Board Setup
 
-Unfortunately the setup of an NVIDIA Jetson is not as simple and straightforward as for 
-a Raspberry Pi. The setup includes multiple manual steps to be completed before you can
-successfully connect the device to Reswarm.
-
-### Host device with Ubuntu 18.04 or Ubuntu 16.04
-
-The NVIDIA specific setup of their devices requires a host (Laptop or Desktop machine)
-running Ubuntu 18.04 or Ubuntu 16.04. To install one of these you first have to download
-the corresponding iso-image for 
-[Ubuntu 18.04](https://old-releases.ubuntu.com/releases/18.04.5/ubuntu-18.04-desktop-amd64.iso) 
-(or 
-[Ubuntu 16.04](https://releases.ubuntu.com/16.04/ubuntu-16.04.7-desktop-amd64.iso)
-) and write it to a USB flash memory or an SD card. This can be conveniently done with
-the 
-[Record Evolution Reflasher](https://www.record-evolution.de/en/introducing-the-record-evolution-reflasher-or-how-we-built-the-worlds-best-flashing-app-for-iot-devices/).
-After successfully writing the iso-image to the flash memory, insert the flash memory 
-into your host machine, restart the machine and enter the boot menu to boot from the 
-flash memory. Just follow along the steps during the initial setup process of Ubuntu.
-After completing the intial setup and rebooting in the OS please make sure to have 
-the `qemu-user-static`, any `python2.x` package and an appropriate soft link
-`/usr/bin/python -> /usr/bin/python2.x` to the python2.x binary installed. If you don`t,
-please open up a terminal and execute:
-
-```
-sudo apt-get install update && apt-get upgrade
-sudo apt-get install qemu-user-static
-sudo apt-get install python2.x
-sudo ln -s /usr/bin/python2.x /usr/bin/python
-```
-
-### Prepare NVIDIA root filesystem 
-
-Given that you successfully installed Ubuntu 18.04/16.04 on a host machine you can now
-start to connect the hardware in the following way:
+Before you proceed with setup of the board make sure to familiarize yourself with the 
+basic features and components of the 
+[Jetson Nano board](https://developer.nvidia.com/embedded/learn/jetson-nano-2gb-devkit-user-guide#id-.JetsonNano2GBDeveloperKitUserGuidevbatuu_v1.0-Introduction).
+Although the Jetson Nano can be initially set up in headless mode we stick to the GUI-kind
+of setup. Make sure the board is powered off and disconnected from any power-plug. Furthermore,
+ensure the freshly flashed SD card is inserted into the board's micro SD card slot. The 
+SD card slot is located at the read-side of the board at the lower end of the Jetson module
+in an upside-down position. 
 
 <p align="center">
   <img
-    alt="NVIDIAJetsonAGXXavier_Setup1.jpg"
-    src="./IMG_20210917_104807627.jpg"
+    alt="NVIDIAJetsonNano2GB_Setup1.jpg"
+    src="./IMG_20211020_165614970.jpg"
     width="400"
   />
 </p>
 
-Please don`t connect the power plug before everything else is connected! First of all,
-we have to connect the Jetson board with the host machine by means of an USB-C to USB-A/C
-cable (depending on your host machine). Secondly, we have to connect the HDMI output of 
-the board to an external screen for the sake of being able to complete the graphical
-user setup later. Finally, we have to connect an USB keyboard in order to fill the forms 
-of the graphical setup. After having everything connected like in the picture above you
-may finally connect the power plug as well (_without_ pushing the power button of the board!!).
-Now, we have to put in the board into so-called _FORCE RECOVERY MODE_ which is done by
-pushing and holding the three button on the side of the board (see the picture below) 
-in the following order:
-
-1. push and keep holding the Force Recovery button (center button)
-1. push and hold and the Power button (left button)
-1. release the power button
-1. release the force recovery button
+Finally, we have to connect the HDMI output of the board to a monitor to be able to 
+follow along the initial OS setup. Additionaly, the setup requires a keyboard and/or
+mouse to be connected to the board via the two USB 2.0/3.0 interfaces.
+If in doubt about any plugs or connectors, please consult the board description of the 
+[Jetson Nano board](https://developer.nvidia.com/embedded/learn/jetson-nano-2gb-devkit-user-guide#id-.JetsonNano2GBDeveloperKitUserGuidevbatuu_v1.0-Introduction). At last, connect the USB-c power-plug to the board which 
+is located at the front-left side of it. MAKE SURE to only use a power-adapter that 
+satifies 5V @ 3A .
 
 <p align="center">
   <img
-    alt="NVIDIAJetsonAGXXavier_Setup2.jpg"
-    src="./IMG_20210917_104551483.jpg"
+    alt="NVIDIAJetsonNano2GB_Setup2.jpg"
+    src="./IMG_20211020_172132679.jpg"
     width="400"
   />
 </p>
 
-That procedure puts the NVIDIA board into force recovery mode. To confirm that,
-please open up a terminal on your Ubuntu host machine and type:
+## Initial OS setup
 
-```
-lsusb | grep -i nvidia
-```
-
-The expected output is of the form:
-
-```
-Bus xxx Device yyy: ID nnnn:7019 NVidia Corp.
-```
-
-If you don`t see this result but none output at all, please go back to trying to put
-the board into force recovery mode.
-
-Now, we have to prepare the root file system for the NVIDIA board on our host system.
-To this end, download the required 
-[latest drivers](https://developer.nvidia.com/embedded/linux-tegra-archive), e.g. the 
-L4T 32.6.1 Release for Jetson Nano, Nano 2GB and TX1 at
-[L4T 32.6.1 Release archive](https://developer.nvidia.com/embedded/l4t/r32_release_v6.1/t210/tegra_linux_sample-root-filesystem_r32.6.1_aarch64.tbz2)
-and the corresponding root filesystem, e.g. 
-[Sample Root Filesystem 32.6.1](https://developer.nvidia.com/embedded/l4t/r32_release_v6.1/t210/jetson-210_linux_r32.6.1_aarch64.tbz2) 
-to the host machine. Start by extracting the driver archive by:
-
-```
-tar xf Jetson-210_Linux_R32.6.1_aarch64.tbz2
-```
-
-which produces the directory `Linux_for_Tegra` in the same folder. Enter the folder
-`Linux_for_Tegra/rootfs/` and extract the root filesystem into it by:
-
-```
-cd Linux_for_Tegra/rootfs/ && sudo tar xpf ../../<path-to-downloaded-rootfs-archive>/Tegra_Linux_Sample-Root-Filesystem_R32.6.1_aarch64.tbz2
-```
-
-where it is ESSENTIAL to do this as root with the flags `xpf` in order to preserve 
-the permission and owernships in the root filesystem. Next we have to prepare some
-binaries by:
-
-```
-cd Linux_for_Tegra/ && sudo ./apply_binaries.sh
-```
-
-After successfull completion of this step we can finally flash the internal 
-board memory by (while making sure that the device is still in FORCE RECOVERY MODE):
-
-```
-cd Linux_for_Tegra/ && sudo ./flash.sh jetson-nano-2gb-devkit mmcblk0p1
-```
-
-Depending on your host machine this may take up to about five minutes to complete.
-After the script is succesfully finished the NVIDIA board will automatically 
-reboot and start to show the initial user setup on the connected HDMI screen.
+After powering the board it will automatically start to boot and show the intial
+setup screen.
 
 <p align="center">
   <img
-    alt="NVIDIAJetsonAGXXavier_Setup3.jpg"
-    src="./IMG_20210917_124638168.jpg"
+    alt="NVIDIAJetsonNano2GB_Setup3.jpg"
+    src="./IMG_20211020_172433089.jpg"
     width="400"
   />
 </p>
+
+Simply follow along the setup wizard and customize the board according to 
+your needs.
 
 ## Reswarm Connection
 
@@ -145,7 +93,7 @@ After successfully finishing the basic board setup and completing the initial
 user setup, make sure to connect the board to a working ethernet connection,
 reboot it and log in either directly via the graphical user interface and keyboard
 or via ssh on the local network. Proceed with the following steps in order
-to connect your NVIDIA device to Reswarm Platform:
+to connect your NVIDIA device to the Reswarm Platform:
 
 1. make sure the system is up-to-date by executing 
 	`sudo apt-get update && sudo apt-get upgrade` 
