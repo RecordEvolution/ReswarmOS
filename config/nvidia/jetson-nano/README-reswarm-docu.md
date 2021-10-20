@@ -98,13 +98,12 @@ to connect your NVIDIA device to the Reswarm Platform:
 1. make sure the system is up-to-date by executing 
 	`sudo apt-get update && sudo apt-get upgrade` 
 1. download the Reswarm device setup shell script
-	`wget https://storage.googleapi.com/reswarmos/`
+	`wget https://storage.googleapis.com/reswarmos/nvidia/reswarmify-nvidia.sh`
 1. make sure the script is executable:
-	`chmod +x setup-reswarm-device.sh`
+	`chmod +x reswarmify-nvidia.sh`
 1. copy your confidential `.reswarm` configuration file to the device, e.g. by
 	`scp <your-reswarm-device-config>.reswarm <user-name>@<local-ip-of-board>:
 1. execute the (idempotent) Reswarm-script to transform the board into a Reswarm device
-	`sudo ./setup-reswarm-device.sh <your-reswarm-device-config>.reswarm`
+	`sudo ./reswarmify-nvidia.sh <your-reswarm-device-config>.reswarm`
 
 Log in to your Record-Evolution account and check for the connected device.
-
