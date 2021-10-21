@@ -27,7 +27,7 @@ the
 After successfully writing the iso-image to the flash memory, insert the flash memory 
 into your host machine, restart the machine and enter the boot menu to boot from the 
 flash memory. Just follow along the steps during the initial setup process of Ubuntu.
-After completing the intial setup and rebooting in the OS please make sure to have 
+After completing the initial setup and rebooting in the OS please make sure to have 
 the `qemu-user-static`, any `python2.x` package and an appropriate soft link
 `/usr/bin/python -> /usr/bin/python2.x` to the python2.x binary installed. If you don`t,
 please open up a terminal and execute:
@@ -112,14 +112,14 @@ cd Linux_for_Tegra/rootfs/ && sudo tar xpf ../../<path-to-downloaded-rootfs-arch
 ```
 
 where it is ESSENTIAL to do this as root with the flags `xpf` in order to preserve 
-the permission and owernships in the root filesystem. Next we have to prepare some
+the permission and ownership in the root filesystem. Next we have to prepare some
 binaries by:
 
 ```
 cd Linux_for_Tegra/ && sudo ./apply_binaries.sh
 ```
 
-After successfull completion of this step we can finally flash the internal 
+After successful completion of this step we can finally flash the internal 
 board memory by (while making sure that the device is still in FORCE RECOVERY MODE):
 
 ```
@@ -127,7 +127,7 @@ cd Linux_for_Tegra/ && sudo ./flash.sh jetson-agx-xavier-devkit mmcblk0p1
 ```
 
 Depending on your host machine this may take up to about five minutes to complete.
-After the script is succesfully finished the NVIDIA board will automatically 
+After the script is successfully finished the NVIDIA board will automatically 
 reboot and start to show the initial user setup on the connected HDMI screen.
 
 <p align="center">
@@ -141,7 +141,7 @@ reboot and start to show the initial user setup on the connected HDMI screen.
 ## Reswarm Connection
 
 After successfully finishing the basic board setup and completing the initial
-user setup, make sure to connect the board to a working ethernet connection,
+user setup, make sure to connect the board to a working Ethernet connection,
 reboot it and log in either directly via the graphical user interface and keyboard
 or via ssh on the local network. Proceed with the following steps in order
 to connect your NVIDIA device to the Reswarm Platform:

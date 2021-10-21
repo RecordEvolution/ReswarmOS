@@ -33,7 +33,7 @@ where `/dev/sdX` has to be replaced by the device corresponding to your micro SD
 connected to the host machine. The available external flash drives may be listed
 by `reflasher-cli -l`. Since the `sd-blob.img` is about 13GB of size this process may
 take about 10-15 minutes depending on the performance of your SD card. Make sure to 
-wait until the image write process is successfully finished and the image is succesfully
+wait until the image write process is successfully finished and the image is successfully
 validated.
 
 ## Board Setup
@@ -44,7 +44,7 @@ basic features and components of the
 Although the Jetson Nano can be initially set up in headless mode we stick to the GUI-kind
 of setup. Make sure the board is powered off and disconnected from any power-plug. Furthermore,
 ensure the freshly flashed SD card is inserted into the board's micro SD card slot. The 
-SD card slot is located at the read-side of the board at the lower end of the Jetson module
+SD card slot is located at the rear side of the board at the lower end of the Jetson module
 in an upside-down position. 
 
 <p align="center">
@@ -56,12 +56,12 @@ in an upside-down position.
 </p>
 
 Finally, we have to connect the HDMI output of the board to a monitor to be able to 
-follow along the initial OS setup. Additionaly, the setup requires a keyboard and/or
+follow along the initial OS setup. Additionally, the setup requires a keyboard and/or
 mouse to be connected to the board via the two USB 2.0/3.0 interfaces.
 If in doubt about any plugs or connectors, please consult the board description of the 
 [Jetson Nano board](https://developer.nvidia.com/embedded/learn/jetson-nano-2gb-devkit-user-guide#id-.JetsonNano2GBDeveloperKitUserGuidevbatuu_v1.0-Introduction). At last, connect the USB-c power-plug to the board which 
 is located at the front-left side of it. MAKE SURE to only use a power-adapter that 
-satifies 5V @ 3A .
+satisfies 5V @ 3A .
 
 <p align="center">
   <img
@@ -73,7 +73,7 @@ satifies 5V @ 3A .
 
 ## Initial OS setup
 
-After powering the board it will automatically start to boot and show the intial
+After powering the board it will automatically start to boot and show the initial
 setup screen.
 
 <p align="center">
@@ -90,7 +90,7 @@ your needs.
 ## Reswarm Connection
 
 After successfully finishing the basic board setup and completing the initial
-user setup, make sure to connect the board to a working ethernet connection,
+user setup, make sure to connect the board to a working Ethernet connection,
 reboot it and log in either directly via the graphical user interface and keyboard
 or via ssh on the local network. Proceed with the following steps in order
 to connect your NVIDIA device to the Reswarm Platform:
