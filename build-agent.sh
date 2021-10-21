@@ -1,5 +1,28 @@
 #!/bin/bash
 
+# --------------------------------------------------------------------------- #
+# build manually on standard Ubuntu distro
+#
+# install cross-compiler toolchain
+#
+# $ apt-get install -y gcc-arm-linux-gnueabihf \ # for armhf
+#                      gcc-aarch64-linux-gnu     # for aarch64
+#
+# $ which arm-linux-gnueabihf-gcc aarch64-linux-gnu-gcc
+# $ /usr/bin/arm-linux-gnueabihf-gcc
+# $ /usr/bin/aarch64-linux-gnu-gcc
+#
+# armhf
+#
+# $ CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm GOARM=7 go get .
+# $ CC=arm-linux-gnueabihf-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm GOARM=7 go build -ldflags "-X 'reagent/system.BuildArch=armv7'" .
+#
+# aarch64 
+#
+# $ CC=aarch64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 go get .
+# $ CC=aarch64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 go build -ldflags "-X 'reagent/system.BuildArch=armv7'" .
+#
+# --------------------------------------------------------------------------- #
 # exit immediately on a non-zero status
 set -e
 
