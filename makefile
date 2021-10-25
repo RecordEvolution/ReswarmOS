@@ -115,9 +115,16 @@ clean-docker:
 
 $(OUT)key.pem $(OUT)cert.pem:
 	openssl req -new -x509 -newkey rsa:4096 -nodes \
-	-keyout $(OUT)key.pem -out $(OUT)cert.pem \
+	-keyout $(OUT)key.pem -out $(OUT)cert.pem -days 365 \
 	-subj "/C=DE/ST=Hesse/L=Frankfurt am Main/O=RecordEvolutionGmbH/CN=www.record-evolution.com"
 	chmod +rx $(OUT)key.pem $(OUT)cert.pem
+	# checks on PKI
+	openssl x509 -in $(OUT)cert.pem -dates -noout
+	#openssl x509 -in $(OUT)cert.pem -text -noout
+	openssl x509 -noout -modulus -in $(OUT)cert.pem | openssl md5
+	openssl rsa -noout -modulus -in $(OUT)key.pem | openssl md5
+	#openssl x509 -in $(OUT)cert.pem -noout -pubkey
+	#openssl rsa -in $(OUT)key.pem -pubout
 
 # add certificate to rootfs for verification of RAUC bundle
 rootfs/etc/rauc/cert.pem: $(OUT)cert.pem
