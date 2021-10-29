@@ -1,13 +1,13 @@
 ---
   # OS name and version
   os-name: 'ReswarmOS'
-  version: 0.4.2
+  version: 0.4.3
   # general board description
   board: raspberrypi
   boardname: 'Raspberry Pi'
   # specific model
-  model: raspberrypi3
-  modelname: 'Raspberry Pi 3'
+  model: raspberrypi0w
+  modelname: 'Raspberry Pi Zero W'
   # custom configuration file (default: "config/<board>/<model>/config")
   config:
   # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")

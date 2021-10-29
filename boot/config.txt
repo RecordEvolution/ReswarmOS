@@ -42,7 +42,8 @@ max_usb_current=1
 safe_mode_gpio=4
 
 # Temperature Sensor
-dtoverlay=w1-gpio,gpiopin=18
+#dtoverlay=w1-gpio,gpiopin=18
+dtoverlay=w1-gpio
 
 # CAN Bus
 # https://www.embeddedpi.com/documentation/isolated-canbus/mypi-industrial-raspberry-pi-can-bus-card-configuration
