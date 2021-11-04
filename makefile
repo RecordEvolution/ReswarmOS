@@ -2,7 +2,7 @@
 
 OUT = output-build/
 CDR = $(shell pwd)
-IMG = $(OUT)$(shell ls -t $(OUT) | grep -v 'img.gz' | grep '.img')
+IMG = $(OUT)$(shell ls -t $(OUT) | grep -v 'img.gz' | grep '.img' | head -n1)
 NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
 BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')

@@ -38,16 +38,16 @@
             "boardname": "Raspberry Pi",
             "cpu": "arm1176jzf-s",
             "latestImage": {
-                "buildtime": "20210928T163345",
-                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.1-raspberrypi0w.img.gz",
-                "file": "ReswarmOS-0.4.1-raspberrypi0w.img.gz",
-                "sha256": "9e8124bdb3292145fb1fffa396fe0602f6ee27b5c66616c47da9c3abe80653ff",
-                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.1-raspberrypi0w.raucb",
-                "version": "0.4.1"
+                "buildtime": "20211104T174650",
+                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.4-raspberrypi0w.img.gz",
+                "file": "ReswarmOS-0.4.4-raspberrypi0w.img.gz",
+                "sha256": "e0330a02e539d96d57e653be08c63e989471b911819cae77e4964094d7e97450",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.4-raspberrypi0w.raucb",
+                "version": "0.4.4"
             },
             "model": "raspberrypi0w",
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2021-10-06T14:24:55"
+    "latestUpdate": "2021-11-04T18:02:15"
 }
