@@ -5,16 +5,44 @@
 
 # show board and flash info 
 bdinfo
-flinfo
+#flinfo
 
 # check for RAUC variables and evtl. initialize
 test -n "${BOOT_ORDER}" || setenv BOOT_ORDER "rootfsA rootfsB"
 test -n "${BOOT_rootfsA_LEFT}" || setenv BOOT_rootfsA_LEFT 3
 test -n "${BOOT_rootfsB_LEFT}" || setenv BOOT_rootfsB_LEFT 3
 
-# load device-tree and kernel
-fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
+# load kernel
+echo "load kernel"
+echo "kernel_addr_r:" ${kernel_addr_r}
 fatload mmc 0:1 ${kernel_addr_r} uImage
+
+# load base device-tree
+echo "load base device-tree"
+#setenv fdt_addr_r 0x87f00000
+echo "fdt_addr_r:" ${fdt_addr_r}
+echo "fdt_file:" ${fdt_file}
+fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
+
+# load overlay device-tree
+echo "load device-tree overlay"
+setexpr fdtovaddr ${fdt_addr_r} + C0000
+#setenv fdtovaddr 0x87fc0000
+echo "fdtovaddr:" ${fdtovaddr}
+fatload mmc 0:1 ${fdtovaddr} overlays/w1-gpio.dtbo
+
+# manage ftd address and size
+fdt addr ${fdt_addr_r}
+fdt resize 8192
+#setexpr fdtovaddr ${fdt_addr_r} + F000
+fdt apply ${fdtovaddr}
+
+#setenv OVLDTB "w1-gpio" 
+#echo "OVLDTB:" ${OVLDTB}
+#for ov in ${OVLDTB}; do
+#  echo overlaying ${ov} ...
+#  fatload mmc 0:1 ${fdtovaddr} overlays/${ov}.dtbo && fdt apply ${fdtovaddr}
+#done
 
 # reset/empty bootargs variable and check all slots
 setenv bootargs
