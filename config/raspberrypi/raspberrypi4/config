@@ -2692,7 +2692,7 @@ BR2_PACKAGE_MAKEDUMPFILE_ARCH_SUPPORTS=y
 # pamtester depends on linux-pam
 #
 # BR2_PACKAGE_POLKIT is not set
-# BR2_PACKAGE_PROCPS_NG is not set
+BR2_PACKAGE_PROCPS_NG=y
 # BR2_PACKAGE_PROCRANK_LINUX is not set
 # BR2_PACKAGE_PSMISC is not set
 # BR2_PACKAGE_PWGEN is not set
