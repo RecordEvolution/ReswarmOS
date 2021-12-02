@@ -23,6 +23,7 @@
 # $ CC=aarch64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm64 GOARM=7 go build -ldflags "-X 'reagent/system.BuildArch=armv7'" .
 #
 # --------------------------------------------------------------------------- #
+
 # exit immediately on a non-zero status
 set -e
 
@@ -54,8 +55,8 @@ ARCV=$(cat ${BR2_CONFIG} | grep 'BR2_arm1176j' | grep -v "^#" | awk -F '=' '{pri
 echo "building for architecture: ${ARCH} (${ARCV})"
 
 # build agent binary
-#if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
-if [ 0 == 0 ]; then
+if [ ! -f ${BASE_DIR}/build/DeviceManagementAgent/src/reagent ]; then
+#if [ 0 == 0 ]; then
 
   pushd ${BASE_DIR}/build/DeviceManagementAgent/src/
 
