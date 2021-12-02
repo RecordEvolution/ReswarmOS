@@ -1,11 +1,38 @@
+#-----------------------------------------------------------------------------#
 #
-# for reference:
-# https://rauc.readthedocs.io/en/latest/integration.html#set-up-u-boot-boot-script-for-rauc
+# U-boot script for RasberryPi4
 #
+# (default) memory layout:
+#
+#   - kernel_add_r = 0x 0008 0000
+#   - fdt_addr_r   = 0x 0260 0000
+#
+#   - boot_params  = 0x 0000 0100
+#   - DRAM start   = 0x 0000 0000
+#          size    = 0x 039c 0000
+#          start   = 0x 4000 0000
+#          size    = 0x bc00 0000
+#   - fdt_blob     = 0x 3975 b4c0
+#   - fdt_size     = 0x 0000 c9c0
+#
+# use "$ md 0x yyyy zzzz" to inspect memory
+#
+# References:
+# - https://u-boot.readthedocs.io/en/latest/index.html
+# - https://u-boot.readthedocs.io/en/latest/usage/fdt_overlays.html#manually-loading-and-applying-overlays
+# - https://rauc.readthedocs.io/en/latest/integration.html#set-up-u-boot-boot-script-for-rauc
+# - https://u-boot.readthedocs.io/en/latest/usage/fdt_overlays.html
+# - https://dius.com.au/2015/08/19/raspberry-pi-u-boot/
+# - https://irq5.io/2018/07/24/boot-time-device-tree-overlays-with-u-boot/
+#
+#-----------------------------------------------------------------------------#
 
-# show board and flash info 
+# show board and FAT partition info
 bdinfo
-#flinfo
+fatinfo mmc 0:1
+
+# list files in FAT partition
+ls mmc 0:1 /
 
 # check for RAUC variables and evtl. initialize
 test -n "${BOOT_ORDER}" || setenv BOOT_ORDER "rootfsA rootfsB"
@@ -24,17 +51,21 @@ echo "fdt_addr_r:" ${fdt_addr_r}
 echo "fdt_file:" ${fdt_file}
 fatload mmc 0:1 ${fdt_addr_r} bcm2711-rpi-4-b.dtb
 
-# load overlay device-tree
+# manage ftd address and size for overlays
+fdt addr ${fdt_addr_r}
+fdt resize 16384       # make sure all overlays to be loaded are covered!!
+
+# load overlay device-tree(s)
 echo "load device-tree overlay"
 setexpr fdtovaddr ${fdt_addr_r} + C0000
-#setenv fdtovaddr 0x87fc0000
+# setenv fdtovaddr 0x87fc0000
 echo "fdtovaddr:" ${fdtovaddr}
-fatload mmc 0:1 ${fdtovaddr} overlays/w1-gpio.dtbo
 
-# manage ftd address and size
-fdt addr ${fdt_addr_r}
-fdt resize 8192
-#setexpr fdtovaddr ${fdt_addr_r} + F000
+fatload mmc 0:1 ${fdtovaddr} overlays/w1-gpio.dtbo    # 1036 bytes
+fdt apply ${fdtovaddr}
+fatload mmc 0:1 ${fdtovaddr} overlays/rpi-sense.dtbo  # 893 bytes
+fdt apply ${fdtovaddr}
+fatload mmc 0:1 ${fdtovaddr} overlays/mcp2515-can0.dtbo # 1793 bytes
 fdt apply ${fdtovaddr}
 
 #setenv OVLDTB "w1-gpio" 
