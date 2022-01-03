@@ -16,3 +16,6 @@ colorscheme darkblue
 filetype on
 filetype plugin on
 filetype indent on
+
+" strictly enable backspace
+:set backspace=indent,eol,start
