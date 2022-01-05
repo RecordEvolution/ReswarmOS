@@ -196,7 +196,7 @@ repartdevp4()
 # partition p2
 if [ $p2sizsecIs -lt $p23sizsec ]; then
   echo "need to resize partition ${devc}p2"
-  repartdevp2
+  #repartdevp2
 else
   echo "no need to resize partition ${devc}p2"
 fi
@@ -204,7 +204,7 @@ fi
 # partition p3
 if [ $p3sizsecIs -lt $p23sizsec ]; then
   echo "need to resize partition ${devc}p3"
-  repartdevp3
+  #repartdevp3
 else
   echo "no need to resize partition ${devc}p3"
 fi
@@ -212,7 +212,14 @@ fi
 # partition p4
 if [ $p4sizsecIs -lt $p4sizsec ]; then
   echo "need to resize partition ${devc}p4"
-  repartdevp4
+  #repartdevp4
+
+  # Since any resizing is usually only required during the initial/first setup
+  # we take the size of partition p4=appfs as overall indicator. In contrast,
+  # after a ReswarmOS upgrade via RAUC we don't expect to have to repartition
+  # anything, while the updated partition is resized by RAUC itself automatically!!
+  repartdevp2
+
 else
   echo "no need to resize partition ${devc}p4"
 fi
