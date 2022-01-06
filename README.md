@@ -104,7 +104,7 @@ cd ReswarmOS
 
 Open up the main configuration file `setup.yaml` and choose i.a. the 
 desired target hardware the resulting operating system image is supposed
-to run on, e.g. for a RasberryPi4
+to run on, e.g. for a Raspberry Pi 4
 
 ```
   # OS name and version
