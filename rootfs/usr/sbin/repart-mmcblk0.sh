@@ -118,7 +118,7 @@ repartdevp2()
   flock ${devc} partprobe ${devc}
 
   echo "resize partition ${devc}p2=rootfsA"
-  parted /dev/mmcblk0 --script resizepart 2 ${p2endabssec}
+  parted /dev/mmcblk0 --script resizepart 2 "${p2endabssec}s"
   udevadm settle
   flock ${devc} partprobe ${devc}
 
@@ -153,7 +153,7 @@ repartdevp3()
   flock ${devc} partprobe ${devc}
 
   echo "resize partition ${devc}p3=rootfsB"
-  parted /dev/mmcblk0 --script resizepart 3 ${p3endabssec}
+  parted /dev/mmcblk0 --script resizepart 3 "${p3endabssec}s"
   udevadm settle
   flock ${devc} partprobe ${devc}
 
@@ -179,7 +179,7 @@ repartdevp3()
 repartdevp4()
 {
   echo "resize partition ${devc}p4=appfs"
-  parted /dev/mmcblk0 --script resizepart 4 ${p4endabssec}
+  parted /dev/mmcblk0 --script resizepart 4 "${p4endabssec}s"
   udevadm settle
   flock ${devc} partprobe ${devc}
 
