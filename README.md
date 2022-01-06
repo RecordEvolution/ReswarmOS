@@ -93,8 +93,9 @@ ssh -i id_rsa <swarm_owner_name>@<device-name/corresponding local ip>
 The development of _ReswarmOS_ relies on [Buildroot](https://buildroot.org)
 as its build system. To build _ReswarmOS_ yourself, all you need is a
 _docker-able_ host machine (with at least 4 threads and 4GB of RAM and
-20GB free disk space). Clone the repository, customize _device-config.yaml_
-to your needs, build the docker image and start the container by
+20GB free disk space).
+
+First of all, clone the repository by doing
 
 ```Shell
 git clone https://github.com/RecordEvolution/ReswarmOS.git
@@ -103,7 +104,7 @@ cd ReswarmOS
 
 Open up the main configuration file `setup.yaml` and choose i.a. the 
 desired target hardware the resulting operating system image is supposed
-to run on:
+to run on, e.g. for a RasberryPi4
 
 ```
   # OS name and version
@@ -121,8 +122,13 @@ to run on:
   image:
 ```
 
-After making the required adjustments save and close the file and proceed with
-setting up the build environment and launching the actual build process:
+Note, that `board` refers to the family (type) of boards while `model` provides
+the specifics of a particular member of this board family. While the corresponding
+fields `boardname` and `modelname` are merely arbitrary but meaningful labels, the
+`board` and `model` fields have to exactly match the directory structure in the
+`config/` folder. After making the required adjustments save and close the file
+and proceed with setting up the build environment and launching the actual build
+process:
 
 ```Shell
 make setup
