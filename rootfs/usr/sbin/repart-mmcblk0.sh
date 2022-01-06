@@ -111,7 +111,7 @@ echo "planned ${devc}p4 start - end (sectors) = ${p4startabssec}s - ${p4endabsse
 # repartition p2
 repartdevp2()
 {
-  echo "remove partitions ${devc}p3=rootfsB and ${dev}p4=appfs"
+  echo "remove partitions ${devc}p3=rootfsB and ${devc}p4=appfs"
   flock ${devc} parted ${devc} --script rm 4
   flock ${devc} parted ${devc} --script rm 3
   udevadm settle
