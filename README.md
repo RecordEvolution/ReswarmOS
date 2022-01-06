@@ -146,6 +146,15 @@ run stats:
 | Intel(R) Core(TM) i5-7500T CPU @ 2.70GHz | Ubuntu 20.10        | Container       | 69:48           | 12855272      |
 
 
+In order to roll out the image and release the corresponding
+RAUC update bundle to our google-cloud storage `gs://reswarmos` do
+
+```Shell
+make release
+```
+
+This requires `gsutil` to be set up and configured on your localhost.
+
 ## References
 
 ### Buildroot
