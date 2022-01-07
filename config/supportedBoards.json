@@ -6,12 +6,12 @@
             "boardname": "Raspberry Pi",
             "cpu": "cortex-a53",
             "latestImage": {
-                "buildtime": "20220106T123348",
-                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.0-raspberrypi3.img.gz",
-                "file": "ReswarmOS-0.5.0-raspberrypi3.img.gz",
-                "sha256": "77b727419929fe2b472ecdda2f4c8f7d6865c2d2f3e97687746311f30f618e7c",
-                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.0-raspberrypi3.raucb",
-                "version": "0.5.0"
+                "buildtime": "20220107T111026",
+                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi3.img.gz",
+                "file": "ReswarmOS-0.5.1-raspberrypi3.img.gz",
+                "sha256": "60e5bba0df30a71f4ddab4fd6887f6555a0f81e80441deeb39b27ed45ef07e78",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi3.raucb",
+                "version": "0.5.1"
             },
             "model": "raspberrypi3",
             "modelname": "Raspberry Pi 3"
@@ -22,12 +22,12 @@
             "boardname": "Raspberry Pi",
             "cpu": "cortex-a72",
             "latestImage": {
-                "buildtime": "20220105T225850",
-                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.0-raspberrypi4.img.gz",
-                "file": "ReswarmOS-0.5.0-raspberrypi4.img.gz",
-                "sha256": "d4cdbdf79fb43a3791b6c414e14defcac91fe960c6e5b5949dd34f489a5fd21d",
-                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.0-raspberrypi4.raucb",
-                "version": "0.5.0"
+                "buildtime": "20220107T102230",
+                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi4.img.gz",
+                "file": "ReswarmOS-0.5.1-raspberrypi4.img.gz",
+                "sha256": "e638c9a207a54981755f8394e261c7c7845aa0cd54a00917ecb9c8dd9fbf3480",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi4.raucb",
+                "version": "0.5.1"
             },
             "model": "raspberrypi4",
             "modelname": "Raspberry Pi 4"
@@ -38,16 +38,16 @@
             "boardname": "Raspberry Pi",
             "cpu": "arm1176jzf-s",
             "latestImage": {
-                "buildtime": "20211206T083208",
-                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.6-raspberrypi0w.img.gz",
-                "file": "ReswarmOS-0.4.6-raspberrypi0w.img.gz",
-                "sha256": "7a6bc04c722f1a6d03357beeeb8ba2a20b31b58c05853a612cde82701b0d3eb0",
-                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.4.6-raspberrypi0w.raucb",
-                "version": "0.4.6"
+                "buildtime": "20220106T135012",
+                "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi0w.img.gz",
+                "file": "ReswarmOS-0.5.1-raspberrypi0w.img.gz",
+                "sha256": "fd4927172c8a283f802cd476fde293a59c8fff20657a8374b20a123563c579bc",
+                "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi0w.raucb",
+                "version": "0.5.1"
             },
             "model": "raspberrypi0w",
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2022-01-06T12:38:30"
+    "latestUpdate": "2022-01-07T12:30:04"
 }
