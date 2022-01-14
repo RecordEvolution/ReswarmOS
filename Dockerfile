@@ -10,12 +10,16 @@ RUN groupadd buildroot && \
 # build environment including packages required by buildroot
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && apt-get upgrade -y && apt-get install -y \
-    git make python3 python3-yaml \
+    git make python3 python3-yaml python3-pip \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
     wget cpio unzip rsync bc iproute2 \
     rauc u-boot-tools \
     genext2fs \
-    xsltproc
+    xsltproc \
+    jq
+
+# add pip packages
+RUN python3 -m pip install yq
 
 # clone buildroot repository (at certain commit)
 #RUN git clone https://github.com/buildroot/buildroot --single-branch --depth=1 /home/buildroot

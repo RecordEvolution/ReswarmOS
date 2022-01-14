@@ -11,6 +11,8 @@ import hashlib
 parser = argparse.ArgumentParser(description='Update list of supported boards and their latest images')
 parser.add_argument('setupFile',type=str,help='ReswarmOS setup.yaml file')
 parser.add_argument('boardsFile',type=str,help='path to supported boards JSON file')
+parser.add_argument('--outputDir',type=str,default='output-build',help='output directory of built images')
+parser.add_argument('--compressionExt',type=str,default='.img.gz',help='file extension of compressed image')
 parser.add_argument('--timeFormat',type=str,default='%Y-%m-%dT%H:%M:%S',help='timestamp format')
 parser.add_argument('--boardSchema',type=str,default='{"latestUpdate":"","boards":[{"board":"","boardname":"","model":"","modelname":"","architecture":"","cpu":"","latestImage":{"file":"","sha256":"","buildtime":""}}]}',help='JSON schema of board/image list')
 parser.add_argument('--baseURL',type=str,default='https://storage.googleapis.com/reswarmos/',help='public base URL of images')
@@ -34,7 +36,10 @@ with open(os.path.join('config',setupConfig['board'],setupConfig['model'],'confi
 print('Buildroot configuration:\n'+'\n'.join(bldCfg[:20])+'\n')
 
 # generate (compressed) image's filename
-imgName = setupConfig['os-name'] + '-' + setupConfig['version'] + '-' + setupConfig['model'] + '.img.gz'
+imgName = setupConfig['osname']
+if setupConfig['osvariant'] :
+    imgName += '-' + setupConfig['osvariant']
+imgName += '-' + setupConfig['version'] + '-' + setupConfig['model'] + args.compressionExt
 
 #-----------------------------------------------------------------------------#
 
@@ -166,10 +171,14 @@ if __name__ == '__main__' :
     builtBoardImage['architecture'] = cpuarch['architecture']
 
     # add image file information
+    imageFullPath = os.path.join(args.outputDir,imgName)
+    builtBoardImage['latestImage']['osname'] = setupConfig['osname']
+    builtBoardImage['latestImage']['osvariant'] = setupConfig['osvariant']
     builtBoardImage['latestImage']['file'] = imgName
+    builtBoardImage['latestImage']['size'] = os.path.getsize(imageFullPath)
     
     sha256_hash = hashlib.sha256()
-    with open(os.path.join('output-build',imgName),'rb') as fin:
+    with open(imageFullPath,'rb') as fin:
         for byte_block in iter(lambda: fin.read(4096),b""):
             sha256_hash.update(byte_block)
     builtBoardImage['latestImage']['sha256'] = sha256_hash.hexdigest()
