@@ -10,6 +10,7 @@ logging_header "starting to build ReswarmOS"
 # --------------------------------------------------------------------------- #
 
 logging_message "set up and check environment"
+
 #export FORCE_UNSAFE_CONFIGURE=1
 env
 echo "current user: $(whoami)"
@@ -26,20 +27,46 @@ ls -lh ./reswarmos-build/
 
 logging_message "ReswarmOS configuration"
 
+# --------------------------------------------------------------------------- #
+
+# set main ReswarmOS configuration file
 reswarmcfg="./setup.yaml"
 cat ${reswarmcfg}
 
-# extra some information from .yaml configuration file
-board=$(cat ${reswarmcfg} | grep "^ *board:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
-model=$(cat ${reswarmcfg} | grep "^ *model:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
-confg=$(cat ${reswarmcfg} | grep "^ *config:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
-imcfg=$(cat ${reswarmcfg} | grep "^ *image:" | awk -F ':' '{print $2}' | tr -d "\"\' ")
+# parse and validate .yaml configuration file
+osname=$(cat ${reswarmcfg} | yq .osname | tr -d "\"" | sed 's/null//g')
+osvariant=$(cat ${reswarmcfg} | yq .osvariant | tr -d "\"" | sed 's/null//g')
+osversion=$(cat ${reswarmcfg} | yq .version | tr -d "\"" | sed 's/null//g')
+board=$(cat ${reswarmcfg} | yq .board | tr -d "\"" | sed 's/null//g')
+model=$(cat ${reswarmcfg} | yq .model | tr -d "\"" | sed 's/null//g')
+confg=$(cat ${reswarmcfg} | yq .config | tr -d "\"" | sed 's/null//g')
+lnxconfg=$(cat ${reswarmcfg} | yq .linuxconfig | tr -d "\"" | sed 's/null//g')
+imcfg=$(cat ${reswarmcfg} | yq .image | tr -d "\"" | sed 's/null//g')
+
+if [ -z ${osname} ]; then
+  echo "failed to validate configuration .yaml: missing osname specifier" >&2
+  exit 1
+fi
+if [ -z ${osversion} ]; then
+  echo "failed to validate configuration .yaml: missing osversion specifier" >&2
+  exit 1
+fi
+if [ -z ${board} ]; then
+  echo "failed to validate configuration .yaml: missing board specifier" >&2
+  exit 1
+fi
+if [ -z ${model} ]; then
+  echo "failed to validate configuration .yaml: missing model specifier" >&2
+  exit 1
+fi
 
 # construct image file name
-osname=$(cat ${reswarmcfg} | grep "^ *os-name" | awk -F ':' '{print $2}' | tr -d "\"\' ")
-osversion=$(cat ${reswarmcfg} | grep "^ *version" | awk -F ':' '{print $2}' | tr -d "\"\' ")
-#imgname=$(echo "${osname}-${osversion}-${board}-${model}.img")
-imgname=$(echo "${osname}-${osversion}-${model}.img")
+if [ -z ${osvariant} ]; then
+  imgname=$(echo "${osname}-${osversion}-${model}.img")
+else
+  imgname=$(echo "${osname}-${osvariant}-${osversion}-${model}.img")
+fi
+echo "final image name will be: ${imgname}"
 
 # buildroot configuration file
 if [ ! -z ${confg} ]; then
@@ -50,6 +77,16 @@ else
   cfgfile="./config/${board}/${model}/config"
 fi
 echo "${cfgfile}"
+
+# linux configuration file
+if [ ! -z ${lnxconfg} ]; then
+  echo -e "linux custom configuration specified:"
+  lnxcfgfile="./${lnxconfg}"
+  echo "${lnxcfgfile}"
+else
+  echo "no linux custom configuration specified: using default"
+  lnxcfgfile=""
+fi
 
 # image configuration file
 if [ ! -z ${imcfg} ]; then
@@ -68,10 +105,27 @@ rfsovly=$(echo ${rfsovly} | sed 's/\//\\\//g')
 sed -i "s/BR2_ROOTFS_OVERLAY=\"\"/BR2_ROOTFS_OVERLAY=\"${rfsovly}\"/g" ${cfgfile}
 cat ${cfgfile} | grep BR2_ROOTFS_OVERLAY
 
+# employ linux custom configuration
+if [ ! -z ${lnxcfgfile} ]; then
+  echo "employing custom linux configuration:"
+  echo "${lnxcfgfile}"
+  lnxcfgpath=$(realpath --relative-to=./reswarmos-build/buildroot ${lnxcfgfile})
+  echo "relative path: ${lnxcfgpath}"
+  lnxcfgpath=$(echo ${lnxcfgpath} | sed 's/\//\\\//g')
+  sed -i "s/BR2_LINUX_KERNEL_USE_DEFCONFIG=y/\# BR2_LINUX_KERNEL_USE_DEFCONFIG is not set/g" ${cfgfile}
+  sed -i "/BR2_LINUX_KERNEL_DEFCONFIG=.*/d" ${cfgfile}
+  sed -i "s/\# BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG is not set/BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y\nBR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE=\"${lnxcfgpath}\"/g" ${cfgfile}
+else
+  echo "using linux default configuration"
+fi
+cat ${cfgfile} | grep -P "BR2_LINUX_KERNEL_.*DEFCONFIG"
+cat ${cfgfile} | grep -P "BR2_LINUX_KERNEL_.*CUSTOM_CONFIG"
+
 # --------------------------------------------------------------------------- #
 
-# extract buildroot commit required by particular configuration
 logging_message "extracting required buildroot commit from buildroot configuration"
+
+# extract buildroot commit required by particular configuration
 comcfg=$(cat ${cfgfile} | grep "^# Buildroot .*-g.*Configuration" | awk -F '-g' '{print $2}' | awk -F ' ' '{print $1}' | tr -d ' ')
 echo "chosen configuration corresponds to buildroot commit ${comcfg}"
 
@@ -109,6 +163,8 @@ ls -lhd ./
 ls -lh ./
 ls -lh reswarmos-build/
 
+# --------------------------------------------------------------------------- #
+
 # copy configuration file to buildroot directory
 logging_message "copy required configuration file"
 
@@ -123,12 +179,16 @@ else
   exit 1
 fi
 
+# --------------------------------------------------------------------------- #
+
 # inserting external packages
 logging_message "adding external packages"
 
 cp -rv ./packages/* ./reswarmos-build/buildroot/package/
 ./packages/add-to-config.sh ./reswarmos-build/buildroot/package/Config.in > ./Config.in
 mv -v ./Config.in ./reswarmos-build/buildroot/package/Config.in
+
+# --------------------------------------------------------------------------- #
 
 # show and check buildroot directory
 logging_message "listing buildroot directory"
@@ -148,15 +208,15 @@ cp -v "${imcfgfile}" "./reswarmos-build/buildroot/board/${board}/genimage-${mode
 echo "employ post-build.sh"
 cp -v ./config/${board}/${model}/post-build.sh "./reswarmos-build/buildroot/board/${model}/"
 
+# --------------------------------------------------------------------------- #
+
+logging_message "initializing build process"
+
 # generate/update os-version file in rootfs overlay directory
 echo "${osname}-${osversion}" > ./rootfs/etc/reswarmos
 cat ./rootfs/etc/reswarmos
 
 ls -lhR ./rootfs
-
-# --------------------------------------------------------------------------- #
-
-logging_message "initializing build process"
 
 # get starting timestamp
 startts=$(date)
