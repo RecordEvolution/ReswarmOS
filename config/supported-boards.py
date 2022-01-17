@@ -14,12 +14,14 @@ parser.add_argument('boardsFile',type=str,help='path to supported boards JSON fi
 parser.add_argument('--outputDir',type=str,default='output-build',help='output directory of built images')
 parser.add_argument('--compressionExt',type=str,default='.img.gz',help='file extension of compressed image')
 parser.add_argument('--timeFormat',type=str,default='%Y-%m-%dT%H:%M:%S',help='timestamp format')
-parser.add_argument('--boardSchema',type=str,default='{"latestUpdate":"","boards":[{"board":"","boardname":"","model":"","modelname":"","architecture":"","cpu":"","latestImage":{"file":"","sha256":"","buildtime":""}}]}',help='JSON schema of board/image list')
+parser.add_argument('--boardSchema',type=str,default='{"latestUpdate":"","boards":[{"board":"","boardname":"","model":"","modelname":"","architecture":"","cpu":"","latestImages":[{"osname":"","osvariant":"","version":"","file":"","size":0,"sha256":"","buildtime":""}]}]}',help='JSON schema of board/image release file')
 parser.add_argument('--baseURL',type=str,default='https://storage.googleapis.com/reswarmos/',help='public base URL of images')
 parser.add_argument('--newFile',type=str,default=None,help='different output file')
 
 args = parser.parse_args()
 print('CLI arguments:\n'+json.dumps(vars(args),indent=4)+'\n')
+
+#-----------------------------------------------------------------------------#
 
 # parse ReswarmOS's setup.yaml
 with open(args.setupFile,'r') as fin :
@@ -29,11 +31,16 @@ with open(args.setupFile,'r') as fin :
         raise RuntimeError('failed to read setup.yaml: '+str(err))
 print('ReswarmOS setup:\n'+json.dumps(setupConfig,indent=4)+'\n')
 
-# read buildroot configuration
-with open(os.path.join('config',setupConfig['board'],setupConfig['model'],'config')) as fin :
+# read buildroot configuration (consider default vs. custom configuration)
+if 'config' in list(setupConfig.keys()) and setupConfig['config'] :
+    buildConfigPath = setupConfig['config']
+else :
+    buildConfigPath = os.path.join('config',setupConfig['board'],setupConfig['model'],'config')
+
+with open(buildConfigPath) as fin :
     buildConfig = fin.read()
     bldCfg = buildConfig.split('\n')
-print('Buildroot configuration:\n'+'\n'.join(bldCfg[:20])+'\n')
+print('Buildroot configuration: (' + buildConfigPath + ')\n'+'\n'.join(bldCfg[:20])+'\n')
 
 # generate (compressed) image's filename
 imgName = setupConfig['osname']
@@ -98,14 +105,14 @@ def validateObject(boardSchema, boardObject) :
     """
     (Recursively) validate board object with respect to essential keys
     Args:
-        boardList [object]
         boardSchema [object]
+        boardObject [object]
     Return:
         [boolean]
     """
 
     for key in boardSchema:
-        if isinstance(boardSchema[key],str) :
+        if isinstance(boardSchema[key],str) or isinstance(boardSchema[key],int) :
             if key not in list(boardObject.keys()) :
                 return False
         elif isinstance(boardSchema[key],list) :
@@ -152,66 +159,89 @@ if __name__ == '__main__' :
     except Exception as err :
         raise RuntimeError('failed to validate board/image object: '+str(err))
 
-    # throw exception for invalid board/image schema
     if not valid :
         raise RuntimeError('board/image file schema is invalid')
 
-    # compose currently built board/image object
-    builtBoardImage = initializeObject()["boards"][0]
+    # compose currently built board/model/image object
+    boardRelease = initializeObject()["boards"][0]#["latestImages"][0]
+    print('single templated board object\n',boardRelease,'\n')
 
     # board/model information
-    builtBoardImage['board'] = setupConfig['board']
-    builtBoardImage['boardname'] = setupConfig['boardname']
-    builtBoardImage['model'] = setupConfig['model']
-    builtBoardImage['modelname'] = setupConfig['modelname']
+    boardRelease['board'] = setupConfig['board']
+    boardRelease['boardname'] = setupConfig['boardname']
+    boardRelease['model'] = setupConfig['model']
+    boardRelease['modelname'] = setupConfig['modelname']
 
     # add CPU/architecture information
     cpuarch = extractBuildrootInfo(bldCfg)
-    builtBoardImage['cpu'] = cpuarch['cpu']
-    builtBoardImage['architecture'] = cpuarch['architecture']
+    boardRelease['cpu'] = cpuarch['cpu']
+    boardRelease['architecture'] = cpuarch['architecture']
 
-    # add image file information
+    # single system image release information
     imageFullPath = os.path.join(args.outputDir,imgName)
-    builtBoardImage['latestImage']['osname'] = setupConfig['osname']
-    builtBoardImage['latestImage']['osvariant'] = setupConfig['osvariant']
-    builtBoardImage['latestImage']['file'] = imgName
-    builtBoardImage['latestImage']['size'] = os.path.getsize(imageFullPath)
-    
+    imageRelease = boardRelease['latestImages'][0]
+    imageRelease['osname'] = setupConfig['osname']
+    imageRelease['osvariant'] = setupConfig['osvariant']
+    imageRelease['file'] = imgName
+    imageRelease['size'] = os.path.getsize(imageFullPath)
+
+    # ...check sum
     sha256_hash = hashlib.sha256()
     with open(imageFullPath,'rb') as fin:
         for byte_block in iter(lambda: fin.read(4096),b""):
             sha256_hash.update(byte_block)
-    builtBoardImage['latestImage']['sha256'] = sha256_hash.hexdigest()
+    imageRelease['sha256'] = sha256_hash.hexdigest()
 
+    # ...build time
     with open('rootfs/etc/os-release','r') as fin :
         osrelease = fin.read()
         osrls = osrelease.split('\n')
     reg = re.compile('VERSION=')
     bldtm = list(filter(reg.match,osrls))
     bldtm = bldtm[0].split('-')[-1].replace('\"','') if len(bldtm) == 1 else ''
-    builtBoardImage['latestImage']['buildtime'] = bldtm
-    builtBoardImage['latestImage']['download'] = args.baseURL + setupConfig['board'] + '/' + imgName
-    builtBoardImage['latestImage']['update'] = args.baseURL + setupConfig['board'] + '/' + imgName.replace('.img.gz','.raucb')
-    builtBoardImage['latestImage']['version'] = setupConfig['version']
-    
-    print('updated/new board/image object:\n'+json.dumps(builtBoardImage,indent=4)+'\n')
+    imageRelease['buildtime'] = bldtm
 
-    # check for existing object in list of boards that exactly matches board/model/architecture
+    # ...public download link, RAUC bundle download and OS version
+    imageRelease['download'] = args.baseURL + setupConfig['board'] + '/' + imgName
+    imageRelease['update'] = args.baseURL + setupConfig['board'] + '/' + imgName.replace(args.compressionExt,'.raucb')
+    imageRelease['version'] = setupConfig['version']
+    
+    print('new image release object:\n'+json.dumps(imageRelease,indent=4)+'\n')
+
+    # check for existing board/model object with matching cpu/architecture in list of boards
     exstidx = -1
-    for (idx,brdimg) in enumerate(boards['boards']) :
-        if ( brdimg['board'] == builtBoardImage['board'] and
-             brdimg['model'] == builtBoardImage['model'] and 
-             brdimg['architecture'] == builtBoardImage['architecture'] and
-             brdimg['cpu'] == builtBoardImage['cpu'] ) :
+    for (idx,brdmdl) in enumerate(boards['boards']) :
+        if ( brdmdl['board'] == boardRelease['board'] and
+             brdmdl['model'] == boardRelease['model'] and
+             brdmdl['architecture'] == boardRelease['architecture'] and
+             brdmdl['cpu'] == boardRelease['cpu'] ) :
             exstidx = idx
-    print('existing board/image object at index: '+str(exstidx))
+    print('existing board/image object at index: '+str(exstidx) + '\n')
 
     if exstidx != -1 :
-        print('replacing/updating existing board/image object\n')
-        boards['boards'][exstidx] = builtBoardImage
+        exstBoardModel = boards['boards'][exstidx]
+
+        # look for existing osname + osvariant combination
+        for (idx,img) in enumerate(exstBoardModel['latestImages']) :
+            if ( img['osname'] == imageRelease['osname'] and
+                 img['osvariant'] == imageRelease['osvariant'] ) :
+                imgidx = idx
+
+        if imgidx != -1 :
+            print('existing OS name/variant object\n'
+                  + json.dumps(exstBoardModel['latestImages'][imgidx],indent=4,sort_keys=True)+'\n')
+            exstBoardModel['latestImages'][imgidx] = imageRelease
+        else :
+            print('OS name/variant object is not listed yet\n')
+            exstBoardModel['latestImages'].append(imageRelease)
+
+        # update exisiting board/model object
+        boards['boards'][exstidx] = exstBoardModel
+
     else :
-        print(' => adding board/image object\n')
-        boards['boards'].append(builtBoardImage)
+        print('adding board/image object\n')
+        boardRelease['latestImages'] = [imageRelease]
+        boards['boards'].append(boardRelease)
 
     # update update-timestamp
     boards["latestUpdate"] = getTimeStamp()
