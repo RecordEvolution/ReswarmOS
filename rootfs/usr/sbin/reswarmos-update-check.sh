@@ -7,20 +7,30 @@ echo "using release URL: ${releaseURL}"
 # get release file
 wget ${releaseURL} -P /tmp
 
+# local path of setup.yaml
+stpyml=/etc/setup.yaml
+
+# path of running system's release file
+sysRls=/etc/os-release
+
 # local path of release file
 relFile="/tmp/$(basename ${releaseURL})"
 
-# specify model/board this system is running on
-brd=$(cat /etc/setup.yaml | grep "^  board:" | awk -F ':' '{print $2}' | tr -d ' ')
-mdl=$(cat /etc/setup.yaml | grep "^  model:" | awk -F ':' '{print $2}' | tr -d ' ')
-echo "looking for release for ${brd}:${mdl}"
+# specify model/board and OS name/variant this system is running on
+brd=$(cat ${stpyml} | grep "^  board:" | awk -F ':' '{print $2}' | tr -d ' ')
+mdl=$(cat ${stpyml} | grep "^  model:" | awk -F ':' '{print $2}' | tr -d ' ')
+osn=$(cat ${stpyml} | grep "^  osname:" | awk -F ':' '{print $2}' | tr -d ' ')
+osv=$(cat ${stpyml} | grep "^  osvariant:" | awk -F ':' '{print $2}' | tr -d ' ')
+echo "looking for release for ${brd}:${mdl} and ${osn}:${osv}"
 
-# obtain build time of latest ReswarmOS image supporting this board/model
-latestImage=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[] | select(.model == $mdl and .board == $brd) | .latestImage')
-echo -e "${latestImage}"
-latestImageBldTime=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[]  | select(.model == $mdl and .board == $brd) | .latestImage | .buildtime' | tr -d '"')
-latestImageUpdate=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[]  | select(.model == $mdl and .board == $brd) | .latestImage | .update' | tr -d '"')
-latestImageVersion=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[]  | select(.model == $mdl and .board == $brd) | .latestImage | .version' | tr -d '"')
+# obtain object (build time) of latest (ReswarmOS) image supporting this board/model
+boardRelease=$(cat ${relFile} | jq --arg brd "$brd" --arg mdl "$mdl" '.boards[] | select(.model == $mdl and .board == $brd)')
+echo -e "${boardRelease}"
+imageRelease=$(echo "${boardRelease}" | jq --arg osn "$osn" --arg osv "$osv" '.latestImages[] | select(.osname == $osn and .osvariant == $osv )')
+echo -e "${imageRelease}"
+latestImageBldTime=$(echo "${imageRelease}" | jq .buildtime | tr -d '"')
+latestImageUpdate=$(echo "${imageRelease}" | jq .update | tr -d '"')
+latestImageVersion=$(echo "${imageRelease}" | jq .version | tr -d '"')
 
 # remove any release file
 rm -vf ${relFile}.*
@@ -34,7 +44,7 @@ else
 fi
 
 # get build time of ReswarmOS we're running on
-thisBldTime=$(cat /etc/os-release | grep "^VERSION=" | awk -F '=' '{print $2}' | awk -F '-' '{print $3}' | tr -d ' ')
+thisBldTime=$(cat ${sysRls} | grep "^VERSION=" | awk -F '=' '{print $2}' | awk -F '-' '{print $3}' | tr -d ' ')
 echo "build time of running system: ${thisBldTime}"
 
 # compare build times
