@@ -75,7 +75,7 @@ $(OUT)$(NAM).gz: $(OUT)$(NAM)
 	@echo $(CDR)/$(OUT)$(NAM).gz
 
 #-----------------------------------------------------------------------------#
-# deploy ReswarmOS image/update and meta-data
+# deploy ReswarmOS image/update and meta-data/release-file
 
 release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb
 	gsutil cp gs://reswarmos/supportedImages.json config/supportedBoards.json
@@ -151,7 +151,7 @@ clean-rauc:
 	rm -vf rootfs/etc/rauc/cert.pem
 
 #-----------------------------------------------------------------------------#
-# analyse objects contributing to final root filesystem size
+# analyse objects/packages/directories contributing to final root filesystem
 
 analyze-depends:
 	cd $(OUT)buildroot/ && make graph-depends && cd -
