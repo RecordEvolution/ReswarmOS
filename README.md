@@ -175,7 +175,7 @@ everything to the google-cloud bucket.
 
 The build mechanism is basically a wrapper and an extension to _Buildroot_,
 which takes care of setting up the tool-chains, cross-compiling, constructing
-the root filesystem and generating the final system image. Buildroot`s
+the root filesystem and generating the final system image. Buildroot's
 configuration concept bears strong similarities with the one of the
 [Linux Kernel](https://www.kernel.org). In particular, both use an `.ini` like
 configuration file `.config` located in the respositories root directory, i.e.
