@@ -216,12 +216,13 @@ if __name__ == '__main__' :
              brdmdl['architecture'] == boardRelease['architecture'] and
              brdmdl['cpu'] == boardRelease['cpu'] ) :
             exstidx = idx
-    print('existing board/image object at index: '+str(exstidx) + '\n')
+    print('existing board/model object at index: '+str(exstidx) + '\n')
 
     if exstidx != -1 :
         exstBoardModel = boards['boards'][exstidx]
 
         # look for existing osname + osvariant combination
+        imgidx = -1
         for (idx,img) in enumerate(exstBoardModel['latestImages']) :
             if ( img['osname'] == imageRelease['osname'] and
                  img['osvariant'] == imageRelease['osvariant'] ) :
