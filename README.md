@@ -245,6 +245,7 @@ a RAUC update bundle.
 - https://github.com/buildroot/buildroot
 - https://buildroot.org/downloads/manual/manual.html
 - https://elinux.org/images/2/2a/Using-buildroot-real-project.pdf
+- https://firedome.io/wp-content/uploads/2021/02/How-to-build-your-own-tailor-made-IoT-Linux-OS_1.pdf
 
 ### Image
 
