@@ -1,6 +1,7 @@
 #!/bin/bash
 
 vrsn=$(cat setup.yaml | grep version | awk -F ':' '{print $2}' | tr -d ' \n')
+osvr=$(cat setup.yaml | grep osvariant | awk -F ':' '{print $2}' | tr -d ' \n')
 gthsh=$(git rev-parse HEAD)
 gthshshort=$(git rev-parse --short HEAD)
 gtbranch=$(git rev-parse --abbrev-ref HEAD)
@@ -8,7 +9,7 @@ gtbranch=$(git rev-parse --abbrev-ref HEAD)
 tsdate=$(date +%Y%m%dT%H%M%S)
 
 osrls=$(cat << EOF
-NAME=ReswarmOS
+NAME=ReswarmOS-${osvr}
 VERSION=v${vrsn}-g${gthshshort}-${tsdate}
 ID=reswarmos
 VERSION_ID=g${gthsh}

@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------#
 #
-# U-boot script for RasberryPi4
+# U-boot script for RasberryPi0w
 #
 # (default) memory layout:
 #
