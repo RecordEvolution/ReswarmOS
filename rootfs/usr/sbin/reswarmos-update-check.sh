@@ -37,10 +37,10 @@ rm -vf ${relFile}.*
 rm -vf ${relFile}
 
 if [ -z "${latestImageBldTime}" ]; then
-  echo "no ReswarmOS image available supporting this board/model" >&2
+  echo "no ReswarmOS image available supporting this board/model with same OS name/version" >&2
   exit 1
 else
-  echo "build time of latest image supporting ${brd}:${mdl}: ${latestImageBldTime}"
+  echo "build time of latest image supporting ${brd}:${mdl} and ${osn}:${osv} : ${latestImageBldTime}"
 fi
 
 # get build time of ReswarmOS we're running on

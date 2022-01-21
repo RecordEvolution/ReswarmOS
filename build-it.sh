@@ -223,7 +223,7 @@ startts=$(date)
 startsec=$(date +%s)
 
 pushd ./reswarmos-build/buildroot
-make
+make -j4
 popd
 
 # show produced image file

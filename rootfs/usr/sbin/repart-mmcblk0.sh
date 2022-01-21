@@ -140,7 +140,7 @@ repartdevp2()
   resize2fs ${devc}p2
 
   echo "recreate filesystems on ${devc}p3 and ${devc}p4"
-  mkfs.ext4 ${devc}p3 -L rootfs
+  mkfs.ext4 ${devc}p3 -L rootfsB
   mkfs.ext4 ${devc}p4 -L appfs
 }
 
@@ -217,7 +217,7 @@ if [ $p4sizsecIs -lt $p4sizsec ]; then
   # Since any resizing is usually only required during the initial/first setup
   # we take the size of partition p4=appfs as overall indicator. In contrast,
   # after a ReswarmOS upgrade via RAUC we don't expect to have to repartition
-  # anything, while the updated partition is resized by RAUC itself automatically!!
+  # anything, since the updated partition is resized by RAUC itself automatically!!
   repartdevp2
 
 else

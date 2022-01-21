@@ -1,7 +1,7 @@
 ---
   # OS name and version
   osname: ReswarmOS
-  osvariant: heavy
+  osvariant: light
   version: 0.5.2
   # general board description
   board: raspberrypi
@@ -10,9 +10,9 @@
   model: raspberrypi3
   modelname: Raspberry Pi 3
   # custom (buildroot) configuration file (default: "config/<board>/<model>/config")
-  config: config/raspberrypi/raspberrypi3/config-full
+  # config: config/raspberrypi/raspberrypi3/config-full
   # custom linux configuration (default is already specified by (buildroot) config)
-  linuxconfig:
+  # linuxconfig: config/raspberrypi/linux-config-debian-bullseye-11
   # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")
   image:
 ...
