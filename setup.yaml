@@ -7,10 +7,10 @@
   board: raspberrypi
   boardname: Raspberry Pi
   # specific model
-  model: raspberrypi3
-  modelname: Raspberry Pi 3
+  model: raspberrypi4
+  modelname: Raspberry Pi 4
   # custom (buildroot) configuration file (default: "config/<board>/<model>/config")
-  # config: config/raspberrypi/raspberrypi3/config-full
+  #config: config/raspberrypi/raspberrypi4/config-full
   # custom linux configuration (default is already specified by (buildroot) config)
   # linuxconfig: config/raspberrypi/linux-config-debian-bullseye-11
   # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")

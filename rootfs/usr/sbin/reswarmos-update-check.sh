@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # define release file URL of ReswarmOS
-releaseURL="https://storage.googleapis.com/reswarmos/supportedImages.json"
+releaseURL="https://storage.googleapis.com/reswarmos/supportedBoardsImages.json"
 echo "using release URL: ${releaseURL}"
 
 # get release file
