@@ -8,3 +8,4 @@ rootfs/etc/rauc/cert.pem
 rootfs/etc/setup.yaml
 *.log
 cfg*
+git-credentials
