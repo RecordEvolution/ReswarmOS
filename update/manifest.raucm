@@ -30,7 +30,7 @@ build=
 # hooks=
 
 [image.rootfs]
-filename=rootfsA.ext4
+filename=rootfs.ext4
 #size=419430400
 #sha256=b14c1457dc10469418b4154fef29a90e1ffb4dddd308bf0f2456d436963ef5b3
 # hooks=

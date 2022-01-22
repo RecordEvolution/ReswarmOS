@@ -7,6 +7,7 @@ NAM = $(shell basename $(IMG))
 NAS = $(shell echo $(NAM) | sed 's/.img//g')
 BRD = $(shell cat setup.yaml | grep "board:" | sed 's/board://g' | tr -d '\n ')
 MDL = $(shell cat setup.yaml | grep "model:" | sed 's/model://g' | tr -d '\n ')
+VRT = $(shell cat setup.yaml | grep "osvariant:" | sed 's/osvariant://g' | tr -d '\n ')
 VSN = $(shell cat setup.yaml | grep "version:" | sed 's/version://g' | tr -d '\n ')
 BLT = $(shell cat rootfs/etc/os-release | grep "^VERSION=" | sed 's/VERSION=v[^-]*-[^-]*-//g')
 TNM = reswarmos-builder:latest
@@ -77,13 +78,13 @@ $(OUT)$(NAM).gz: $(OUT)$(NAM)
 #-----------------------------------------------------------------------------#
 # deploy ReswarmOS image/update and meta-data/release-file
 
-release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VSN)-$(MDL).raucb
-	gsutil cp gs://reswarmos/supportedImages.json config/supportedBoards.json
+release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VRT)-$(VSN)-$(MDL).raucb
+	gsutil cp gs://reswarmos/supportedBoardsImages.json config/supportedBoards.json
 	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
 	gsutil cp $< gs://reswarmos/$(BRD)/
 	gsutil cp $(word 2,$^) gs://reswarmos/$(BRD)/
 	gsutil ls -lh gs://reswarmos/$(BRD)/
-	gsutil cp config/supportedBoards.json gs://reswarmos/supportedImages.json
+	gsutil cp config/supportedBoards.json gs://reswarmos/supportedBoardsImages.json
 	gsutil ls -lh gs://reswarmos/
 
 #-----------------------------------------------------------------------------#
@@ -140,7 +141,7 @@ $(OUT)rauc-bundle/rootfs.ext4: $(OUT)buildroot/output/images/rootfs.ext2
 	cp -v $< $@
 	#e2label $@ rootfsB
 
-$(OUT)ReswarmOS-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
+$(OUT)ReswarmOS-$(VRT)-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
 	rm -vf $@
 	rauc bundle --cert=$(word 3,$^) --key=$(word 4,$^) $< $@
 	rauc info --no-verify $@

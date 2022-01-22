@@ -39,15 +39,26 @@
             "cpu": "cortex-a72",
             "latestImages": [
                 {
-                    "buildtime": "20220107T102230",
-                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi4.img.gz",
-                    "file": "ReswarmOS-0.5.1-raspberrypi4.img.gz",
+                    "buildtime": "20220122T104408",
+                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi4.img.gz",
+                    "file": "ReswarmOS-light-0.5.3-raspberrypi4.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "light",
-                    "sha256": "e638c9a207a54981755f8394e261c7c7845aa0cd54a00917ecb9c8dd9fbf3480",
-                    "size": 0,
-                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-0.5.1-raspberrypi4.raucb",
-                    "version": "0.5.1"
+                    "sha256": "928eae517f9359f8029554b4628f89c839e1bc1e9a945d876c847c1967b61927",
+                    "size": 138684542,
+                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi4.raucb",
+                    "version": "0.5.3"
+                },
+                {
+                    "buildtime": "20220122T195742",
+                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi4.img.gz",
+                    "file": "ReswarmOS-heavy-0.5.3-raspberrypi4.img.gz",
+                    "osname": "ReswarmOS",
+                    "osvariant": "heavy",
+                    "sha256": "642dcfe06d613acf4d20526c620a8dc6ee714e31ce51cee6436ef640716d44aa",
+                    "size": 166287473,
+                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi4.raucb",
+                    "version": "0.5.3"
                 }
             ],
             "model": "raspberrypi4",
@@ -75,5 +86,5 @@
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2022-01-18T20:16:16"
+    "latestUpdate": "2022-01-22T20:08:05"
 }
