@@ -1,7 +1,7 @@
 ---
   # OS name and version
   osname: ReswarmOS
-  osvariant: light
+  osvariant: heavy
   version: 0.5.3
   # general board description
   board: raspberrypi
