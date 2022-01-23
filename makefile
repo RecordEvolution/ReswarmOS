@@ -1,5 +1,7 @@
 #-----------------------------------------------------------------------------#
 
+SHELL = /bin/bash
+
 OUT = output-build/
 CDR = $(shell pwd)
 IMG = $(OUT)$(shell ls -t $(OUT) | grep -v 'img.gz' | grep '.img' | head -n1)
@@ -135,14 +137,15 @@ $(OUT)rauc-bundle/:
 	mkdir -pv $@
 
 $(OUT)rauc-bundle/manifest.raucm: update/manifest.raucm rootfs/etc/os-release
-	cat $< | grep -v "^#" | sed "s/^version=/version=$(VSN)/g" | sed "s/^build=/build=$(BLT)/g" > $@
+	cat $< | grep "." | grep -v "^#" | sed "s/^\[/\\n\[/g" \
+	       | sed "s/^compatible=ReswarmOS/compatible=ReswarmOS-$(VRT)-$(MDL)/g" \
+	       | sed "s/^version=/version=$(VSN)/g" | sed "s/^build=/build=$(BLT)/g" > $@
 
 $(OUT)rauc-bundle/rootfs.ext4: $(OUT)buildroot/output/images/rootfs.ext2
 	cp -v $< $@
-	#e2label $@ rootfsB
 
 $(OUT)ReswarmOS-$(VRT)-$(VSN)-$(MDL).raucb: $(OUT)rauc-bundle/ $(OUT)rauc-bundle/rootfs.ext4 $(OUT)cert.pem $(OUT)key.pem $(OUT)rauc-bundle/manifest.raucm
-	rm -vf $@
+	rm -vf $(OUT)ReswarmOS-*.raucb
 	rauc bundle --cert=$(word 3,$^) --key=$(word 4,$^) $< $@
 	rauc info --no-verify $@
 

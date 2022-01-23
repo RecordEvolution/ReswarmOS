@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------------------#
 
 [update]
-compatible=ReswarmDevice
+compatible=ReswarmOS
 version=
 description=RAUC update bundle for ReswarmOS
 build=
