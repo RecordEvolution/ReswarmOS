@@ -7,24 +7,24 @@
             "cpu": "cortex-a53",
             "latestImages": [
                 {
-                    "buildtime": "20220123T104438",
+                    "buildtime": "20220124T151002",
                     "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi3.img.gz",
                     "file": "ReswarmOS-light-0.5.3-raspberrypi3.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "light",
-                    "sha256": "b5437c535d0d0d90001c40b38bef1c30c4a3bb089bf386238dc77c97f995f453",
-                    "size": 138138239,
+                    "sha256": "d5289fb6429ccbee1198498e8544ebd42bd9c72b1ad85bf88cd0ca453117b99d",
+                    "size": 138144126,
                     "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi3.raucb",
                     "version": "0.5.3"
                 },
                 {
-                    "buildtime": "20220123T124917",
+                    "buildtime": "20220124T174059",
                     "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi3.img.gz",
                     "file": "ReswarmOS-heavy-0.5.3-raspberrypi3.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "heavy",
-                    "sha256": "1142b5e8d5177d8ec75d0e3b30ec8fb9f70a9f0b38d2136bbc2bf56f4fcfc7df",
-                    "size": 165997776,
+                    "sha256": "01975fdbc7a8bc4697156cd3544299de72ad5bff97404e5393b95c68fdb41727",
+                    "size": 165996986,
                     "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi3.raucb",
                     "version": "0.5.3"
                 }
@@ -39,24 +39,24 @@
             "cpu": "cortex-a72",
             "latestImages": [
                 {
-                    "buildtime": "20220122T233458",
+                    "buildtime": "20220124T123915",
                     "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi4.img.gz",
                     "file": "ReswarmOS-light-0.5.3-raspberrypi4.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "light",
-                    "sha256": "4078a33990ca8989d42df4f4a2a34f58392955a97a99eb20bda695dbe5ce17db",
-                    "size": 138688200,
+                    "sha256": "6f45f20c363970904a52733b35a90394f56263b8d1444c69d70a8f9cd53af52b",
+                    "size": 138690812,
                     "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi4.raucb",
                     "version": "0.5.3"
                 },
                 {
-                    "buildtime": "20220123T091536",
+                    "buildtime": "20220124T144616",
                     "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi4.img.gz",
                     "file": "ReswarmOS-heavy-0.5.3-raspberrypi4.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "heavy",
-                    "sha256": "3d0e3a74e7753696db3c097d72d9174e5e27d8eae34e632a843f0c31a376602b",
-                    "size": 166287106,
+                    "sha256": "3eff93b833e3bff2955a709feaaad2040ee0c7ebc8d7eb62d012f74d8046143b",
+                    "size": 166287827,
                     "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi4.raucb",
                     "version": "0.5.3"
                 }
@@ -71,24 +71,24 @@
             "cpu": "arm1176jzf-s",
             "latestImages": [
                 {
-                    "buildtime": "20220123T160109",
+                    "buildtime": "20220124T182024",
                     "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi0w.img.gz",
                     "file": "ReswarmOS-light-0.5.3-raspberrypi0w.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "light",
-                    "sha256": "69ebc30df50bbb9d17f243a3b5f93cdf582e56809f917cfefbf2e8ea422d6bd4",
-                    "size": 136778579,
+                    "sha256": "d1e4fc520a638e0d8883db1a0f890706ea0ef256ef83a28ad1a293291231533c",
+                    "size": 136778958,
                     "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-light-0.5.3-raspberrypi0w.raucb",
                     "version": "0.5.3"
                 },
                 {
-                    "buildtime": "20220123T161702",
+                    "buildtime": "20220124T195314",
                     "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi0w.img.gz",
                     "file": "ReswarmOS-heavy-0.5.3-raspberrypi0w.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "heavy",
-                    "sha256": "1d009625b8778d6cbf7660f0324e4a2030d3b4f459f31bad4c4d0101ef2393a5",
-                    "size": 164747912,
+                    "sha256": "8e3574d360a4f5b6297c70f9a2b3c525e950433ae9425ce8730a6f91801968c6",
+                    "size": 164755696,
                     "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi0w.raucb",
                     "version": "0.5.3"
                 }
@@ -97,5 +97,5 @@
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2022-01-23T16:31:27"
+    "latestUpdate": "2022-01-24T20:08:38"
 }
