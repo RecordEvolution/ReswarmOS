@@ -123,6 +123,18 @@ cat ${cfgfile} | grep -P "BR2_LINUX_KERNEL_.*CUSTOM_CONFIG"
 
 # --------------------------------------------------------------------------- #
 
+logging_message "specify RAUC compatibility tag for update bundle"
+
+raucsysconfg="./rootfs/etc/rauc/system.conf"
+rauccomp="ReswarmOS-${osvariant}-${model}"
+echo "using RAUC compatibility tag: ${rauccomp}"
+cat ${raucsysconfg} | grep "." | grep -v "^#" | sed "s/^\[/\\n\[/g" \
+  | sed "s/^compatible=ReswarmOS/compatible=${rauccomp}/g" > ${raucsysconfg}.tmp
+mv -v ${raucsysconfg}.tmp ${raucsysconfg}
+cat "${raucsysconfg}"
+
+# --------------------------------------------------------------------------- #
+
 logging_message "github credentials configuration (to access Reagent repo)"
 
 # ask for any (github) credentials if ~/.git-credentials does not exist
