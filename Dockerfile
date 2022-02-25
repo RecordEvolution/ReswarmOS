@@ -13,7 +13,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     git make python3 python3-yaml python3-pip \
     build-essential gcc g++ autoconf automake libtool bison flex gettext \
     wget cpio unzip rsync bc iproute2 \
-    rauc u-boot-tools \
+    rauc u-boot-tools dosfstools mtools \
     genext2fs \
     xsltproc \
     jq
@@ -41,9 +41,6 @@ COPY config/ ./config
 COPY packages/ ./packages
 COPY rootfs/ ./rootfs/
 COPY boot/ ./boot/
-
-# (TODO prelimminary) copy git-credentials to clone private repositories during build
-COPY git-credentials ./.git-credentials
 
 # create directory (make sure to match directory/path given in makefile) to 
 # be mounted as volume and transfer ownership
