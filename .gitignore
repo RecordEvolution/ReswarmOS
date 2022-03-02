@@ -2,6 +2,7 @@
 output-build/
 custom-disk/
 custom-root/
+source-disk/
 *.img
 *.iso
 *.md5
