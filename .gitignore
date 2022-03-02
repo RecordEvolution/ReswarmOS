@@ -8,6 +8,7 @@ custom-root/
 *.img.zip
 *.img.gz
 *.iso.gz
+*.tar.gz
 rootfs/etc/os-release
 rootfs/etc/rauc/cert.pem
 rootfs/etc/setup.yaml
