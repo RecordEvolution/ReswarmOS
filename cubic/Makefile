@@ -26,11 +26,18 @@ extract-project:
 download-project:
 	gsutil cp gs://reswarmos/installer-source/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz archives/
 
+install-project: download-project extract-project
+
 upload-project:
 	gsutil cp archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz gs://reswarmos/installer-source
 
+release: archive-project upload-project
+
 download-source:
 	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
+
+update-config:
+	./update-config.sh
 
 clean-project:
 	sudo rm -rf project/custom-disk/ project/custom-root
