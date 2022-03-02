@@ -1,8 +1,15 @@
 
 output-build/
+custom-disk/
+custom-root/
+source-disk/
 *.img
+*.iso
+*.md5
 *.img.zip
 *.img.gz
+*.iso.gz
+*.tar.gz
 rootfs/etc/os-release
 rootfs/etc/rauc/cert.pem
 rootfs/etc/setup.yaml
