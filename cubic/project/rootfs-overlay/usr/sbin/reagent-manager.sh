@@ -38,11 +38,11 @@ check_latest() {
     echo "no reagent binary ${reagentdir}/${reagentbin}* found"
   else
     # make sure symbolic link points to latest (executable) binary
-    if [ ! "${reagentLatest}" == "${reagentupgr}" ]; then
-      echo "${reagentupgr} is newer than ${reagentLatest}"
+    if [ ! "$(readlink -f ${reagentLatest})" == "${reagentupgr}" ]; then
+      echo "${reagentupgr} is newer than $(readlink -f ${reagentLatest})"
       chmod 755 ${reagentupgr}
       rm -f ${reagentLatest}
-      ln -s ${reagentupgr} ${reagentLatest}
+      ln -s $(readlink -f ${reagentupgr}) ${reagentLatest}
     fi
   fi
 }
@@ -57,12 +57,12 @@ do
   # if reagentActive does not yet exist link it to reagentLatest
   if [ ! -L ${reagentActive} ]; then
     echo "linking ${reagentActive} to ${reagentLatest}"
-    ln -s ${reagentLatest} ${reagentActive}
+    ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
   fi
   # if reagentPrevious does not yet exist link it to reagentActive
   if [ ! -L ${reagentPrevious} ]; then
     echo "linking ${reagentPrevious} to ${reagentActive}"
-    ln -s ${reagentActive} ${reagentPrevious}
+    ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
   fi
 
   # check status of agent
@@ -71,14 +71,14 @@ do
 
     echo "reagent failed"
 
-    if [ "${reagentLatest}" == "${reagentActive}" ]; then
-      if [ "${reagentLatest}" != "${reagentPrevious}" ]; then
+    if [ "$(readlink -f ${reagentLatest})" == "$(readlink -f ${reagentActive})" ]; then
+      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
         if [ $countcycles -lt $numcycleout ]; then
           echo "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
           rm -f ${reagentActive}
-          ln -s ${reagentPrevious} ${reagentActive}
+          ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
           rm -f ${reagentPrevious}
-          ln -s ${reagentLatest} ${reagentPrevious}
+          ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
         fi
       fi
     fi
@@ -90,14 +90,14 @@ do
 
   else
 
-    if [ "${reagentLatest}" != "${reagentActive}" ]; then
-      if [ "${reagentLatest}" != "${reagentPrevious}" ]; then
+    if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentActive})" ]; then
+      if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
 
         echo "upgrading to latest version of reagent ${reagentLatest}"
         rm -f ${reagentPrevious}
-        ln -s ${reagentActive} ${reagentPrevious}
+        ln -s $(readlink -f ${reagentActive}) ${reagentPrevious}
         rm -f ${reagentActive}
-        ln -s ${reagentLatest} ${reagentActive}
+        ln -s $(readlink -f ${reagentLatest}) ${reagentActive}
 
         # check version of binary and restart reagent service
         agentver=$(${reagentActive} --version)
