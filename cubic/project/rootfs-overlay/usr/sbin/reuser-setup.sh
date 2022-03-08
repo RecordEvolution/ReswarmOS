@@ -3,6 +3,11 @@
 # source the configuration parser
 . /usr/sbin/reparse-ini.sh
 
+ubuntuUser=$(cat /etc/shadow | grep ubuntu)
+if [ -n ${ubuntuUser} ]; then
+    userdel -rfRZ ubuntu > /dev/null 2>&1
+fi
+
 # check configuration file argument
 configfile="$1"
 if [ -z ${configfile} ]; then
