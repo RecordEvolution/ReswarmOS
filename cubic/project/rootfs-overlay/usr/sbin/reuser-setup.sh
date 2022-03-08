@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # source the configuration parser
 . /usr/sbin/reparse-ini.sh

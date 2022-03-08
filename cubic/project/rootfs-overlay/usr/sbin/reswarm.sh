@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # JSON parser
 JQ=/usr/bin/jq
@@ -11,7 +11,7 @@ bootDir="/boot"
 
 # check for (latest) *.reswarm device configuration file on vfat partition
 reswarmfile=$(ls -t ${bootDir} | grep ".reswarm" | head -n1)
-reswarmcfg="$(readlink ${bootDir})/${reswarmfile}"
+reswarmcfg="${bootDir}/${reswarmfile}"
 
 # define reswarm mode file and soft link to .reswarm configuration
 remode=/opt/reagent/reswarm-mode
@@ -22,7 +22,7 @@ reagentdir=/opt/reagent/
 reagentbin=$(ls -t ${reagentdir} | grep "reagent-" | head -n1)
 
 # set up symlink to general device.ini configuration
-ln -svf $(readlink ${bootDir})/device.ini /opt/reagent/device-config.ini
+ln -svf ${bootDir}/device.ini /opt/reagent/device-config.ini
 
 # reswarm mode
 if [ ! -z ${reswarmfile} ]; then

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # JSON parser
 JQ=/usr/bin/jq
@@ -13,7 +13,7 @@ if [ -z ${configfile} ]; then
   exit 1
 fi
 
-configfileln=$(readlink -f ${configfile})
+configfileln=${configfile}
 if [ ! -f ${configfileln} ]; then
   echo "configuration file ${configfile} -> ${configfileln} does not exist" >&2
   exit 1

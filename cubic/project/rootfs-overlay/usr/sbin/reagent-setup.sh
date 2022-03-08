@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # define reagent directory
 reagentdir=/opt/reagent/
@@ -28,7 +28,7 @@ echo "running on architecture: ${archverb}/${arch}"
 # check for existing link to reagent binary
 if [ -L ${reagentdir}${reagentact} ]; then
   # read existing link to get previous working architecture
-  prevpath=$(readlink ${reagentdir}${reagentact})
+  prevpath=${reagentdir}${reagentact}
   echo "existing ${reagentdir}${reagentact} is linked to ${prevpath}"
   ls -lh ${reagentdir}${reagentact}
   # compare to current working architecture

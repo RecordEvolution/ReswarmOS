@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # https://stedolan.github.io/jq/
 # https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html
