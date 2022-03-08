@@ -23,9 +23,7 @@ run-bios:
 	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 
 build-agent:
-	ARCH="amd64"
-	BUILD_ARCH="amd64"
-	cd ${HOME}/git/DeviceManagementAgent/src && CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} go build -ldflags "-X 'reagent/release.BuildArch=${BUILD_ARCH}'" -v -a -o ${HOME}/git/ReswarmOS/cubic/project/rootfs-overlay/opt/reagent/reagent-latest
+	cd ${HOME}/git/DeviceManagementAgent/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X 'reagent/release.BuildArch=amd64'" -v -a -o ${HOME}/git/ReswarmOS/cubic/project/rootfs-overlay/opt/reagent/reagent-latest
 
 overlay-fs:
 	sudo rsync -avp project/rootfs-overlay/ project/custom-root/
