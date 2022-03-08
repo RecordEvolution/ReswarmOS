@@ -1,0 +1,7 @@
+{
+  "insecure-registries": [],
+  "max-concurrent-downloads": 2,
+  "max-concurrent-uploads": 2,
+  "max-download-attempts": 3,
+  "data-root": "/apps/docker"
+}

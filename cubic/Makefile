@@ -16,6 +16,9 @@ run-efi:
 run-bios:
 	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 
+overlay-fs:
+	sudo rsync -avp project/rootfs-overlay/ project/custom-root/
+
 archive-project:
 	sudo rm archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz
 	sudo tar -cpvzf archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz project/custom-disk/ project/custom-root/

@@ -1,0 +1,14 @@
+[Unit]
+Description=Reswarm mode configuration
+After=repart.service mnt-wibble.mount
+# Before=rehost.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/reswarm.sh
+RemainAfterExit=no
+
+[Install]
+#WantedBy=sysinit.target
+#WantedBy=multi-user.target
+RequiredBy=rehost.service rewifi.service redocker.service reagent.service
