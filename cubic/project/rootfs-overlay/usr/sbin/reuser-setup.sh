@@ -80,10 +80,6 @@ if [ -z "${userExst}" ]; then
     mv /etc/ssh/sshd_config.tmp /etc/ssh/sshd_config
   fi
 
-  # employ .vimrc configuration
-  cp -v /root/.vimrc ${homedir}/.vimrc
-  chown ${usernm}:${usernm} ${homedir}/.vimrc
-
 else
 
   echo "user ${usernm} already exists"
