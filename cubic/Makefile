@@ -43,7 +43,16 @@ install-project: download-project extract-project
 upload-project:
 	gsutil cp archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz gs://reswarmos/installer-source
 
-release: archive-project upload-project
+release-source: archive-project upload-project
+
+compress-release:
+	gzip -k target/ReswarmOS-0.0.1-installer-amd64.iso
+
+release-bios:
+	gsutil cp target/ReswarmOS-0.0.1-installer-amd64.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-bios.iso.gz
+
+release-efi:
+	gsutil cp target/ReswarmOS-0.0.1-installer-amd64.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-efi.iso.gz
 
 download-source:
 	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
