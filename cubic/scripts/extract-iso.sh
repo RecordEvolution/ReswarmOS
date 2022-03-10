@@ -9,21 +9,24 @@ platform=$(uname -s)
 dir_id=$(uuidgen)
 mount_dir="/tmp/iso-mount-$dir_id"
 
-mkdir -p $2
+absolute_ISO_path=$(realpath $1)
+extract_dir=$(realpath $2)
+
+mkdir -p $extract_dir
 mkdir -p $mount_dir
 
 if [[ "$platform" == "Darwin" ]]; then
-    hdiutil_output=$(hdiutil attach -nomount $1)
+    hdiutil_output=$(hdiutil attach -nomount $absolute_ISO_path)
     attached_disk=$(echo $hdiutil_output | cut -d ' ' -f 1 | head -n 1 | xargs)
     mount -t cd9660 $attached_disk $mount_dir &> /dev/null
 else
-    sudo mount $1 $2
+    sudo mount $absolute_ISO_path $mount_dir
 fi
 
-rsync -az --info=progress2 $mount_dir/ $2/
+rsync -az --info=progress2 $mount_dir/ $extract_dir/ 2> /dev/null
 
 if [ $? -eq 0 ]; then
-    echo "Sucessfully extracted ISO contents to $2"
+    echo "Sucessfully extracted ISO contents to $extract_dir"
 fi
 
 if [[ "$platform" == "Darwin" ]]; then
@@ -34,4 +37,4 @@ else
 fi
 
 # make the ISO contents writable
-chmod -R 775 $2
+chmod -R 777 $extract_dir
