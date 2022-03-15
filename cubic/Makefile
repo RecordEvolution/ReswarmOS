@@ -66,7 +66,7 @@ download-source:
 	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
 
 update-config:
-	./update-config.sh
+	scripts/update-config.sh
 
 clean-project:
 	sudo rm -rf project/custom-disk/ project/custom-root
