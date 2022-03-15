@@ -94,6 +94,6 @@ autoinstall:
     - sed -i 's/^session    optional   pam_motd.so/#session    optional   pam_motd.so/g' /target/etc/pam.d/login
     - curtin in-target --target=/target -- passwd -q -u root
     - sed -i 's|^root:.:|root:$6$3b873df474b55246$GIpSsujar7ihMzG8urUKpzF9/2yZJhR.msyFRa5ouGXOKRCVszsc4aBcE2yi3IuFVxtAGwrPKin2WAzK3qOtB.:|' /target/etc/shadow
-    - cp /cdrom/boot/*.reswarm /target/boot
+    - cp /cdrom/boot/*.reswarm /target/boot || true
   user-data:
     disable_root: false
