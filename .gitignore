@@ -17,3 +17,4 @@ rootfs/etc/setup.yaml
 cfg*
 git-credentials
 reagent*
+!reagent/
