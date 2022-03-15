@@ -4,7 +4,7 @@ setup:
 setup-boot:
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/grub.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/boot/grub/grub.cfg
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/loopback.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/boot/grub/loopback.cfg
-	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/isolinux/txt.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/isolinux/loopback.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/isolinux/txt.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/isolinux/txt.cfg
 
 setup-bios:
 	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
