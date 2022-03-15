@@ -2,11 +2,11 @@ setup:
 	cubic project/
 
 setup-bios:
-	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
+	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/bios.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
 
 setup-efi:
-	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
+	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
 
 create-img:
