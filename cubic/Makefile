@@ -1,6 +1,12 @@
 setup:
 	cubic project/
 
+setup-bios:
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/bios.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
+
+setup-efi:
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
+
 create-img:
 	qemu-img create target/reswarm.img 16G
 
@@ -15,6 +21,12 @@ run-efi:
 
 run-bios:
 	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
+
+build-agent:
+	cd ${HOME}/git/DeviceManagementAgent/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X 'reagent/release.BuildArch=amd64'" -v -a -o ${HOME}/git/ReswarmOS/cubic/project/rootfs-overlay/opt/reagent/reagent-latest
+
+overlay-fs:
+	sudo rsync -av --info=progress2 project/rootfs-overlay/ project/custom-root/
 
 archive-project:
 	sudo rm archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz
@@ -31,7 +43,16 @@ install-project: download-project extract-project
 upload-project:
 	gsutil cp archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz gs://reswarmos/installer-source
 
-release: archive-project upload-project
+release-source: archive-project upload-project
+
+compress-release:
+	gzip -k target/ReswarmOS-0.0.1-installer-amd64.iso
+
+release-bios:
+	gsutil cp target/ReswarmOS-0.0.1-installer-amd64.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-bios.iso.gz
+
+release-efi:
+	gsutil cp target/ReswarmOS-0.0.1-installer-amd64.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-efi.iso.gz
 
 download-source:
 	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
