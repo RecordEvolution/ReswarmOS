@@ -14,6 +14,6 @@ echo "Restarting reagent in 3 seconds..." >>"${LGFL}"
 sleep 3
 systemctl restart reagent
 
-echo "Restarted the agent service!\n" >>"${LGFL}"
+echo "Restarted the agent service!" >>"${LGFL}"
 
 rm $schedule_lock_file
