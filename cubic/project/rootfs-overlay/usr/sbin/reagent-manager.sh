@@ -21,7 +21,7 @@ reagentLatest="${reagentdir}/${reagentlin}latest"
 reagentPrevious="${reagentdir}/${reagentlin}previous"
 
 # define length of management cycle
-cyclenumsecs=30
+cyclenumsecs=15
 
 # define time-out for version upgrade to be reverted after failure
 numcycleout=4
