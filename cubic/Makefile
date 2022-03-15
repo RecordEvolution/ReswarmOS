@@ -1,8 +1,14 @@
 setup:
 	cubic project/
 
+setup-boot:
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/grub.cfg ${HOME}/ReswarmOS/cubic/project/custom-disk/boot/grub/grub.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/loopback.cfg ${HOME}/ReswarmOS/cubic/project/custom-disk/boot/grub/loopback.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/isolinux/txt.cfg ${HOME}/ReswarmOS/cubic/project/custom-disk/isolinux/loopback.cfg
+
 setup-bios:
 	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
+	touch ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/meta-data
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/bios.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
 
 setup-efi:
