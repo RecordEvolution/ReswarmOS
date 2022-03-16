@@ -3,14 +3,15 @@
 sed="sed"
 os=$(uname -s)
 
-has_gsed=$(gsed --version)
-if [ $? == "1" ]; then
-    printf "Error: gsed needs to be installed on MacOS\nType 'brew install gsed' to install gsed\n" >&2
-    exit 1
-fi
-
 if [ $os == "Darwin" ]; then
-    sed="gsed"
+
+	has_gsed=$(gsed --version)
+	if [ $? == "1" ]; then
+   	 	printf "Error: gsed needs to be installed on MacOS\nType 'brew install gsed' to install gsed\n" >&2
+    		exit 1
+	fi
+
+    	sed="gsed"
 fi
 
 ${sed} -i 's#directory = .*/git#directory = '"$HOME"'/git#g#' project/cubic.conf
