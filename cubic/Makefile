@@ -13,6 +13,7 @@ setup-bios:
 
 setup-efi:
 	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
+	touch ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/meta-data
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
 
 create-img:
