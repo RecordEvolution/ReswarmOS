@@ -2,7 +2,10 @@
 
 set -e
 
-apt-get update && apt-get install \
+
+# Install main packages
+
+apt-get update && apt-get install -y \
     ca-certificates \
     curl \
     gnupg \
@@ -12,7 +15,8 @@ apt-get update && apt-get install \
     dnsutils \
     network-manager \
     jq \
-    openssh-server
+    openssh-server \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Docker
 
@@ -22,24 +26,22 @@ echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
     $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-apt-get update && apt-get install docker-ce docker-ce-cli containerd.io
+apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 
 usermod -aG docker $USER
 
-newgrp docker
+# Setup MOTD
 
-# disable motd-news
 sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news
 
-# disable pam motd
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/login
 
-# disable old network config
+# Disable old network config
 echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg
 systemctl disable motd-news.timer
 
-# enable new services
+# Enable new services
 
 systemctl enable reagent-manager.service
 systemctl enable reagent.service
@@ -53,9 +55,7 @@ systemctl enable rewifi.service
 
 echo "deb http://archive.ubuntu.com/ubuntu/ impish main" >> /etc/apt/sources.list
 
-apt-get update
-
-apt-get install network-manager
+apt-get update && apt-get install -y network-manager && rm -rf /var/lib/apt/lists/*
 
 sed -i 's@deb http://archive.ubuntu.com/ubuntu/ impish main@@g' /etc/apt/sources.list
 
