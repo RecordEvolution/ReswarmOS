@@ -57,6 +57,8 @@ echo "deb http://archive.ubuntu.com/ubuntu/ impish main" >> /etc/apt/sources.lis
 
 apt-get update && apt-get install -y network-manager && rm -rf /var/lib/apt/lists/*
 
+mkdir -p /var/lib/apt/lists/partial
+
 sed -i 's@deb http://archive.ubuntu.com/ubuntu/ impish main@@g' /etc/apt/sources.list
 
 # to run after launch --------------------------------------

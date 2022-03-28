@@ -35,7 +35,7 @@ build-agent:
 	cd ${HOME}/git/DeviceManagementAgent/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X 'reagent/release.BuildArch=amd64'" -v -a -o ${HOME}/git/ReswarmOS/cubic/project/rootfs-overlay/opt/reagent/reagent-latest
 
 overlay-fs:
-	sudo rsync -av --info=progress2 project/rootfs-overlay/ project/custom-root/
+	sudo rsync -av --mkpath --info=progress2 project/rootfs-overlay/ project/custom-root/
 
 archive-project:
 	sudo rm archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz
