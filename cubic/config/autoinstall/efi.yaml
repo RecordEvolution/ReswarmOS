@@ -105,6 +105,7 @@ autoinstall:
   late-commands:
     - curtin in-target --target=/target -- apt-get --purge -y --quiet=2 remove apport bcache-tools btrfs-progs byobu cloud-guest-utils cloud-initramfs-copymods cloud-initramfs-dyn-netconf friendly-recovery fwupd landscape-common lxd-agent-loader ntfs-3g open-vm-tools plymouth plymouth-theme-ubuntu-text popularity-contest screen snapd sosreport tmux || true
     - curtin in-target --target=/target -- apt-get --purge -y --quiet=2 autoremove || true
+    - curtin in-target --target=/target -- apt-get clean || true
     - sed -i 's/ENABLED=1/ENABLED=0/g' /target/etc/default/motd-news
     - sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /target/etc/pam.d/sshd
     - sed -i 's/^session    optional   pam_motd.so/#session    optional   pam_motd.so/g' /target/etc/pam.d/login
