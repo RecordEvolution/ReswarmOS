@@ -66,6 +66,9 @@ release-efi:
 download-source:
 	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
 
+update-os-config:
+	scripts/update-os-config.sh
+
 update-config:
 	scripts/update-config.sh
 

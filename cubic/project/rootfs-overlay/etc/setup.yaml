@@ -1,0 +1,8 @@
+---
+  osname: ReswarmOS
+  osvariant: installer
+  version: 0.0.3
+  board: ipc
+  boardname: PC Platform (IPC)
+  model: efi
+  modelname: UEFI
