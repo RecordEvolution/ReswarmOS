@@ -55,7 +55,13 @@ systemctl enable rewifi.service
 
 echo "deb http://archive.ubuntu.com/ubuntu/ impish main" >> /etc/apt/sources.list
 
-apt-get update && apt-get install -y network-manager && rm -rf /var/lib/apt/lists/*
+apt-get update && apt-get install -y network-manager
+
+wget http://archive.ubuntu.com/ubuntu/pool/universe/r/rauc/rauc_1.5.1-1_amd64.deb && apt install -y ./rauc_1.5.1-1_amd64.deb && rm ./rauc_1.5.1-1_amd64.deb
+
+wget http://archive.ubuntu.com/ubuntu/pool/universe/r/rauc/rauc-service_1.5.1-1_all.deb && apt install -y ./rauc-service_1.5.1-1_all.deb && rm ./rauc-service_1.5.1-1_all.deb
+
+rm -rf /var/lib/apt/lists/*
 
 mkdir -p /var/lib/apt/lists/partial
 
