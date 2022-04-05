@@ -1,0 +1,12 @@
+# https://rauc.readthedocs.io/en/latest/integration.html#systemd-integration
+
+[Unit]
+Description=RAUC good-marking service for currently booted rootfs
+ConditionKernelCommandLine=|bootchooser.active
+ConditionKernelCommandLine=|rauc.slot
+
+[Service]
+ExecStart=/usr/bin/rauc status mark-good
+
+[Install]
+WantedBy=multi-user.target

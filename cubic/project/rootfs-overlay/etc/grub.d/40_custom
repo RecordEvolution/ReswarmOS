@@ -1,0 +1,56 @@
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+
+set ORDER="rootfsA rootfsB"
+set rootfsA_OK=0
+set rootfsB_OK=0
+set rootfsA_TRY=0
+set rootfsB_TRY=0
+load_env
+
+# select bootable slot
+for SLOT in $ORDER; do
+    if [ "$SLOT" == "rootfsA" ]; then
+        INDEX=0
+        OK=$rootfsA_OK
+        TRY=$rootfsA_TRY
+        rootfsA_TRY=1
+    fi
+    if [ "$SLOT" == "rootfsB" ]; then
+        INDEX=1
+        OK=$rootfsB_OK
+        TRY= rootfsB_TRY
+     rootfsB_TRY=1
+    fi
+    if [ "$OK" -eq 1 -a "$TRY" -eq 0 ]; then
+        default=$INDEX
+        break
+    fi
+done
+
+# reset booted flags
+if [ "$default" -eq 0 ]; then
+    if [ "$rootfsA_OK" -eq 1 -a "$rootfsA_TRY" -eq 1 ]; then
+        rootfsA_TRY=0
+    fi
+    if [ "$rootfsB_OK" -eq 1 -a "$rootfsB_TRY" -eq 1 ]; then
+     rootfsB_TRY=0
+    fi
+fi
+
+save_env ORDER rootfsA_OK rootfsB_OK rootfsA_TRY rootfsB_TRY
+
+CMDLINE="panic=60 quiet"
+
+menuentry "Slot A (OK=$rootfsA_OK TRY=$rootfsA_TRY)" {
+    linux /vmlinuz-5.4.0-107-generic root=/dev/sda2 $CMDLINE rauc.slot=rootfsA
+    initrd /initrd.img-5.4.0-107-generic
+}
+
+menuentry "Slot B (OK=$rootfsB_OK TRY=$rootfsB_TRY)" {
+    linux /vmlinuz-5.4.0-107-generic root=/dev/sda3 $CMDLINE rauc.slot=rootfsB
+    initrd /initrd.img-5.4.0-107-generic
+}
