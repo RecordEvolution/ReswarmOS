@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Install ReswarmOS update bundle
+
+[Service]
+Type=oneshot
+ExecStart=rauc install $(ls -t /tmp/*.raucb)
+ExecStop=rm /tmp/*.raucb -v
+
+[Install]
+
