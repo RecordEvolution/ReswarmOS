@@ -80,3 +80,6 @@ clean-archives:
 
 remove-images:
 	rm *.img *.iso *.md5
+
+release:
+	python3 ../config/supported-boards.py --outputDir target --osReleasePath project/rootfs-overlay/etc/os-release project/rootfs-overlay/etc/setup.yaml ../config/supportedBoards.json

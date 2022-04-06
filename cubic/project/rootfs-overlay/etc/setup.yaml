@@ -6,3 +6,5 @@
   boardname: PC Platform (IPC)
   model: efi
   modelname: UEFI
+  cpu: x86_64 CPU
+  architecture: amd64

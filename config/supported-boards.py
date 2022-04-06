@@ -16,6 +16,7 @@ parser.add_argument('--compressionExt',type=str,default='.img.gz',help='file ext
 parser.add_argument('--timeFormat',type=str,default='%Y-%m-%dT%H:%M:%S',help='timestamp format')
 parser.add_argument('--boardSchema',type=str,default='{"latestUpdate":"","boards":[{"board":"","boardname":"","model":"","modelname":"","architecture":"","cpu":"","latestImages":[{"osname":"","osvariant":"","version":"","file":"","size":0,"sha256":"","buildtime":""}]}]}',help='JSON schema of board/image release file')
 parser.add_argument('--baseURL',type=str,default='https://storage.googleapis.com/reswarmos/',help='public base URL of images')
+parser.add_argument('--osReleasePath',type=str,default='rootfs/etc/os-release',help='path to os-release file')
 parser.add_argument('--newFile',type=str,default=None,help='different output file')
 
 args = parser.parse_args()
@@ -31,16 +32,17 @@ with open(args.setupFile,'r') as fin :
         raise RuntimeError('failed to read setup.yaml: '+str(err))
 print('ReswarmOS setup:\n'+json.dumps(setupConfig,indent=4)+'\n')
 
+if setupConfig['osvariant'] != 'installer':
 # read buildroot configuration (consider default vs. custom configuration)
-if 'config' in list(setupConfig.keys()) and setupConfig['config'] :
-    buildConfigPath = setupConfig['config']
-else :
-    buildConfigPath = os.path.join('config',setupConfig['board'],setupConfig['model'],'config')
+    if 'config' in list(setupConfig.keys()) and setupConfig['config'] :
+        buildConfigPath = setupConfig['config']
+    else :
+        buildConfigPath = os.path.join('config',setupConfig['board'],setupConfig['model'],'config')
 
-with open(buildConfigPath) as fin :
-    buildConfig = fin.read()
-    bldCfg = buildConfig.split('\n')
-print('Buildroot configuration: (' + buildConfigPath + ')\n'+'\n'.join(bldCfg[:20])+'\n')
+    with open(buildConfigPath) as fin :
+        buildConfig = fin.read()
+        bldCfg = buildConfig.split('\n')
+    print('Buildroot configuration: (' + buildConfigPath + ')\n'+'\n'.join(bldCfg[:20])+'\n')
 
 # generate (compressed) image's filename
 imgName = setupConfig['osname']
@@ -173,7 +175,11 @@ if __name__ == '__main__' :
     boardRelease['modelname'] = setupConfig['modelname']
 
     # add CPU/architecture information
-    cpuarch = extractBuildrootInfo(bldCfg)
+    if setupConfig['osvariant'] == 'installer':
+        cpuarch = {'cpu': setupConfig['cpu'], 'architecture': setupConfig['architecture']}
+    else:
+        cpuarch = extractBuildrootInfo(bldCfg)
+
     boardRelease['cpu'] = cpuarch['cpu']
     boardRelease['architecture'] = cpuarch['architecture']
 
@@ -193,7 +199,7 @@ if __name__ == '__main__' :
     imageRelease['sha256'] = sha256_hash.hexdigest()
 
     # ...build time
-    with open('rootfs/etc/os-release','r') as fin :
+    with open(args.osReleasePath,'r') as fin :
         osrelease = fin.read()
         osrls = osrelease.split('\n')
     reg = re.compile('VERSION=')
