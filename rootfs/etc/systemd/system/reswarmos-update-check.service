@@ -2,6 +2,7 @@
 [Unit]
 Description=Check for ReswarmOS updates
 Wants=reswarmos-update-check.timer
+After=network-online.target
 
 [Service]
 Type=oneshot
