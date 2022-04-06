@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vrsn=$(cat project/rootfs-overlay/etc/setup.yaml | grep version | awk -F ':' '{print $2}' | tr -d ' ')
+vrsn=$(cat project/rootfs-overlay/etc/config/setup.yaml | grep version | awk -F ':' '{print $2}' | tr -d ' ')
 gthsh=$(git rev-parse HEAD)
 gthshshort=$(git rev-parse --short HEAD)
 gtbranch=$(git rev-parse --abbrev-ref HEAD)
@@ -16,4 +16,4 @@ VERSION_ID=${gthsh}
 PRETTY_NAME="ReswarmOS-x86_64-${vrsn}"
 EOF
 )
-echo -e "${osrls}" > project/rootfs-overlay/etc/os-release
+echo -e "${osrls}" > project/rootfs-overlay/etc/config/os-release

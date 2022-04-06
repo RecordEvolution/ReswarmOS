@@ -50,6 +50,11 @@ systemctl enable rehost.service
 systemctl enable reswarm.service
 systemctl enable reuser.service
 systemctl enable rewifi.service
+systemctl enable raucmarkgood.service
+systemctl enable reswarmos-update-check.service
+systemctl enable reswarmos-update-check.timer
+systemctl enable reswarmos-update-get.service
+systemctl enable reswarmos-update-install.service
 
 # install latest NetworkManager
 
