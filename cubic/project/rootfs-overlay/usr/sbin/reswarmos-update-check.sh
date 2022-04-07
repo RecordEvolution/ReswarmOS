@@ -56,9 +56,9 @@ if [ $lstBldTime -gt $thsBldTime ]; then
   echo "update available (version ${latestImageVersion})"
   touch "/etc/reswarmos-update"
   echo "${latestImageVersion},${latestImageBldTime},${latestImageUpdate}" > /etc/reswarmos-update
-  echo "${latestImage}" > /etc/os-release-latest.json
+  echo "${imageRelease}" > /etc/os-release-latest.json
 else
   echo "running system is up to date"
-  echo "${latestImage}" > /etc/os-release-latest.json
+  echo "${imageRelease}" > /etc/os-release-latest.json
 fi
 
