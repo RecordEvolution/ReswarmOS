@@ -49,15 +49,15 @@
             "cpu": "cortex-a72",
             "latestImages": [
                 {
-                    "buildtime": "20220124T144616",
-                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi4.img.gz",
-                    "file": "ReswarmOS-heavy-0.5.3-raspberrypi4.img.gz",
+                    "buildtime": "20220427T172846",
+                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-image-0.5.4-raspberrypi4.img.gz",
+                    "file": "ReswarmOS-image-0.5.4-raspberrypi4.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "image",
-                    "sha256": "3eff93b833e3bff2955a709feaaad2040ee0c7ebc8d7eb62d012f74d8046143b",
-                    "size": 166287827,
-                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi4.raucb",
-                    "version": "0.5.3"
+                    "sha256": "974bdcdc9e26c4b3724137b5fcf63248903191de4612ca0e3cee1c119bb0b755",
+                    "size": 167165711,
+                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-image-0.5.4-raspberrypi4.raucb",
+                    "version": "0.5.4"
                 }
             ],
             "model": "raspberrypi4",
@@ -85,5 +85,5 @@
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2022-04-07T19:34:44"
+    "latestUpdate": "2022-04-27T18:04:36"
 }

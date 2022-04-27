@@ -1,4 +1,5 @@
 
 output-build/
+cubic/
 *.img
-
+.git/

@@ -87,7 +87,7 @@ release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VRT)-$(VSN)-$(MDL).raucb
 	gsutil cp $(word 2,$^) gs://reswarmos/$(BRD)/
 	gsutil ls -lh gs://reswarmos/$(BRD)/
 	gsutil cp config/supportedBoards.json gs://reswarmos/supportedBoardsImages.json
-	gsutil ls -lh gs://reswarmos/
+	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos
 
 #-----------------------------------------------------------------------------#
 

@@ -63,9 +63,7 @@ def extractBuildrootInfo(buildrootConfig) :
     cpu = cpu[0].split('=')[1].replace('\"','') if len(cpu) == 1 else ''
 
     # architecture
-    reg = re.compile('BR2_ARCH=')
-    arch = list(filter(reg.match,bldCfg))
-    arch = arch[0].split('=')[1].replace('\"','') if len(arch) == 1 else ''
+    arch = setupConfig['architecture']
 
     return {"cpu":cpu,"architecture":arch}
 

@@ -1,16 +1,17 @@
 ---
   # OS name and version
   osname: ReswarmOS
-  osvariant: heavy
-  version: 0.5.3
+  osvariant: image
+  version: 0.5.4
+  architecture: armv7
   # general board description
   board: raspberrypi
   boardname: Raspberry Pi
   # specific model
-  model: raspberrypi0w
-  modelname: Raspberry Pi Zero W
+  model: raspberrypi4
+  modelname: Raspberry Pi 4
   # custom (buildroot) configuration file (default: "config/<board>/<model>/config")
-  config: config/raspberrypi/raspberrypi0w/config-full
+  config: config/raspberrypi/raspberrypi4/config-full
   # custom linux configuration (default is already specified by (buildroot) config)
   # linuxconfig: config/raspberrypi/linux-config-debian-bullseye-11
   # name of image configuration file (default: "config/<board>/<model>/genimage.cfg")
