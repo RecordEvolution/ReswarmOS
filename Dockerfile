@@ -47,6 +47,9 @@ COPY boot/ ./boot/
 RUN mkdir -v ./reswarmos-build
 RUN chown buildroot:buildroot ./reswarmos-build
 
+# (TODO prelimminary) copy git-credentials to clone private repositories during build
+COPY git-credentials ./.git-credentials
+
 # set ownership/permissions and switch to non-root user for build process
 RUN chown buildroot:buildroot -R ./
 USER buildroot
