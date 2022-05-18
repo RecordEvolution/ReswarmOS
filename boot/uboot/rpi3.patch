@@ -1,16 +1,15 @@
-diff --git a/arch/arm/dts/bcm2711-rpi-4-b.dts b/arch/arm/dts/bcm2711-rpi-4-b.dts
-index 72ce80fbf2..0c905a495b 100644
---- a/arch/arm/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/dts/bcm2711-rpi-4-b.dts
-@@ -232,27 +232,6 @@
- 	};
+diff --git a/arch/arm/dts/bcm2837-rpi-3-b.dts b/arch/arm/dts/bcm2837-rpi-3-b.dts
+index dd4a486040..b99c047f0b 100644
+--- a/arch/arm/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/dts/bcm2837-rpi-3-b.dts
+@@ -130,26 +130,6 @@
+ 	status = "okay";
  };
  
 -/* uart0 communicates with the BT module */
 -&uart0 {
 -	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32>;
--	uart-has-rtscts;
+-	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
 -	status = "okay";
 -
 -	bluetooth {
@@ -27,9 +26,9 @@ index 72ce80fbf2..0c905a495b 100644
 -	status = "okay";
 -};
 -
- &vc4 {
- 	status = "okay";
- };
+ /* SDHCI is used to control the SDIO for wireless */
+ &sdhci {
+ 	#address-cells = <1>;
 diff --git a/board/raspberrypi/rpi/rpi.c b/board/raspberrypi/rpi/rpi.c
 index 17b8108cc8..6dd9b03aa5 100644
 --- a/board/raspberrypi/rpi/rpi.c
@@ -45,17 +44,17 @@ index 17b8108cc8..6dd9b03aa5 100644
 +	return 0;
 +}
 \ No newline at end of file
-diff --git a/configs/rpi_4_32b_defconfig b/configs/rpi_4_32b_defconfig
-index a699591cee..1a3e2fa5d9 100644
---- a/configs/rpi_4_32b_defconfig
-+++ b/configs/rpi_4_32b_defconfig
-@@ -65,3 +65,4 @@ CONFIG_PHYS_TO_BUS=y
- CONFIG_ADDR_MAP=y
- CONFIG_SYS_NUM_ADDR_MAP=2
+diff --git a/configs/rpi_3_32b_defconfig b/configs/rpi_3_32b_defconfig
+index c1d5538810..3733b6fca0 100644
+--- a/configs/rpi_3_32b_defconfig
++++ b/configs/rpi_3_32b_defconfig
+@@ -49,3 +49,4 @@ CONFIG_VIDEO_BCM2835=y
+ CONFIG_CONSOLE_SCROLL_LINES=10
+ CONFIG_PHYS_TO_BUS=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_BOOTDELAY=-2
 diff --git a/include/configs/rpi.h b/include/configs/rpi.h
-index 7a5f0851b5..4c4a109f9d 100644
+index 7a5f0851b5..9b721894e8 100644
 --- a/include/configs/rpi.h
 +++ b/include/configs/rpi.h
 @@ -172,5 +172,9 @@
