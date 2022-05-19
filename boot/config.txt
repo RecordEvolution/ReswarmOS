@@ -10,9 +10,6 @@
 #   $ vcgencmd get_config <config>
 #
 #-----------------------------------------------------------------------------#
-
-start_file=start4.elf
-fixup_file=fixup4.dat
 kernel=u-boot.bin
 
 # create serial console
