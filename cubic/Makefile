@@ -83,3 +83,5 @@ remove-images:
 
 release:
 	python3 ../config/supported-boards.py --compressionExt .iso.gz --outputDir target --osReleasePath project/rootfs-overlay/etc/config/os-release project/rootfs-overlay/etc/config/setup.yaml ../config/supportedBoards.json
+	gsutil cp ../config/supportedBoards.json gs://reswarmos/supportedBoardsImages.json
+	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/supportedBoardsImages.json
