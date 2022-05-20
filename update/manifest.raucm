@@ -1,50 +1,7 @@
-#-----------------------------------------------------------------------------#
-
 [update]
-compatible=ReswarmOS
-version=
+compatible=ReswarmOS-image-raspberrypi4
+version=0.5.5
 description=RAUC update bundle for ReswarmOS
-build=
-
-#[bundle]
-#format=verity plain
-# following three fields are left unspecified and will later be calculated automatically by RAUC
-#verity-hash=
-#verity-salt=
-#verity-size=
-
-#[hooks]
-#filename=
-#hooks=
-#
-#[handler]
-#filename=
-#args=
-
-#-----------------------------------------------------------------------------#
-#
-# [image.<slot-class>]
-# filename= filename of image file relative to bundle content (include file extension!! e.g. "rootfs.ext4")
-# sha256=   automatically determined by RAUC
-# size=     automiatcally determined by RAUC
-# hooks=
 
 [image.rootfs]
 filename=rootfs.ext4
-#size=419430400
-#sha256=b14c1457dc10469418b4154fef29a90e1ffb4dddd308bf0f2456d436963ef5b3
-# hooks=
-
-#[image.appfs]
-#filename=appfs.ext4
-#size=219430400
-#sha256=ecf4c031d01cb9bfa9aa5ecfce93efcf9149544bdbf91178d2c2d9d1d24076ca
-# hooks=
-
-#-----------------------------------------------------------------------------#
-#
-# Reference:
-#
-# - https://rauc.readthedocs.io/en/latest/reference.html#manifest
-# 
-
