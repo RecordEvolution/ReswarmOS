@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY bundler.sh .
 
-COPY certs/* .
+COPY certs/ .
 
 COPY manifest.raucm .
 

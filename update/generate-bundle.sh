@@ -7,6 +7,7 @@ type="image"
 cert_path="certs/cert.pem"
 key_path="certs/key.pem"
 mkdir -p certs
+mkdir -p bundles
 os=$(uname -s)
 version=$(cat ../setup.yaml | grep "^  version:" | awk -F ':' '{print $2}' | tr -d ' ')
 model=$(cat ../setup.yaml | grep "^  model:" | awk -F ':' '{print $2}' | tr -d ' ')
