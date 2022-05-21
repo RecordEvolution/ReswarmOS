@@ -10,12 +10,15 @@
 #   $ vcgencmd get_config <config>
 #
 #-----------------------------------------------------------------------------#
+kernel=u-boot.bin
 
 # create serial console
 enable_uart=1
 
 # HDMI
 hdmi_force_hotplug=1
+
+start_x=1
 
 # load overlays for recognized camera
 camera_auto_detect=1
@@ -29,21 +32,3 @@ dtparam=i2c_arm=on,i2c1=on
 
 # MCC (https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md)
 dtparam=spi=on
-
-# finally, load the uboot binary
-kernel=u-boot.bin
-
-#-----------------------------------------------------------------------------#
-
-#device_tree_address=0x03000000
-# kernel graphics driver overlay
-# dtoverlay=vc4-kms-v3d
-# temperature sensor
-#dtoverlay=w1-gpio
-# CAN Bus
-# https://www.embeddedpi.com/documentation/isolated-canbus/mypi-industrial-raspberry-pi-can-bus-card-configuration
-#dtoverlay=mcp2515-can0
-# sense-hat
-#dtoverlay=rpi-sense
-
-#-----------------------------------------------------------------------------#

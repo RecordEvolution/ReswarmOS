@@ -87,14 +87,14 @@ for BOOT_SLOT in "${BOOT_ORDER}"; do
       # decrease number of remaining attempts by one
       setexpr BOOT_rootfsA_LEFT ${BOOT_rootfsA_LEFT} - 1
       # adjust kernel arguments according to cmdline.txt and required boot partition
-      setenv bootargs root=/dev/mmcblk0p2 rootfstype=ext4 rauc.slot=rootfsA rootwait rw console=tty1 console=ttyAMA0,115200 cgroup_enable=cpuset cgroup_enable=memory swapaccount=1 fsck.repair=yes dwc_otg.lpm_enable=0
+      setenv bootargs root=/dev/mmcblk0p2 rootfstype=ext4 8250.nr_uarts=1 rauc.slot=rootfsA rootwait rw console=tty1 console=ttyAMA0,115200 cgroup_enable=cpuset cgroup_enable=memory swapaccount=1 fsck.repair=yes dwc_otg.lpm_enable=0
       #setenv bootargs "${default_bootargs} root=/dev/mmcblk0p1 rauc.slot=A"
     fi
   elif test "x${BOOT_SLOT}" = "xrootfsB"; then
     if test ${BOOT_rootfsB_LEFT} -gt 0; then
       echo "found valid slot rootfsB, ${BOOT_rootfsB_LEFT} attempts remaining"
       setexpr BOOT_rootfsB_LEFT ${BOOT_rootfsB_LEFT} - 1
-      setenv bootargs root=/dev/mmcblk0p3 rootfstype=ext4 rauc.slot=rootfsB rootwait rw console=tty1 console=ttyAMA0,115200 cgroup_enable=cpuset cgroup_enable=memory swapaccount=1 fsck.repair=yes dwc_otg.lpm_enable=0
+      setenv bootargs root=/dev/mmcblk0p3 rootfstype=ext4 8250.nr_uarts=1 rauc.slot=rootfsB rootwait rw console=tty1 console=ttyAMA0,115200 cgroup_enable=cpuset cgroup_enable=memory swapaccount=1 fsck.repair=yes dwc_otg.lpm_enable=0
     fi
   fi
 done
