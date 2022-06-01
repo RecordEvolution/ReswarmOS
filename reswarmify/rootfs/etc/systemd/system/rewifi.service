@@ -1,0 +1,16 @@
+[Unit]
+Description=WiFi configuration
+After=reswarm.service NetworkManager.service
+Requires=NetworkManager.service
+
+[Service]
+Type=oneshot
+# ExecStartPre=
+ExecStart=/usr/sbin/rewifi.sh /opt/reagent/device-config.ini
+# Restart=on-failure
+# RestartSec=5s
+RemainAfterExit=no
+
+[Install]
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Reagent manager
+ConditionPathExists=/opt/reagent/reswarm-mode
+After=reswarm.service reagent.service
+
+[Service]
+ExecStart=/usr/sbin/reagent-manager.sh
+RestartSec=30
+Restart=always
+
+[Install]
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

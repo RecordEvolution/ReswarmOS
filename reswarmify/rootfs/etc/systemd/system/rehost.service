@@ -1,0 +1,15 @@
+[Unit]
+Description=Host configuration
+After=reswarm.service
+# Before=rewifi.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/reconfigure.sh /opt/reagent/device-config.ini
+# Restart=on-failure
+# RestartSec=5s
+RemainAfterExit=no
+
+[Install]
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

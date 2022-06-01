@@ -1,0 +1,17 @@
+#!/bin/bash
+
+LGFL="/var/log/nm-dispatcher.log"
+
+if [ -n "$1" ]; then
+    echo "interface: $1" >> "${LGFL}"
+fi
+
+if [ -n "$2" ]; then
+    echo "action: $2" >> "${LGFL}"
+fi
+
+if [ "$1" != "docker0" ] && [ "$1" != "none" ]; then
+        if [ "$2" == "up" ] || [ "$2" == "down" ] || [ "$2" == "dhcp4-change" ]; then
+                nohup /usr/sbin/restart-agent.sh &> /dev/null &
+        fi
+fi

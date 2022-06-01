@@ -1,9 +1,6 @@
-
-
-setup-reswarm-device.sh: 
-	cat 04-install-packages.sh | grep -v "^#\|logging\|^ *\$ " 
-	#chmod +x $@
-
-clean:
-	rm -vf setup-reswarm-device.sh
-
+release:
+	rm rootfs.tar.gz || true
+	tar -zcvf rootfs.tar.gz rootfs
+	gsutil cp gs://reswarmos/reswarmify/rootfs.tar.gz rootfs.tar.gz
+	gsutil cp gs://reswarmos/reswarmify/setup-reswarm.sh setup-reswarm.sh
+	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/reswarmify
