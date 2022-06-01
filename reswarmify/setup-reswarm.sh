@@ -78,13 +78,13 @@ apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 usermod -aG docker $USER
 
 # Disable old network config
-echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg || true
+echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg || true >/dev/null 2>&1
 
 systemctl disable motd-news.timer
 
 # Setup MOTD
 
-sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news
+sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news || true >/dev/null 2>&1
 
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/login
