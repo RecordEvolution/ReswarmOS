@@ -63,7 +63,7 @@ if [ "$UNAME_ARCH" == "aarch64" ]; then
 fi
 
 curl "https://storage.googleapis.com/re-agent/linux/$arch/$(curl https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent
-chmod +x /opt/reagent
+chmod +x /opt/reagent/reagent
 
 # Install Docker
 
