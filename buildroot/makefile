@@ -81,12 +81,12 @@ $(OUT)$(NAM).gz: $(OUT)$(NAM)
 # deploy ReswarmOS image/update and meta-data/release-file
 
 release: $(OUT)$(NAM).gz $(OUT)ReswarmOS-$(VRT)-$(VSN)-$(MDL).raucb
-	gsutil cp gs://reswarmos/supportedBoardsImages.json config/supportedBoards.json
-	python3 config/supported-boards.py setup.yaml config/supportedBoards.json
+	gsutil cp gs://reswarmos/supportedBoardsImages.json supportedBoards.json
+	python3 supported-boards.py setup.yaml supportedBoards.json
 	gsutil cp $< gs://reswarmos/$(BRD)/
 	gsutil cp $(word 2,$^) gs://reswarmos/$(BRD)/
 	gsutil ls -lh gs://reswarmos/$(BRD)/
-	gsutil cp config/supportedBoards.json gs://reswarmos/supportedBoardsImages.json
+	gsutil cp supportedBoards.json gs://reswarmos/supportedBoardsImages.json
 	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos
 
 #-----------------------------------------------------------------------------#
