@@ -20,7 +20,7 @@ VLP = /home/buildroot/reswarmos-build
 # container image hosting build process
 
 setup: Dockerfile $(OUT) $(OUT)key.pem $(OUT)cert.pem rootfs/etc/rauc/cert.pem
-	./reswarmify/os-release.sh > rootfs/etc/os-release
+	./os-release.sh > rootfs/etc/os-release
 	cp -v setup.yaml rootfs/etc/setup.yaml
 	docker build ./ --tag=$(TNM)
 	rm -vf $(OUT)buildroot/output/target/etc/os-release

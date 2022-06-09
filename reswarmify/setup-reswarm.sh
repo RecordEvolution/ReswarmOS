@@ -77,6 +77,8 @@ apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 
 usermod -aG docker $USER
 
+newgrp docker || true # instantly allow user to use Docker without root 
+
 # Disable old network config
 echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg || true >/dev/null 2>&1
 
