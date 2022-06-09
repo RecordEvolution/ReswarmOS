@@ -101,4 +101,10 @@ systemctl enable reswarm.service
 systemctl enable reuser.service
 systemctl enable rewifi.service
 
-reboot
+systemctl start reagent-manager.service
+systemctl start reagent.service
+systemctl start redocker.service
+systemctl start rehost.service
+systemctl start reswarm.service
+systemctl start reuser.service
+systemctl start rewifi.service
