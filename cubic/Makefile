@@ -1,20 +1,38 @@
-setup:
-	cubic project/
+setup-amd64:
+	cubic project/amd64
 
-setup-boot:
-	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/grub.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/boot/grub/grub.cfg
-	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/loopback.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/boot/grub/loopback.cfg
-	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/isolinux/txt.cfg ${HOME}/git/ReswarmOS/cubic/project/custom-disk/isolinux/txt.cfg
+setup-boot-amd64:
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/grub.cfg ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/boot/grub/grub.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/loopback.cfg ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/boot/grub/loopback.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/isolinux/txt.cfg ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/isolinux/txt.cfg
 
-setup-bios:
-	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
-	touch ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/meta-data
-	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/bios.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
+setup-bios-amd64:
+	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/preseed/nocloud
+	touch ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/preseed/nocloud/meta-data
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/bios.yaml ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/preseed/nocloud/user-data
 
-setup-efi:
-	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud
-	touch ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/meta-data
-	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/custom-disk/preseed/nocloud/user-data
+setup-efi-amd64:
+	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/preseed/nocloud
+	touch ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/preseed/nocloud/meta-data
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/amd64/custom-disk/preseed/nocloud/user-data
+
+setup-arm64:
+	cubic project/arm64
+
+setup-boot-arm64:
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/grub.cfg ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/boot/grub/grub.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/grub/loopback.cfg ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/boot/grub/loopback.cfg
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/boot/isolinux/txt.cfg ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/isolinux/txt.cfg
+
+setup-bios-arm64:
+	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud
+	touch ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud/meta-data
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/bios.yaml ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud/user-data
+
+setup-efi-arm64:
+	mkdir -p ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud
+	touch ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud/meta-data
+	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud/user-data
 
 create-img:
 	qemu-img create target/reswarm.img 16G
@@ -34,8 +52,12 @@ run-bios:
 build-agent:
 	cd ${HOME}/git/DeviceManagementAgent/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X 'reagent/release.BuildArch=amd64'" -v -a -o ${HOME}/git/ReswarmOS/cubic/project/rootfs-overlay/opt/reagent/reagent-latest
 
-overlay-fs:
-	sudo rsync -av --mkpath --info=progress2 project/rootfs-overlay/ project/custom-root/
+overlay-fs-amd64:
+	sudo rsync -av --mkpath --info=progress2 project/rootfs-overlay/ project/amd64/custom-root/
+
+overlay-fs-arm64:
+	sudo rsync -av --mkpath --info=progress2 project/rootfs-overlay/ project/arm64/custom-root/
+
 
 archive-project:
 	sudo rm archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz
@@ -65,12 +87,6 @@ release-efi:
 
 download-source:
 	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
-
-update-os-config:
-	scripts/update-os-config.sh
-
-update-config:
-	scripts/update-config.sh
 
 clean-project:
 	sudo rm -rf project/custom-disk/ project/custom-root

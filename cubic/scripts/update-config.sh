@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cubicPath=$(realpath $1)
 sed="sed"
 os=$(uname -s)
 
@@ -14,6 +15,6 @@ if [ $os == "Darwin" ]; then
     	sed="gsed"
 fi
 
-${sed} -i 's#directory = .*/git#directory = '"$HOME"'/git#g#' project/cubic.conf
-${sed} -i 's#is_success_copy = True#is_success_copy = False#g#' project/cubic.conf
-${sed} -i 's#is_success_extract = True#is_success_extract = False#g#' project/cubic.conf
+${sed} -i 's#directory = .*/git#directory = '"$HOME"'/git#g#' $cubicPath
+${sed} -i 's#is_success_copy = True#is_success_copy = False#g#' $cubicPath
+${sed} -i 's#is_success_extract = True#is_success_extract = False#g#' $cubicPath
