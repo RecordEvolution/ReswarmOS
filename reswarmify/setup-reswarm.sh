@@ -56,7 +56,7 @@ apt-get update && apt-get install -y \
 
 # Overlay filesystem
 
-echo "Overlaying RESWARM rootfs...."
+echo "Reswarmifying the root filesystem...."
 
 wget https://storage.googleapis.com/reswarmos/reswarmify/rootfs.tar.gz -O /tmp/rootfs.tar.gz && tar -xvzf /tmp/rootfs.tar.gz -C /tmp
 
@@ -74,11 +74,10 @@ if [ "$UNAME_ARCH" == "aarch64" ]; then
     arch="arm64"
 fi
 
+echo "Downloading and Installing the REagent...."
+
 curl "https://storage.googleapis.com/re-agent/linux/$arch/$(curl https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent-latest
-chmod +x /opt/reagent/reagent
-
-
-echo "Installing Docker...." # add pipe yes to it
+chmod +x /opt/reagent/reagent-latest
 
 # Install Docker
 
@@ -87,8 +86,9 @@ if [ ! -f "/usr/share/keyrings/docker-archive-keyring.gpg" ]; then
 fi
 
 if [[ $(which docker) && $(docker --version) ]]; then
-    echo "Docker is already installed, skipping...."
+    echo "Docker is already installed, skipping installation...."
 else
+    echo "Installing Docker...." # add pipe yes to it
     echo \
         "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
