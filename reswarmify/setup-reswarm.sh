@@ -14,6 +14,12 @@ fi
 
 filePath=$(realpath ${file})
 
+jq_check="$(dpkg --get-selections | grep -w "jq")"
+if [[ "$jq_check" != *"install"* ]]; then
+    echo "Installing prerequisites.... (jq)"
+    apt-get update  >/dev/null 2>&1 && apt-get install -y jq >/dev/null 2>&1
+fi
+
 cat $filePath | jq type >/dev/null 2>&1
 
 if [ $? -ne 0 ]; then
@@ -68,43 +74,42 @@ if [ "$UNAME_ARCH" == "aarch64" ]; then
     arch="arm64"
 fi
 
-curl "https://storage.googleapis.com/re-agent/linux/$arch/$(curl https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent
+curl "https://storage.googleapis.com/re-agent/linux/$arch/$(curl https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent-latest
 chmod +x /opt/reagent/reagent
 
 
-echo "Installing Docker...."
+echo "Installing Docker...." # add pipe yes to it
 
 # Install Docker
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+if [ ! -f "/usr/share/keyrings/docker-archive-keyring.gpg" ]; then
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+fi
 
-echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+if [[ $(which docker) && $(docker --version) ]]; then
+    echo "Docker is already installed, skipping...."
+else
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
-
-usermod -aG docker $USER
-
-newgrp docker || true # instantly allow user to use Docker without root 
-
+    apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io || true
+fi
 
 echo "Setting up network configuration...."
 
 # Disable old network config
-echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg || true >/dev/null 2>&1
+echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg || true >/dev/null 2>&1 # fails here
 
 systemctl disable motd-news.timer
-
 
 echo "Setting up MOTD...."
 
 # Setup MOTD
 
-sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news || true >/dev/null 2>&1
-
-sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd
-sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/login
+sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news >/dev/null 2>&1 || true
+sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd || true
+sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/login || true
 
 echo "Enabling services...."
 
