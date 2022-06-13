@@ -25,9 +25,13 @@ set -e
 
 echo "Intialising Reswarmify process with config file: $filePath"
 
+cp $filePath /boot
+
 # setup folders
 
 mkdir -p /opt/reagent/docker-apps
+
+echo "Installing neccessary packages...."
 
 # Install main packages
 
@@ -45,6 +49,8 @@ apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Overlay filesystem
+
+echo "Overlaying RESWARM rootfs...."
 
 wget https://storage.googleapis.com/reswarmos/reswarmify/rootfs.tar.gz -O /tmp/rootfs.tar.gz && tar -xvzf /tmp/rootfs.tar.gz -C /tmp
 
@@ -65,6 +71,9 @@ fi
 curl "https://storage.googleapis.com/re-agent/linux/$arch/$(curl https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent
 chmod +x /opt/reagent/reagent
 
+
+echo "Installing Docker...."
+
 # Install Docker
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -79,10 +88,16 @@ usermod -aG docker $USER
 
 newgrp docker || true # instantly allow user to use Docker without root 
 
+
+echo "Setting up network configuration...."
+
 # Disable old network config
 echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/97-disable-network-config.cfg || true >/dev/null 2>&1
 
 systemctl disable motd-news.timer
+
+
+echo "Setting up MOTD...."
 
 # Setup MOTD
 
@@ -90,6 +105,8 @@ sed -i 's/ENABLED=1/ENABLED=0/g' /etc/default/motd-news || true >/dev/null 2>&1
 
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/sshd
 sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/g' /etc/pam.d/login
+
+echo "Enabling services...."
 
 # Enable new services
 
