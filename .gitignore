@@ -10,9 +10,9 @@ source-disk/
 *.img.gz
 *.iso.gz
 *.tar.gz
-rootfs/etc/os-release
-rootfs/etc/rauc/cert.pem
-rootfs/etc/setup.yaml
+buildroot/rootfs/etc/os-release
+buildroot/rootfs/etc/rauc/cert.pem
+buildroot/rootfs/etc/setup.yaml
 *.log
 cfg*
 git-credentials
