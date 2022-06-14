@@ -2,7 +2,7 @@
   # OS name and version
   osname: ReswarmOS
   osvariant: image
-  version: 0.5.4
+  version: 0.5.6
   architecture: armv7
   # general board description
   board: raspberrypi

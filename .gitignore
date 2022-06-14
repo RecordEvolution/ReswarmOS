@@ -16,6 +16,8 @@ rootfs/etc/setup.yaml
 *.log
 cfg*
 git-credentials
+builds
+builds/*
 *.pem
 *.ext4
 !reagent/
