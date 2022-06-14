@@ -22,8 +22,8 @@ cp -v $OUT/cert.pem rootfs/etc/rauc/cert.pem
 
 ./os-release.sh > rootfs/etc/os-release
 cp -v setup.yaml rootfs/etc/setup.yaml
-docker build ./ --tag=reswarmos-builder:latest
+docker build ./ --tag=reswarmos-builder:$MDL
 rm -vf $OUT/buildroot/output/target/etc/os-release
 
 # docker run -it --rm --name $(CNM) --volume $(CDR)/$(OUT):$(VLP) $(TNM)
-docker run -it --rm --name reswarmos-builder --volume $CDR/$OUT:/home/buildroot/reswarmos-build reswarmos-builder:latest
+docker run -it --rm --name reswarmos-builder-$MDL --volume $CDR/$OUT:/home/buildroot/reswarmos-build reswarmos-builder:$MDL
