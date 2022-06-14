@@ -46,11 +46,11 @@ save_env ORDER rootfsA_OK rootfsB_OK rootfsA_TRY rootfsB_TRY
 CMDLINE="panic=60 quiet"
 
 menuentry "Slot A (OK=$rootfsA_OK TRY=$rootfsA_TRY)" {
-    linux /vmlinuz root=/dev/sda2 $CMDLINE rauc.slot=rootfsA
+    linux /vmlinuz root=/dev/xxx2 $CMDLINE rauc.slot=rootfsA
     initrd /initrd.img
 }
 
 menuentry "Slot B (OK=$rootfsB_OK TRY=$rootfsB_TRY)" {
-    linux /vmlinuz root=/dev/sda3 $CMDLINE rauc.slot=rootfsB
+    linux /vmlinuz root=/dev/xxx3 $CMDLINE rauc.slot=rootfsB
     initrd /initrd.img
 }
