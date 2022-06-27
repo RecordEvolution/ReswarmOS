@@ -1,13 +1,13 @@
 build-agent-amd64:
 	echo "linux/amd64" > ${HOME}/git/DeviceManagementAgent/targets
 	make -C ${HOME}/git/DeviceManagementAgent build-all-docker
-	cp ${HOME}/git/DeviceManagementAgent/build/reagent-amd64-linux project/rootfs-overlay/opt/reagent/reagent-latest
+	cp ${HOME}/git/DeviceManagementAgent/build/reagent-linux-amd64 project/rootfs-overlay/opt/reagent/reagent-latest
 	chmod +x project/rootfs-overlay/opt/reagent/reagent-latest
 
 build-agent-arm64:
 	echo "linux/arm644" > ${HOME}/git/DeviceManagementAgent/targets
 	make -C ${HOME}/git/DeviceManagementAgent build-all-docker
-	cp ${HOME}/git/DeviceManagementAgent/build/reagent-arm644-linux project/rootfs-overlay/opt/reagent/reagent-latest
+	cp ${HOME}/git/DeviceManagementAgent/build/reagent-linux-arm64 project/rootfs-overlay/opt/reagent/reagent-latest
 	chmod +x project/rootfs-overlay/opt/reagent/reagent-latest
 
 setup-amd64:
