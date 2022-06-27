@@ -136,7 +136,7 @@ autoinstall:
     - cp /cdrom/boot/*.reswarm /target/boot || true
     - cp /target/etc/config/* /target/etc
     - apt-get install -y efibootmgr
-    - /target/usr/sbin/update_boot_order.sh
+    - /target/usr/sbin/update-boot-order.sh
     - /target/usr/sbin/update-device-names.sh
     - curtin in-target --target=/target -- update-grub
   user-data:
