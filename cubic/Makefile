@@ -110,6 +110,7 @@ remove-images:
 	rm *.img *.iso *.md5
 
 release:
-	python3 ../config/supported-boards.py --compressionExt .iso.gz --outputDir target --osReleasePath project/rootfs-overlay/etc/config/os-release project/rootfs-overlay/etc/config/setup.yaml ../config/supportedBoards.json
-	gsutil cp ../config/supportedBoards.json gs://reswarmos/supportedBoardsImages.json
+	python3 ../buildroot/supported-boards.py --compressionExt .iso.gz --outputDir target --osReleasePath project/rootfs-overlay/etc/config/os-release project/rootfs-overlay/etc/config/setup.yaml ../buildroot/supportedBoards.json
+	gsutil cp target/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-efi.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-efi.iso.gz
+	gsutil cp ../buildroot/supportedBoards.json gs://reswarmos/supportedBoardsImages.json
 	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/supportedBoardsImages.json

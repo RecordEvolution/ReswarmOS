@@ -7,15 +7,15 @@
             "cpu": "x86_64 CPU",
             "latestImages": [
                 {
-                    "buildtime": "20220407T193431",
-                    "download": "https://storage.googleapis.com/reswarmos/ipc/ReswarmOS-installer-0.0.4-efi.iso.gz",
-                    "file": "ReswarmOS-installer-0.0.4-efi.iso.gz",
+                    "buildtime": "20220627T135154",
+                    "download": "https://storage.googleapis.com/reswarmos/ipc/ReswarmOS-installer-0.0.6-efi.iso.gz",
+                    "file": "ReswarmOS-installer-0.0.6-efi.iso.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "installer",
-                    "sha256": "d7d1397b60d9f57dca78960a699160d385865c2d92e75f18132d9dad220e0ece",
-                    "size": 1461683502,
-                    "update": "https://storage.googleapis.com/reswarmos/ipc/ReswarmOS-installer-0.0.4-efi.raucb",
-                    "version": "0.0.4"
+                    "sha256": "210774b84aeef8af2cc82c0e63840adb975a48df5cdef2e8d6511591e42d2827",
+                    "size": 1460796936,
+                    "update": "https://storage.googleapis.com/reswarmos/ipc/ReswarmOS-installer-0.0.6-efi.raucb",
+                    "version": "0.0.6"
                 }
             ],
             "model": "efi",
@@ -85,5 +85,5 @@
             "modelname": "Raspberry Pi Zero W"
         }
     ],
-    "latestUpdate": "2022-06-14T21:38:12"
+    "latestUpdate": "2022-06-27T14:17:03"
 }
