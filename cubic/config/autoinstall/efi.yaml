@@ -135,8 +135,8 @@ autoinstall:
     - sed -i 's|^root:.:|root:$6$3b873df474b55246$GIpSsujar7ihMzG8urUKpzF9/2yZJhR.msyFRa5ouGXOKRCVszsc4aBcE2yi3IuFVxtAGwrPKin2WAzK3qOtB.:|' /target/etc/shadow
     - cp /cdrom/boot/*.reswarm /target/boot || true
     - cp /target/etc/config/* /target/etc
-    - apt-get install -y efibootmgr
-    - /target/usr/sbin/update-boot-order.sh
+    - apt-get install -y efibootmgr || true
+    - /target/usr/sbin/update-boot-order.sh || true
     - /target/usr/sbin/update-device-names.sh
     - curtin in-target --target=/target -- update-grub
   user-data:
