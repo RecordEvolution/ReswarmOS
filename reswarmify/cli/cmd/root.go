@@ -11,6 +11,8 @@ import (
 	"os"
 	"os/signal"
 	"reswarmify-cli/packagemanager"
+	"reswarmify-cli/prompts"
+	"reswarmify-cli/rootfs"
 
 	"github.com/spf13/cobra"
 )
@@ -76,14 +78,51 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
+	fmt.Println()
 
-	// _, err = prompt.New().Ask("Choose:").AdvancedChoose([]choose.Choice{
-	// 	{Text: "Item 1", Note: "The note for item 1"},
-	// 	{Text: "Another item", Note: "The note for item 2"},
-	// 	{Text: "Item 3", Note: "The note for item 3"},
-	// })
+	packages := []string{
+		"jq",
+		"ca-certificates",
+		"curl",
+		"gnupg",
+		"lsb-release",
+		"net-tools",
+		"iproute2",
+		"dnsutils",
+		"network-manager",
+		"openssh-server",
+	}
 
-	packagemanager.InstallPackage([]string{"jq"})
+	fmt.Println("Reswarmify will install the following packages: ")
+	fmt.Println(packages)
+	fmt.Println()
+
+	cont, err := prompts.Continue()
+	if err != nil {
+		fmt.Println("Failed to prompt user: ", err.Error())
+	}
+
+	if !cont {
+		fmt.Println("Reswarmify CLI was stopped")
+		os.Exit(1)
+		return
+	}
+
+	err = packagemanager.UpdatePackages()
+	if err != nil {
+		fmt.Println("Failed to update packages: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	err = packagemanager.InstallPackage(packages)
+	if err != nil {
+		fmt.Println("Failed to install packages: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	rootfs.Download()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)

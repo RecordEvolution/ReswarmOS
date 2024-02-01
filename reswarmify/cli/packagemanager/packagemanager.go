@@ -71,13 +71,11 @@ func UpdatePackages() error {
 		return err
 	}
 
-	fmt.Println(command, args)
-
+	scanner := bufio.NewScanner(cmdStdout)
 	go func() {
-		scanner := bufio.NewScanner(cmdStdout)
 		for scanner.Scan() {
-			output := scanner.Text()
-			fmt.Println(output)
+			// output := scanner.Text()
+			// fmt.Println(output)
 		}
 	}()
 
@@ -85,7 +83,15 @@ func UpdatePackages() error {
 		return fmt.Errorf("command failed to run: %s", err.Error())
 	}
 
-	return nil
+	err = cmd.Wait()
+	if err != nil {
+		switch cmd.ProcessState.ExitCode() {
+		case 100:
+			return nil
+		}
+	}
+
+	return err
 }
 
 func InstallPackage(packages []string) error {
@@ -97,18 +103,16 @@ func InstallPackage(packages []string) error {
 	cmd := exec.Command(command, args...)
 	cmd.Stderr = cmd.Stdout
 
-	fmt.Println(command, args)
-
 	cmdStdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
 
+	scanner := bufio.NewScanner(cmdStdout)
 	go func() {
-		scanner := bufio.NewScanner(cmdStdout)
 		for scanner.Scan() {
-			output := scanner.Text()
-			fmt.Println(output)
+			// output := scanner.Text()
+			// fmt.Println(output)
 		}
 	}()
 
@@ -116,7 +120,7 @@ func InstallPackage(packages []string) error {
 		return fmt.Errorf("command failed to run: %s", err.Error())
 	}
 
-	return nil
+	return cmd.Wait()
 
 }
 
@@ -139,13 +143,15 @@ func detectPackageManager() (PackageManager, error) {
 	switch issuePart {
 	case "Arch":
 		return PACMAN, nil
+	case "Linux": // Linux Mint
+		fallthrough
 	case "Debian":
 		fallthrough
 	case "Ubuntu":
 		return DPKG, nil
 	case "CentOs":
 		fallthrough
-	case "Red":
+	case "Red": // Red Hat
 		fallthrough
 	case "Fedora":
 		return YUM, nil
