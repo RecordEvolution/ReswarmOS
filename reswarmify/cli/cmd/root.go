@@ -10,9 +10,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
-	"reswarmify-cli/packagemanager"
 	"reswarmify-cli/prompts"
-	"reswarmify-cli/rootfs"
 
 	"github.com/spf13/cobra"
 )
@@ -108,21 +106,24 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err = packagemanager.UpdatePackages()
-	if err != nil {
-		fmt.Println("Failed to update packages: ", err.Error())
-		os.Exit(1)
-		return
-	}
+	// err = packagemanager.UpdatePackages()
+	// if err != nil {
+	// 	fmt.Println("Failed to update packages: ", err.Error())
+	// 	os.Exit(1)
+	// 	return
+	// }
 
-	err = packagemanager.InstallPackage(packages)
-	if err != nil {
-		fmt.Println("Failed to install packages: ", err.Error())
-		os.Exit(1)
-		return
-	}
+	// err = packagemanager.InstallPackage(packages)
+	// if err != nil {
+	// 	fmt.Println("Failed to install packages: ", err.Error())
+	// 	os.Exit(1)
+	// 	return
+	// }
 
-	rootfs.Download()
+	// err = fs.DownloadFileWithProgress()
+	// if err != nil {
+	// 	return
+	// }
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
