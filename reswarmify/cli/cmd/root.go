@@ -10,7 +10,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
-	"reswarmify-cli/prompts"
+	"reswarmify-cli/docker"
 
 	"github.com/spf13/cobra"
 )
@@ -75,36 +75,36 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
-	fmt.Println()
+	// fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
+	// fmt.Println()
 
-	packages := []string{
-		"jq",
-		"ca-certificates",
-		"curl",
-		"gnupg",
-		"lsb-release",
-		"net-tools",
-		"iproute2",
-		"dnsutils",
-		"network-manager",
-		"openssh-server",
-	}
+	// packages := []string{
+	// 	"jq",
+	// 	"ca-certificates",
+	// 	"curl",
+	// 	"gnupg",
+	// 	"lsb-release",
+	// 	"net-tools",
+	// 	"iproute2",
+	// 	"dnsutils",
+	// 	"network-manager",
+	// 	"openssh-server",
+	// }
 
-	fmt.Println("Reswarmify will install the following packages: ")
-	fmt.Println(packages)
-	fmt.Println()
+	// fmt.Println("Reswarmify will install the following packages: ")
+	// fmt.Println(packages)
+	// fmt.Println()
 
-	cont, err := prompts.Continue()
-	if err != nil {
-		fmt.Println("Failed to prompt user: ", err.Error())
-	}
+	// cont, err := prompts.Continue()
+	// if err != nil {
+	// 	fmt.Println("Failed to prompt user: ", err.Error())
+	// }
 
-	if !cont {
-		fmt.Println("Reswarmify CLI was stopped")
-		os.Exit(1)
-		return
-	}
+	// if !cont {
+	// 	fmt.Println("Reswarmify CLI was stopped")
+	// 	os.Exit(1)
+	// 	return
+	// }
 
 	// err = packagemanager.UpdatePackages()
 	// if err != nil {
@@ -120,10 +120,43 @@ func root(cmd *cobra.Command, args []string) {
 	// 	return
 	// }
 
-	// err = fs.DownloadFileWithProgress()
+	// err = agent.DownloadAgent()
 	// if err != nil {
-	// 	return
+	// 	panic(err.Error())
 	// }
+
+	// dockerInstalled := true
+	// dockerClient, err := docker.NewDocker()
+	// if err != nil {
+	// 	dockerInstalled = false
+	// } else {
+	// 	if !dockerClient.Running() {
+	// 		dockerInstalled = false
+	// 	}
+	// }
+
+	// if !dockerInstalled {
+	// 	fmt.Println("Docker was not found on this system")
+	// 	fmt.Println("In order for you to access the Record Evolution Platform you'll need to have Docker installed")
+
+	// 	cont, err = prompts.Continue()
+	// 	if err != nil {
+	// 		fmt.Println("Failed to prompt user: ", err.Error())
+	// 		os.Exit(1)
+	// 		return
+	// 	}
+
+	// 	if !cont {
+	// 		fmt.Println("Sorry, but Docker is required")
+	// 		os.Exit(1)
+	// 		return
+	// 	}
+	// }
+
+	err = docker.InstallDocker()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)

@@ -9,6 +9,7 @@ import (
 )
 
 const ROOTFS_TEMP_DIR = "/tmp/rootfs"
+const AGENT_DIR = "/opt/reagent"
 const ROOTFS_TEMP_TAR_GZ = "/tmp/rootfs.tar.gz"
 const ROOTFS_REMOTE_URL = "https://storage.googleapis.com/reswarmos/reswarmify/rootfs.tar.gz"
 
@@ -27,17 +28,14 @@ func DownloadFileWithProgress(URL string, resultPath string) error {
 
 	defer resp.Body.Close()
 
-	f, err := os.OpenFile(resultPath, os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(resultPath, os.O_CREATE|os.O_WRONLY, 0755)
 	if err != nil {
 		return err
 	}
 
 	defer f.Close()
 
-	bar := progressbar.DefaultBytes(
-		resp.ContentLength,
-		"downloading",
-	)
+	bar := progressbar.DefaultBytes(resp.ContentLength)
 
 	_, err = io.Copy(io.MultiWriter(f, bar), resp.Body)
 

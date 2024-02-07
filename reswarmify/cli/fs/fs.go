@@ -15,14 +15,14 @@ func ReswarmifyRootfs() error {
 		return err
 	}
 
+	if err := os.MkdirAll(ROOTFS_TEMP_DIR, os.ModePerm); err != nil {
+		return err
+	}
+
 	return OverlayDir(ROOTFS_TEMP_DIR, "/")
 }
 
 func OverlayDir(src string, dest string) error {
-	if err := os.MkdirAll(dest, os.ModePerm); err != nil {
-		return err
-	}
-
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
