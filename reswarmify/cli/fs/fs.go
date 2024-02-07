@@ -10,7 +10,7 @@ import (
 )
 
 func ReswarmifyRootfs() error {
-	err := DownloadFileWithProgress(ROOTFS_REMOTE_URL, ROOTFS_TEMP_TAR_GZ)
+	err := DownloadFile(ROOTFS_REMOTE_URL, ROOTFS_TEMP_TAR_GZ)
 	if err != nil {
 		return err
 	}
@@ -41,6 +41,7 @@ func OverlayDir(src string, dest string) error {
 
 		defer srcFile.Close()
 
+		fmt.Println("Creating file: ", destPath)
 		destFile, err := os.Create(destPath)
 		if err != nil {
 			return err

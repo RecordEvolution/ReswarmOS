@@ -9,8 +9,13 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/signal"
+	"reswarmify-cli/agent"
 	"reswarmify-cli/docker"
+	"reswarmify-cli/fs"
+	"reswarmify-cli/packagemanager"
+	"reswarmify-cli/prompts"
+	"reswarmify-cli/setup"
+	"reswarmify-cli/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +35,6 @@ var reswarmFilePath string
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-
 	err := rootCmd.Execute()
 	if err != nil {
 		fmt.Println(err)
@@ -75,91 +79,188 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	// fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
-	// fmt.Println()
+	fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
+	fmt.Println()
 
-	// packages := []string{
-	// 	"jq",
-	// 	"ca-certificates",
-	// 	"curl",
-	// 	"gnupg",
-	// 	"lsb-release",
-	// 	"net-tools",
-	// 	"iproute2",
-	// 	"dnsutils",
-	// 	"network-manager",
-	// 	"openssh-server",
-	// }
-
-	// fmt.Println("Reswarmify will install the following packages: ")
-	// fmt.Println(packages)
-	// fmt.Println()
-
-	// cont, err := prompts.Continue()
-	// if err != nil {
-	// 	fmt.Println("Failed to prompt user: ", err.Error())
-	// }
-
-	// if !cont {
-	// 	fmt.Println("Reswarmify CLI was stopped")
-	// 	os.Exit(1)
-	// 	return
-	// }
-
-	// err = packagemanager.UpdatePackages()
-	// if err != nil {
-	// 	fmt.Println("Failed to update packages: ", err.Error())
-	// 	os.Exit(1)
-	// 	return
-	// }
-
-	// err = packagemanager.InstallPackage(packages)
-	// if err != nil {
-	// 	fmt.Println("Failed to install packages: ", err.Error())
-	// 	os.Exit(1)
-	// 	return
-	// }
-
-	// err = agent.DownloadAgent()
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-
-	// dockerInstalled := true
-	// dockerClient, err := docker.NewDocker()
-	// if err != nil {
-	// 	dockerInstalled = false
-	// } else {
-	// 	if !dockerClient.Running() {
-	// 		dockerInstalled = false
-	// 	}
-	// }
-
-	// if !dockerInstalled {
-	// 	fmt.Println("Docker was not found on this system")
-	// 	fmt.Println("In order for you to access the Record Evolution Platform you'll need to have Docker installed")
-
-	// 	cont, err = prompts.Continue()
-	// 	if err != nil {
-	// 		fmt.Println("Failed to prompt user: ", err.Error())
-	// 		os.Exit(1)
-	// 		return
-	// 	}
-
-	// 	if !cont {
-	// 		fmt.Println("Sorry, but Docker is required")
-	// 		os.Exit(1)
-	// 		return
-	// 	}
-	// }
-
-	err = docker.InstallDocker()
-	if err != nil {
-		fmt.Println(err.Error())
+	packages := []string{
+		"jq",
+		"ca-certificates",
+		"curl",
+		"gnupg",
+		"lsb-release",
+		"net-tools",
+		"iproute2",
+		"dnsutils",
+		"network-manager",
+		"openssh-server",
 	}
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt)
+	fmt.Println("Reswarmify will install the following packages: ")
+	fmt.Println(packages)
+	fmt.Println()
 
-	<-sigChan
+	cont, err := prompts.Continue()
+	if err != nil {
+		fmt.Println("Failed to prompt user: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	if !cont {
+		fmt.Println("The above mentioned packages are required in order to Reswarmify your system")
+		os.Exit(1)
+		return
+	}
+
+	err = packagemanager.UpdatePackages()
+	if err != nil {
+		fmt.Println("Failed to update packages: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	err = packagemanager.InstallPackage(packages)
+	if err != nil {
+		fmt.Println("Failed to install packages: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	utils.Clear()
+
+	fmt.Println("The packages were successfully installed.")
+
+	fmt.Println()
+
+	dockerInstalled := true
+	dockerClient, err := docker.NewDocker()
+	if err != nil {
+		dockerInstalled = false
+	} else {
+		if !dockerClient.Running() {
+			dockerInstalled = false
+		}
+	}
+
+	if !dockerInstalled {
+		fmt.Println("Docker was not found on this system")
+		fmt.Println("In order for you to access the Record Evolution Platform you'll need to have Docker installed")
+
+		cont, err := prompts.Continue()
+		if err != nil {
+			fmt.Println("Failed to prompt user: ", err.Error())
+			os.Exit(1)
+			return
+		}
+
+		if !cont {
+			fmt.Println("Sorry, but Docker is required")
+			os.Exit(1)
+			return
+		}
+
+		fmt.Println("Installing Docker, please note that this can take some time...")
+
+		err = docker.InstallDocker()
+		if err != nil {
+			fmt.Println("Failed to install Docker: ", err.Error())
+			os.Exit(1)
+			return
+		}
+
+		fmt.Println("Docker successfully installed")
+
+	} else {
+		// fmt.Println("Found a working Docker installation, skipping installation step...")
+	}
+
+	// fmt.Println("Installing setup scripts for reswarmification process...")
+
+	err = fs.ReswarmifyRootfs()
+	if err != nil {
+		fmt.Println("Failed to overlay Rootfs: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	// fmt.Println("Done!")
+	// fmt.Println()
+
+	fmt.Println("Reswarmify will now install the REAgent")
+	fmt.Println("With the REAgent, your device gains access to the RecordEvolution platform. This allows you to remotely manage your device and apps.")
+
+	cont, err = prompts.Continue()
+	if err != nil {
+		fmt.Println("Failed to prompt user: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	err = agent.DownloadAgent()
+	if err != nil {
+		fmt.Println("Failed to download the REAgent: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	utils.Clear()
+
+	fmt.Println("The REAgent was successfully installed in /opt/reagent")
+
+	fmt.Println()
+
+	fmt.Println("Reswarmify will set up the necessary configuration and services to ensure your experience with the Record Evolution platform is flawless")
+	fmt.Println("You can customize what Reswarmify will do exactly. However, in most cases, the default settings will suffice for your needs")
+	fmt.Println()
+
+	_, indexes, err := prompts.SetupOptions()
+	if err != nil {
+		os.Exit(1)
+		return
+	}
+
+	// Setup
+	for _, index := range indexes {
+		err := setup.HandleSetup(index)
+		if err != nil {
+			fmt.Println("Failed to run setup: ", err.Error())
+
+			os.Exit(1)
+			return
+		}
+	}
+
+	// Post Setup
+	for _, index := range indexes {
+		err := setup.HandlePostSetup(index)
+		if err != nil {
+			fmt.Println("Failed to run setup: ", err.Error())
+
+			os.Exit(1)
+			return
+		}
+	}
+
+	utils.Clear()
+
+	fmt.Println("The Reswarmification has finished, to complete the setup, a reboot is required")
+	fmt.Println()
+
+	fmt.Println("Reboot now?")
+	cont, err = prompts.Continue()
+	if err != nil {
+		fmt.Println("Failed to prompt user: ", err.Error())
+	}
+
+	if cont {
+		err := setup.Reboot()
+		if err != nil {
+			fmt.Println("Failed to trigger reboot: ", err.Error())
+
+			os.Exit(1)
+			return
+		}
+	}
+
+	os.Exit(0)
 }

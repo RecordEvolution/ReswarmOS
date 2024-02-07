@@ -1,7 +1,6 @@
 package docker
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"io"
@@ -60,20 +59,22 @@ func InstallDocker() error {
 	}
 
 	cmd := exec.Command("/bin/bash", dockerScriptPath)
-	cmd.Stderr = cmd.Stdout
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.
+	// cmd.Stderr = cmd.Stdout
 
-	cmdStdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return err
-	}
+	// cmdStdout, err := cmd.StdoutPipe()
+	// if err != nil {
+	// 	return err
+	// }
 
-	go func() {
-		scanner := bufio.NewScanner(cmdStdout)
-		for scanner.Scan() {
-			output := scanner.Text()
-			fmt.Println(output)
-		}
-	}()
+	// go func() {
+	// 	scanner := bufio.NewScanner(cmdStdout)
+	// 	for scanner.Scan() {
+	// 		output := scanner.Text()
+	// 		fmt.Println(output)
+	// 	}
+	// }()
 
 	err = cmd.Start()
 	if err != nil {

@@ -1,7 +1,6 @@
 package packagemanager
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -64,20 +63,8 @@ func UpdatePackages() error {
 	}
 
 	cmd := exec.Command(command, args...)
-	cmd.Stderr = cmd.Stdout
-
-	cmdStdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return err
-	}
-
-	scanner := bufio.NewScanner(cmdStdout)
-	go func() {
-		for scanner.Scan() {
-			// output := scanner.Text()
-			// fmt.Println(output)
-		}
-	}()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("command failed to run: %s", err.Error())
@@ -101,20 +88,8 @@ func InstallPackage(packages []string) error {
 	}
 
 	cmd := exec.Command(command, args...)
-	cmd.Stderr = cmd.Stdout
-
-	cmdStdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return err
-	}
-
-	scanner := bufio.NewScanner(cmdStdout)
-	go func() {
-		for scanner.Scan() {
-			// output := scanner.Text()
-			// fmt.Println(output)
-		}
-	}()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("command failed to run: %s", err.Error())
