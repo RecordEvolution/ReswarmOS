@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reswarmify-cli/agent"
 	"reswarmify-cli/docker"
 	"reswarmify-cli/fs"
 	"reswarmify-cli/packagemanager"
@@ -19,7 +20,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "reswarmify-cli",
 	Short: "CLI tool to help reswarmify your device",
@@ -31,8 +31,6 @@ var rootCmd = &cobra.Command{
 
 var reswarmFilePath string
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -169,6 +167,8 @@ func root(cmd *cobra.Command, args []string) {
 			return
 		}
 
+		utils.Clear()
+
 		fmt.Println("Docker successfully installed")
 
 	} else {
@@ -185,19 +185,25 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println("Reswarmify will now install the REAgent")
 	fmt.Println("With the REAgent, your device gains access to the RecordEvolution platform. This allows you to remotely manage your device and apps.")
 
-	cont, err = prompts.Continue("")
+	cont, err = prompts.Continue("Install the REagent?")
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 		os.Exit(1)
 		return
 	}
 
-	// err = agent.DownloadAgent()
-	// if err != nil {
-	// 	fmt.Println("Failed to download the REAgent: ", err.Error())
-	// 	os.Exit(1)
-	// 	return
-	// }
+	if !cont {
+		fmt.Println("The RecordEvolution agent is required!")
+		os.Exit(1)
+		return
+	}
+
+	err = agent.DownloadAgent()
+	if err != nil {
+		fmt.Println("Failed to download the REAgent: ", err.Error())
+		os.Exit(1)
+		return
+	}
 
 	utils.Clear()
 

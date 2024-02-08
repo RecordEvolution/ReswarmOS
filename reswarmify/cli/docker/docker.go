@@ -59,22 +59,8 @@ func InstallDocker() error {
 	}
 
 	cmd := exec.Command("/bin/bash", dockerScriptPath)
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.
-	// cmd.Stderr = cmd.Stdout
-
-	// cmdStdout, err := cmd.StdoutPipe()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// go func() {
-	// 	scanner := bufio.NewScanner(cmdStdout)
-	// 	for scanner.Scan() {
-	// 		output := scanner.Text()
-	// 		fmt.Println(output)
-	// 	}
-	// }()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
 	err = cmd.Start()
 	if err != nil {
