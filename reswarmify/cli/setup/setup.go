@@ -1,6 +1,9 @@
 package setup
 
-import "os/exec"
+import (
+	"os/exec"
+	"reswarmify-cli/utils"
+)
 
 type SetupFunc func() error
 type PostSetup func() error
@@ -10,6 +13,10 @@ func handleReagentSetup() error {
 	if err != nil {
 		return err
 	}
+
+	// /usr/sbin/reagent-setup.sh
+
+	// /usr/sbin/reagent-manager.sh
 
 	_, err = exec.Command("systemctl", "enable", "reagent.service").Output()
 	if err != nil {
@@ -40,6 +47,10 @@ func handleWifiSetup() error {
 	}
 
 	return nil
+}
+
+func handleNvidiaSetup() error {
+	return utils.Copy("/etc/docker/daemon-nvidia.json", "/etc/docker/daemon.json")
 }
 
 func handleReswarmModeSetup() error {
@@ -78,6 +89,7 @@ var setupFunc = map[int]SetupFunc{
 	0: handleReagentSetup,
 	1: handleREUserSetup,
 	2: handleWifiSetup,
+	3: handleNvidiaSetup,
 }
 
 var postSetupFunc = map[int]SetupFunc{

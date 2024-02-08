@@ -15,11 +15,16 @@ func ReswarmifyRootfs() error {
 		return err
 	}
 
-	if err := os.MkdirAll(ROOTFS_TEMP_DIR, os.ModePerm); err != nil {
+	if err := os.MkdirAll(ROOTFS_TEMP_DIR, 0755); err != nil {
 		return err
 	}
 
-	return OverlayDir(ROOTFS_TEMP_DIR, "/")
+	err = ExtractTarGz(ROOTFS_TEMP_TAR_GZ, ROOTFS_TEMP_DIR)
+	if err != nil {
+		return err
+	}
+
+	return OverlayDir(fmt.Sprintf("%s/rootfs", ROOTFS_TEMP_DIR), "/")
 }
 
 func OverlayDir(src string, dest string) error {
@@ -41,7 +46,6 @@ func OverlayDir(src string, dest string) error {
 
 		defer srcFile.Close()
 
-		fmt.Println("Creating file: ", destPath)
 		destFile, err := os.Create(destPath)
 		if err != nil {
 			return err
@@ -58,71 +62,58 @@ func OverlayDir(src string, dest string) error {
 	})
 }
 
-func ExtractTarGzWithProgress(tarGzFile string, destFolder string) error {
-	file, err := os.Open(tarGzFile)
+func ExtractTarGz(source, dest string) error {
+	gzipFile, err := os.Open(source)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 
-	fileInfo, err := file.Stat()
-	if err != nil {
-		return err
-	}
-	totalSize := fileInfo.Size()
+	defer gzipFile.Close()
 
-	gzipReader, err := gzip.NewReader(file)
+	gzipReader, err := gzip.NewReader(gzipFile)
 	if err != nil {
 		return err
 	}
+
 	defer gzipReader.Close()
 
 	tarReader := tar.NewReader(gzipReader)
 
-	buf := make([]byte, 0)
-	var bytesRead int64
-
 	for {
 		header, err := tarReader.Next()
-
 		if err == io.EOF {
 			break
 		}
-
 		if err != nil {
 			return err
 		}
 
-		filePath := filepath.Join(destFolder, header.Name)
+		target := filepath.Join(dest, header.Name)
 
 		switch header.Typeflag {
 		case tar.TypeDir:
-			if err := os.MkdirAll(filePath, 0755); err != nil {
+			if err := os.MkdirAll(target, 0755); err != nil {
 				return err
 			}
 		case tar.TypeReg:
-			file, err := os.Create(filePath)
+			file, err := os.Create(target)
 			if err != nil {
 				return err
 			}
 			defer file.Close()
 
-			n, err := io.CopyBuffer(file, tarReader, buf)
+			if _, err := io.Copy(file, tarReader); err != nil {
+				return err
+			}
+
+			err = os.Chmod(target, 0755)
 			if err != nil {
 				return err
 			}
-			bytesRead += n
-
-			progress := bytesRead / totalSize * 100
-			fmt.Printf("\rProgress: %d", progress)
-
 		default:
-			return fmt.Errorf("unsupported file type in tar archive: %d", header.Typeflag)
+			return fmt.Errorf("unknown type: %v in %s", header.Typeflag, header.Name)
 		}
 	}
-
-	// Move to the next line after completion
-	fmt.Print("\n")
 
 	return nil
 }

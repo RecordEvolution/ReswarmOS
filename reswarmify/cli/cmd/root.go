@@ -56,24 +56,24 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	reswarmFile, err := os.Open(configPath)
+	reswarmFileObj, err := os.Open(configPath)
 	if err != nil {
 		fmt.Println("Failed to open Reswarm file: " + err.Error())
 		os.Exit(1)
 		return
 	}
 
-	defer reswarmFile.Close()
+	defer reswarmFileObj.Close()
 
-	reswarmFiles, err := io.ReadAll(reswarmFile)
+	reswarmFileByte, err := io.ReadAll(reswarmFileObj)
 	if err != nil {
 		fmt.Println("Failed to open Reswarm file: " + err.Error())
 		os.Exit(1)
 		return
 	}
 
-	var result map[string]interface{}
-	if json.Unmarshal(reswarmFiles, &result) != nil {
+	var reswarmFile map[string]interface{}
+	if json.Unmarshal(reswarmFileByte, &reswarmFile) != nil {
 		fmt.Println("The configuration file is invalid")
 		os.Exit(1)
 		return
@@ -81,6 +81,8 @@ func root(cmd *cobra.Command, args []string) {
 
 	fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
 	fmt.Println()
+
+	utils.Copy(configPath, "/boot")
 
 	packages := []string{
 		"jq",
@@ -99,7 +101,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println(packages)
 	fmt.Println()
 
-	cont, err := prompts.Continue()
+	cont, err := prompts.Continue("")
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 		os.Exit(1)
@@ -146,7 +148,7 @@ func root(cmd *cobra.Command, args []string) {
 		fmt.Println("Docker was not found on this system")
 		fmt.Println("In order for you to access the Record Evolution Platform you'll need to have Docker installed")
 
-		cont, err := prompts.Continue()
+		cont, err := prompts.Continue("")
 		if err != nil {
 			fmt.Println("Failed to prompt user: ", err.Error())
 			os.Exit(1)
@@ -174,8 +176,6 @@ func root(cmd *cobra.Command, args []string) {
 		// fmt.Println("Found a working Docker installation, skipping installation step...")
 	}
 
-	// fmt.Println("Installing setup scripts for reswarmification process...")
-
 	err = fs.ReswarmifyRootfs()
 	if err != nil {
 		fmt.Println("Failed to overlay Rootfs: ", err.Error())
@@ -183,13 +183,10 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	// fmt.Println("Done!")
-	// fmt.Println()
-
 	fmt.Println("Reswarmify will now install the REAgent")
 	fmt.Println("With the REAgent, your device gains access to the RecordEvolution platform. This allows you to remotely manage your device and apps.")
 
-	cont, err = prompts.Continue()
+	cont, err = prompts.Continue("")
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 		os.Exit(1)
@@ -213,7 +210,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println("You can customize what Reswarmify will do exactly. However, in most cases, the default settings will suffice for your needs")
 	fmt.Println()
 
-	_, indexes, err := prompts.SetupOptions()
+	_, indexes, err := prompts.SetupOptions(reswarmFile)
 	if err != nil {
 		os.Exit(1)
 		return
@@ -230,24 +227,12 @@ func root(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// Post Setup
-	for _, index := range indexes {
-		err := setup.HandlePostSetup(index)
-		if err != nil {
-			fmt.Println("Failed to run setup: ", err.Error())
-
-			os.Exit(1)
-			return
-		}
-	}
-
 	utils.Clear()
 
-	fmt.Println("The Reswarmification has finished, to complete the setup, a reboot is required")
+	fmt.Println("The Reswarmification process is complete. A reboot is necessary to finalize the setup")
 	fmt.Println()
 
-	fmt.Println("Reboot now?")
-	cont, err = prompts.Continue()
+	cont, err = prompts.Continue("Reboot now?")
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 	}

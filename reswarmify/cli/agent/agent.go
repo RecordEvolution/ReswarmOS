@@ -11,7 +11,7 @@ import (
 )
 
 const AGENT_DIR = "/opt/reagent"
-const AGENT_PATH = "/opt/reagent/reagent"
+const AGENT_PATH = "/opt/reagent/reagent-latest"
 const AGENT_CLOUD_URL = "https://storage.googleapis.com/re-agent/linux/%s/%s/reagent"
 
 type VersionInfo struct {

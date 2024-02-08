@@ -48,4 +48,5 @@ require (
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.3.8 // indirect
+	gopkg.in/ini.v1 v1.67.0 // indirect
 )
