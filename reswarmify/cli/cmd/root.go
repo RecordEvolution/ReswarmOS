@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"reswarmify-cli/agent"
 	"reswarmify-cli/docker"
 	"reswarmify-cli/fs"
 	"reswarmify-cli/packagemanager"
@@ -193,12 +192,12 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err = agent.DownloadAgent()
-	if err != nil {
-		fmt.Println("Failed to download the REAgent: ", err.Error())
-		os.Exit(1)
-		return
-	}
+	// err = agent.DownloadAgent()
+	// if err != nil {
+	// 	fmt.Println("Failed to download the REAgent: ", err.Error())
+	// 	os.Exit(1)
+	// 	return
+	// }
 
 	utils.Clear()
 

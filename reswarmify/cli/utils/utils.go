@@ -15,14 +15,12 @@ func FindIndex(arr []string, str string) int {
 }
 
 func Copy(source string, dest string) error {
-	cmd := exec.Command("cp", "-rf", source, dest)
-	err := cmd.Run()
-
+	_, err := exec.Command("cp", "-rf", source, dest).Output()
 	if err != nil {
 		return err
 	}
 
-	return cmd.Wait()
+	return nil
 }
 
 func Clear() error {

@@ -9,16 +9,7 @@ type SetupFunc func() error
 type PostSetup func() error
 
 func handleReagentSetup() error {
-	err := handleReswarmModeSetup()
-	if err != nil {
-		return err
-	}
-
-	// /usr/sbin/reagent-setup.sh
-
-	// /usr/sbin/reagent-manager.sh
-
-	_, err = exec.Command("systemctl", "enable", "reagent.service").Output()
+	_, err := exec.Command("systemctl", "enable", "reagent.service").Output()
 	if err != nil {
 		return err
 	}
@@ -53,7 +44,7 @@ func handleNvidiaSetup() error {
 	return utils.Copy("/etc/docker/daemon-nvidia.json", "/etc/docker/daemon.json")
 }
 
-func handleReswarmModeSetup() error {
+func HandleReswarmModeSetup() error {
 	_, err := exec.Command("/bin/bash", "/usr/sbin/reswarm.sh").Output()
 	if err != nil {
 		return err

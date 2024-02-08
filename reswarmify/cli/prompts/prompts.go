@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"reswarmify-cli/setup"
 	"reswarmify-cli/utils"
 	"strings"
 
@@ -30,20 +31,38 @@ func Continue(message string) (bool, error) {
 }
 
 func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
+	// Need to setup device.ini and other to do other setup
+	err := setup.HandleReswarmModeSetup()
+	if err != nil {
+		fmt.Println("Failed to handle reswarm mode setup: ", err.Error())
+		return nil, nil, err
+	}
+
 	out, err := exec.Command("systemctl", "status", "NetworkManager").Output()
 	if err != nil {
 		return nil, nil, err
 	}
 
 	usingNetworkManager := strings.Contains(string(out), "Active: active")
-	options := []string{
+
+	allOptions := []string{
 		"Automatically start the REAgent on boot and keep it running in the background",
 		"Create a RecordEvolution user for your device",
+		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .reswarm file",
+		"Configure Docker to use Nvidia Runtime",
 	}
+
+	options := []string{
+		allOptions[0],
+		allOptions[1],
+	}
+
 	defaultIndexes := []int{0, 1}
 
 	wifissid := reswarmFile["wlanssid"]
-	wifipasswd := reswarmFile["passwd"]
+	wifipasswd := reswarmFile["password"]
+
+	fmt.Println(wifissid, wifipasswd)
 	noWifi := wifipasswd != nil && wifissid != nil
 
 	if wifipasswd == nil && wifissid == nil {
@@ -52,7 +71,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	}
 
 	if usingNetworkManager && noWifi {
-		options = append(options, "(NetworkManager Only) Add and connect to the WiFi connection provided in the .reswarm file")
+		options = append(options, allOptions[2])
 		defaultIndexes = append(defaultIndexes, 2)
 	}
 
@@ -67,7 +86,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	}
 
 	if nvidiaRuntimeFound {
-		options = append(options, "Configure Docker to use Nvidia Runtime")
+		options = append(options, allOptions[3])
 		if usingNetworkManager && noWifi {
 			defaultIndexes = append(defaultIndexes, 3)
 		} else {
@@ -82,7 +101,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 
 	var indexes []int
 	for _, service := range services {
-		indexes = append(indexes, utils.FindIndex(options, service))
+		indexes = append(indexes, utils.FindIndex(allOptions, service))
 	}
 
 	if err != nil {
