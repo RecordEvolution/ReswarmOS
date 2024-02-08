@@ -58,7 +58,7 @@ func OverlayDir(src string, dest string) error {
 			return err
 		}
 
-		return nil
+		return destFile.Chmod(0755)
 	})
 }
 
@@ -106,7 +106,7 @@ func ExtractTarGz(source, dest string) error {
 				return err
 			}
 
-			err = os.Chmod(target, 0755)
+			err = file.Chmod(0755)
 			if err != nil {
 				return err
 			}

@@ -62,7 +62,6 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	wifissid := reswarmFile["wlanssid"]
 	wifipasswd := reswarmFile["password"]
 
-	fmt.Println(wifissid, wifipasswd)
 	noWifi := wifipasswd != nil && wifissid != nil
 
 	if wifipasswd == nil && wifissid == nil {

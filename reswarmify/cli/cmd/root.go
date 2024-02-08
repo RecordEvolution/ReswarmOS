@@ -76,6 +76,12 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
+	if utils.ReswarmifiedAlready() {
+		fmt.Println("The system has already been reswarmified. Please unreswarmify your system and try again")
+		os.Exit(1)
+		return
+	}
+
 	fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
 	fmt.Println()
 
@@ -159,6 +165,7 @@ func root(cmd *cobra.Command, args []string) {
 		}
 
 		fmt.Println("Installing Docker, please note that this can take some time...")
+		fmt.Println()
 
 		err = docker.InstallDocker()
 		if err != nil {
