@@ -13,8 +13,8 @@
 
 _ReswarmOS_ represents a lightweight, customizable and efficient host operating
 system for embedded devices in the IoT context and is specifically designed to
-meet the requirements of the IoT Development Studio
-_[Reswarm](https://www.record-evolution.de/reswarm/)_. It was designed with the 
+meet the requirements of the IoT Development Studio by
+_[Record Evolution](https://www.record-evolution.de/reswarm/)_. It was designed with the 
 following objectives in mind: _minimal footprint/size_ of the root-filesystem
 to ensure quick flashing and easy setup for a myriad of devices, _container support_
 for having a robust solution to dynamically run a huge variety of apps on the 
@@ -60,19 +60,19 @@ by
 ssh <your-username>@<device-hostname/local-ip>
 ```
 
-### Reswarm IoT devices
+### IoT devices
 
 Any devices created within the framework of the IoT Development Studio
 _Reswarm_ are by default equipped with the latest version of _ReswarmOS_
 and automatically configured to securely connect and communicate with
-the Reswarm server cloud instance. Since this setup is coupled to your
-individual Reswarm user account the _ssh login_ is more customized and
+the Record Evolution server cloud instance. Since this setup is coupled to your
+individual Record Evolution user account the _ssh login_ is more customized and
 secure. During the initial boot process ReswarmOS will set up a personalized
 user account on the device using the fields `swarm_owner_name` and `secret`
 of the _.reswarm_ configuration file as username and associated password.
 Note, that this username may be modified in order to comply to the
 `NAME_REGEX` rule `^[a-z][-a-z0-9]*$`. The device will show up in the local
-network with its _hostname_ according to the Reswarm device name. To ensure
+network with its _hostname_ according to the Record Evolution device name. To ensure
 maximal security, by default, this user is the only one able to access the
 device directly using public key authentication. The required identity is
 consequently provided by the _.reswarm_ file of the device and may,
