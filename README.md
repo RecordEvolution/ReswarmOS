@@ -2,14 +2,14 @@
 <p align="center">
   <a href="https://record-evolution.de/reswarm">
     <img
-      alt="reswarm-os.svg"
-      src="archive/assets/reswarm-os.svg"
+      alt="Record Evolution GmbH"
+      src="https://res.cloudinary.com/dotw7ar1m/image/upload/v1708079370/vli89gsgy2siqcrmvzfm.png"
       width="400"
     />
   </a>
 </p>
 
-# ReswarmOS
+# ReswarmOS by Record Evolution
 
 _ReswarmOS_ represents a lightweight, customizable and efficient host operating
 system for embedded devices in the IoT context and is specifically designed to
