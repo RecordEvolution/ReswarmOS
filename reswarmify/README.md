@@ -17,7 +17,7 @@ Do not forget to replace $ARCH in the URL below with the architecture of your ch
 - armv5
   
 ### The download URL:
-`wget https://storage.googleapis.com/reswarmos/reswarmify/linux/$ARCH/1.0.1/reswarmify-cli`
+`wget https://storage.googleapis.com/reswarmos/reswarmify/linux/$ARCH/1.0.2/reswarmify-cli`
 
 ## 2. Usage of the CLI tool
 
