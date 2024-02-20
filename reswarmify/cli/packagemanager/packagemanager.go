@@ -122,6 +122,8 @@ func detectPackageManager() (PackageManager, error) {
 		fallthrough
 	case "Debian":
 		fallthrough
+	case "Raspbian":
+		fallthrough
 	case "Ubuntu":
 		return DPKG, nil
 	case "CentOs":
