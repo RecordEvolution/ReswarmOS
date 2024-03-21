@@ -9,6 +9,30 @@ import (
 type SetupFunc func() error
 type PostSetup func() error
 
+const ScriptDirectory = "/opt/reagent/reswarmify/scripts/"
+const DeviceConfigPath = "/opt/reagent/device-config.ini"
+const ReuserRemoval = "reuser-removal"
+const ReuserSetup = "reuser-setup"
+const ReWifi = "rewifi"
+const ReWifiRemoval = "rewifi-removal"
+const DisableServices = "disable-services"
+const CleanupOverlay = "cleanup-overlay"
+const Reswarm = "reswarm"
+
+func runScript(scriptName string, passConfig bool) error {
+	args := []string{ScriptDirectory + scriptName + ".sh"}
+	if passConfig {
+		args = append(args, DeviceConfigPath)
+	}
+
+	_, err := exec.Command("/bin/bash", args...).Output()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func handleReagentSetup() error {
 	_, err := exec.Command("systemctl", "enable", "reagent.service").Output()
 	if err != nil {
@@ -23,49 +47,20 @@ func handleReagentSetup() error {
 	return nil
 }
 
-func handleReagentRemoval() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/remove-agent-services.sh").Output()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func handleREUserRemoval() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/reuser-removal.sh", "/opt/reagent/device-config.ini").Output()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return runScript(ReuserRemoval, true)
 }
 
 func handleREUserSetup() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/reuser-setup.sh", "/opt/reagent/device-config.ini").Output()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return runScript(ReuserSetup, true)
 }
 
 func handleWifiSetup() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/rewifi.sh", "/opt/reagent/device-config.ini").Output()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return runScript(ReWifi, true)
 }
 
 func handleWifiRemoval() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/rewifi-removal.sh", "/opt/reagent/device-config.ini").Output()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return runScript(ReWifiRemoval, true)
 }
 
 func handleAgentRemoval() error {
@@ -81,22 +76,16 @@ func handleNvidiaRemoval() error {
 	return nil
 }
 
-func HandleReswarmModeSetup() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/reswarm.sh").Output()
-	if err != nil {
-		return err
-	}
-
-	return nil
+func handleDisableServices() error {
+	return runScript(DisableServices, false)
 }
 
-func EnableAndStartServices() error {
-	_, err := exec.Command("/bin/bash", "/opt/reagent/reswarmify/scripts/enable-services.sh").Output()
-	if err != nil {
-		return err
-	}
+func handleOverlayCleanup() error {
+	return runScript(CleanupOverlay, false)
+}
 
-	return nil
+func HandleReswarmModeSetup() error {
+	return runScript(Reswarm, false)
 }
 
 func handlePostReagentSetup() error {
@@ -130,11 +119,12 @@ var setupFunc = map[int]SetupFunc{
 }
 
 var removalFunc = map[int]SetupFunc{
-	0: handleReagentRemoval,
-	1: handleREUserRemoval,
-	2: handleWifiRemoval,
-	3: handleNvidiaRemoval,
-	4: handleAgentRemoval,
+	0: handleREUserRemoval,
+	1: handleWifiRemoval,
+	2: handleNvidiaRemoval,
+	3: handleDisableServices,
+	4: handleOverlayCleanup,
+	5: handleAgentRemoval,
 }
 
 var postSetupFunc = map[int]SetupFunc{

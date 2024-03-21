@@ -46,4 +46,6 @@ else
   cp /etc/ssh/sshd_config /etc/ssh/sshd_config.tmp
 
   sed -i "/Match User $usernm/,/^$/d" /etc/ssh/sshd_config.tmp
+
+  mv /etc/ssh/sshd_config.tmp /etc/ssh/sshd_config
 fi

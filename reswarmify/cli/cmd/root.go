@@ -241,30 +241,23 @@ func root(cmd *cobra.Command, args []string) {
 
 	utils.Clear()
 
-	err = setup.EnableAndStartServices()
-	if err != nil {
-		fmt.Println("Failed to enable and start services: ", err.Error())
-		os.Exit(1)
-		return
-	}
-
 	fmt.Println("The Reswarmification process is complete.")
 	fmt.Println()
 
-	// cont, err = prompts.Continue("Reboot now?")
-	// if err != nil {
-	// 	fmt.Println("Failed to prompt user: ", err.Error())
-	// }
+	cont, err = prompts.Continue("Reboot now?")
+	if err != nil {
+		fmt.Println("Failed to prompt user: ", err.Error())
+	}
 
-	// if cont {
-	// 	err := setup.Reboot()
-	// 	if err != nil {
-	// 		fmt.Println("Failed to trigger reboot: ", err.Error())
+	if cont {
+		err := setup.Reboot()
+		if err != nil {
+			fmt.Println("Failed to trigger reboot: ", err.Error())
 
-	// 		os.Exit(1)
-	// 		return
-	// 	}
-	// }
+			os.Exit(1)
+			return
+		}
+	}
 
 	os.Exit(0)
 }
