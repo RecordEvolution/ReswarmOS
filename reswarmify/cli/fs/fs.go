@@ -9,8 +9,13 @@ import (
 	"path/filepath"
 )
 
-func ReswarmifyRootfs() error {
-	err := DownloadFile(ROOTFS_REMOTE_URL, ROOTFS_TEMP_TAR_GZ)
+func ReswarmifyRootfs(dev bool) error {
+	URL := ROOTFS_REMOTE_URL
+	if dev {
+		URL = ROOTFS_DEV_REMOTE_URL
+	}
+
+	err := DownloadFile(URL, ROOTFS_TEMP_TAR_GZ)
 	if err != nil {
 		return err
 	}
