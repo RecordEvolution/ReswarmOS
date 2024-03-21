@@ -1,0 +1,26 @@
+[Unit]
+Description=Reagent
+ConditionPathExists=/opt/reagent/reswarm-mode
+After=reswarm.service network-online.target
+Requires=network-online.target
+#reagent.socket
+#Requires=reagent.socket
+
+[Service]
+Type=simple
+ExecStartPre=/opt/reagent/reswarmify/scripts/reagent-setup.sh
+ExecStart=/opt/reagent/Reagent-active -config /opt/reagent/device-config.reswarm -appsDir /apps -debug
+# RestartSec=30
+Restart=no
+# Restart=always
+# RemainAfterExit=no
+CPUWeight=2048
+Nice=-16
+# CPUAccounting=1
+# MemoryAccounting=1
+# BlockIOAccounting=1
+# IPAccounting=true
+
+[Install]
+#WantedBy=sysinit.target
+WantedBy=multi-user.target

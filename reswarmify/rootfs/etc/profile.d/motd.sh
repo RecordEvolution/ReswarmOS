@@ -114,8 +114,8 @@ rootfs()
 }
 appfs()
 {
-  totalsize=$(df -h | grep " /opt/reagent/docker-apps$" | awk '{print $2}' | tr -d  ' ')
-  usedsize=$(df -h | grep " /opt/reagent/docker-apps$" | awk '{print $3}' | tr -d  ' ')
+  totalsize=$(df -h | grep " /apps$" | awk '{print $2}' | tr -d  ' ')
+  usedsize=$(df -h | grep " /apps$" | awk '{print $3}' | tr -d  ' ')
   echo "${usedsize} / ${totalsize} used"
 }
 

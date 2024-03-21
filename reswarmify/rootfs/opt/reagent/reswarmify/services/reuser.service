@@ -5,7 +5,7 @@ After=reswarm.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/reuser-setup.sh /opt/reagent/device-config.ini
+ExecStart=/opt/reagent/reswarmify/scripts/reuser-setup.sh /opt/reagent/device-config.ini
 # Restart=on-failure
 # RestartSec=5s
 RemainAfterExit=no

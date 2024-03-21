@@ -4,7 +4,7 @@ ConditionPathExists=/opt/reagent/reswarm-mode
 After=reswarm.service reagent.service
 
 [Service]
-ExecStart=/usr/sbin/reagent-manager.sh
+ExecStart=/opt/reagent/reswarmify/scripts/reagent-manager.sh
 RestartSec=30
 Restart=always
 

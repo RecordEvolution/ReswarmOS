@@ -12,6 +12,6 @@ fi
 
 if [ "$1" != "docker0" ] && [ "$1" != "none" ]; then
         if [ "$2" == "up" ] || [ "$2" == "down" ] || [ "$2" == "dhcp4-change" ]; then
-                nohup /usr/sbin/restart-agent.sh &> /dev/null &
+                nohup /opt/reagent/reswarmify/scripts/restart-agent.sh &> /dev/null &
         fi
 fi

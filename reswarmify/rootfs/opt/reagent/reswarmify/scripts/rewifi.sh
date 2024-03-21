@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source the configuration parser
-. /usr/sbin/reparse-ini.sh
+. /opt/reagent/reswarmify/scripts/reparse-ini.sh
 
 # check configuration file argument
 configfile="$1"
