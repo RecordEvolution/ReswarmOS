@@ -24,6 +24,15 @@ func ReswarmifiedAlready() bool {
 	return true
 }
 
+func IsLegacyReswarmifiedDevice() bool {
+	_, err := os.Stat("/opt/reagent/reswarmify")
+	if err != nil && errors.Is(err, os.ErrNotExist) {
+		return true
+	}
+
+	return false
+}
+
 func Copy(source string, dest string) error {
 	_, err := exec.Command("cp", "-rf", source, dest).Output()
 	if err != nil {
