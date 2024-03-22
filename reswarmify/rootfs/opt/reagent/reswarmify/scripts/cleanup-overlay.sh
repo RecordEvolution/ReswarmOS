@@ -11,3 +11,7 @@ rm /etc/profile/motd.sh
 
 # Remove disabling of auto-updates
 rm /etc/apt/apt.conf.d/20auto-upgrades
+
+echo "Finished cleaning up overlay"
+
+exit 0
