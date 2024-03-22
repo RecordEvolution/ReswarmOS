@@ -26,7 +26,7 @@ func removeCommand(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err := setup.RemoveAll()
+	err := setup.Unreswarmify()
 	if err != nil {
 		fmt.Println("An error occurred while unreswarmifying the device: ", err.Error())
 		os.Exit(1)

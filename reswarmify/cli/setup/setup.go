@@ -1,9 +1,11 @@
 package setup
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"reswarmify-cli/utils"
+	"sort"
 )
 
 type SetupFunc func() error
@@ -25,10 +27,14 @@ func runScript(scriptName string, passConfig bool) error {
 		args = append(args, DeviceConfigPath)
 	}
 
-	_, err := exec.Command("/bin/bash", args...).Output()
+	fmt.Println(args)
+	output, err := exec.Command("/bin/bash", args...).CombinedOutput()
 	if err != nil {
+		fmt.Println(string(output))
 		return err
 	}
+
+	fmt.Println(string(output))
 
 	return nil
 }
@@ -131,8 +137,15 @@ var postSetupFunc = map[int]SetupFunc{
 	0: handlePostReagentSetup,
 }
 
-func RemoveAll() error {
-	for index := range removalFunc {
+func Unreswarmify() error {
+	var indexes []int
+	for k := range removalFunc {
+		indexes = append(indexes, k)
+	}
+
+	sort.Ints(indexes)
+
+	for _, index := range indexes {
 		err := HandleRemoval(index)
 		if err != nil {
 			return err
