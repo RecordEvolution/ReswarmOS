@@ -55,7 +55,12 @@ echo
 chmod +x reswarmify-cli
 
 binaryPath=$(realpath .)
-echo -e "Download complete. You can find the binary file on the following path: $binaryPath/reswarmify-cli\n"
-echo -e "Utilize the help prompt below to continue reswarmifying or resetting an already reswarmified device.\n"
+echo "Download complete!"
+echo
 
-./reswarmify-cli -h
+echo "To reswarmify your device, use the following example command:"
+echo "$binaryPath/reswarmify-cli -c /path/to/device-config.reswarm"
+echo
+
+echo "For other usage and more information, run the following help command:"
+echo "$binaryPath/reswarmify-cli -h"
