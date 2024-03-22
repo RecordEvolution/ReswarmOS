@@ -1,7 +1,6 @@
 package setup
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"reswarmify-cli/utils"
@@ -27,14 +26,10 @@ func runScript(scriptName string, passConfig bool) error {
 		args = append(args, DeviceConfigPath)
 	}
 
-	fmt.Println(args)
-	output, err := exec.Command("/bin/bash", args...).CombinedOutput()
+	_, err := exec.Command("/bin/bash", args...).Output()
 	if err != nil {
-		fmt.Println(string(output))
 		return err
 	}
-
-	fmt.Println(string(output))
 
 	return nil
 }
