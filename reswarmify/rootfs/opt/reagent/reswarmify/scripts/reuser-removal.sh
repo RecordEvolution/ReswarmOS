@@ -39,13 +39,17 @@ else
 
   echo "Removing the Record Evolution user: ${username}"
 
-  userdel ${usernm}
+  killall -u ${usernm}
+  userdel -f ${usernm}
   rm -rf ${homedir}
 
   echo "Restoring SSH configuration"
 
   cp /etc/ssh/sshd_config /etc/ssh/sshd_config.tmp
 
+  # Also handle legacy SSHD configs
+  sed -i "/^AllowUsers $usernm$/d; /^PubkeyAuthentication yes$/d; /^PasswordAuthentication no$/d" /etc/ssh/sshd_config.tmp
+  
   sed -i "/Match User $usernm/,/^$/d" /etc/ssh/sshd_config.tmp
 
   mv /etc/ssh/sshd_config.tmp /etc/ssh/sshd_config
