@@ -6,7 +6,7 @@ Requires=NetworkManager.service
 [Service]
 Type=oneshot
 # ExecStartPre=
-ExecStart=/usr/sbin/rewifi.sh /opt/reagent/device-config.ini
+ExecStart=/opt/reagent/reswarmify/scripts/rewifi.sh /opt/reagent/device-config.ini
 # Restart=on-failure
 # RestartSec=5s
 RemainAfterExit=no

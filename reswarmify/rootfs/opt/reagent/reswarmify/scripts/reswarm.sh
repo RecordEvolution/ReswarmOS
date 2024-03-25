@@ -1,10 +1,12 @@
 #!/bin/bash
 
+set -e
+
 # JSON parser
 JQ=/usr/bin/jq
 
 # include JSON parser
-#. /usr/sbin/reparse-json.sh
+#. /opt/reagent/reswarmify/scripts/reparse-json.sh
 
 # symlink pointing to mount point of vfat partition keeping device configuration
 bootDir="/boot"

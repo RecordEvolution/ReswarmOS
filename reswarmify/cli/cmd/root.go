@@ -182,7 +182,7 @@ func root(cmd *cobra.Command, args []string) {
 		// fmt.Println("Found a working Docker installation, skipping installation step...")
 	}
 
-	err = fs.ReswarmifyRootfs()
+	err = fs.ReswarmifyRootfs(false)
 	if err != nil {
 		fmt.Println("Failed to overlay Rootfs: ", err.Error())
 		os.Exit(1)
@@ -241,7 +241,7 @@ func root(cmd *cobra.Command, args []string) {
 
 	utils.Clear()
 
-	fmt.Println("The Reswarmification process is complete. A reboot is necessary to finalize the setup")
+	fmt.Println("The Reswarmification process is complete.")
 	fmt.Println()
 
 	cont, err = prompts.Continue("Reboot now?")

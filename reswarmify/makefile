@@ -1,5 +1,15 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
+rollout-dev-rootfs:
+	tar -czvf rootfs-dev.tar.gz rootfs/
+	gsutil cp "rootfs-dev.tar.gz" gs://reswarmos/reswarmify
+	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/reswarmify/rootfs-dev.tar.gz
+
+rollout-rootfs:
+	tar -czvf rootfs.tar.gz rootfs/
+	gsutil cp "rootfs.tar.gz" gs://reswarmos/reswarmify
+	gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/reswarmify/rootfs.tar.gz
+
 build-all:
 	scripts/build-all.sh
 

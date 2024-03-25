@@ -1,0 +1,9 @@
+{
+  "data-root": "/opt/reagent/docker-apps",
+  "runtimes": {
+    "nvidia": {
+      "path": "/usr/bin/nvidia-container-runtime",
+      "runtimeArgs": []
+    }
+  }
+}

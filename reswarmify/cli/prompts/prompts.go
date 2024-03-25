@@ -38,12 +38,11 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 		return nil, nil, err
 	}
 
+	usingNetworkManager := false
 	out, err := exec.Command("systemctl", "status", "NetworkManager").Output()
-	if err != nil {
-		return nil, nil, err
+	if err == nil {
+		usingNetworkManager = strings.Contains(string(out), "Active: active")
 	}
-
-	usingNetworkManager := strings.Contains(string(out), "Active: active")
 
 	allOptions := []string{
 		"Automatically start the REAgent on boot and keep it running in the background",

@@ -12,6 +12,7 @@ const ROOTFS_TEMP_DIR = "/tmp/rootfs"
 const AGENT_DIR = "/opt/reagent"
 const ROOTFS_TEMP_TAR_GZ = "/tmp/rootfs.tar.gz"
 const ROOTFS_REMOTE_URL = "https://storage.googleapis.com/reswarmos/reswarmify/rootfs.tar.gz?new=1"
+const ROOTFS_DEV_REMOTE_URL = "https://storage.googleapis.com/reswarmos/reswarmify/rootfs-dev.tar.gz?new=1"
 
 func DownloadFile(URL string, resultPath string) error {
 	req, err := http.NewRequest("GET", URL, nil)

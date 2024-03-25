@@ -4,10 +4,10 @@ Description=Reswarm mode configuration
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/reswarm.sh
+ExecStart=/opt/reagent/reswarmify/scripts/reswarm.sh
 RemainAfterExit=no
 
 [Install]
 #WantedBy=sysinit.target
 #WantedBy=multi-user.target
-RequiredBy=rehost.service rewifi.service redocker.service reagent.service
+RequiredBy=rehost.service rewifi.service reagent.service
