@@ -1,3 +1,5 @@
+echo "Disabling Record Evolution services..."
+
 systemctl stop reagent.service
 systemctl stop reagent-manager.service
 systemctl stop rehost.service
@@ -11,3 +13,5 @@ systemctl disable rehost.service
 systemctl disable reswarm.service
 systemctl disable reuser.service
 systemctl disable rewifi.service
+
+echo "Record Evolution services have been disabled"

@@ -1,14 +1,16 @@
 package setup
 
 import (
+	"bufio"
+	"fmt"
 	"os"
 	"os/exec"
 	"reswarmify-cli/utils"
 	"sort"
 )
 
-type SetupFunc func() error
-type PostSetup func() error
+type SetupFunc func() (chan string, error)
+type PostSetup func() (chan string, error)
 
 const ScriptDirectory = "/opt/reagent/reswarmify/scripts/"
 const DeviceConfigPath = "/opt/reagent/device-config.ini"
@@ -20,87 +22,185 @@ const DisableServices = "disable-services"
 const CleanupOverlay = "cleanup-overlay"
 const Reswarm = "reswarm"
 
-func runScript(scriptName string, passConfig bool) error {
+func runScript(scriptName string, passConfig bool) (chan string, error) {
 	args := []string{ScriptDirectory + scriptName + ".sh"}
 	if passConfig {
 		args = append(args, DeviceConfigPath)
 	}
 
-	_, err := exec.Command("/bin/bash", args...).Output()
+	cmd := exec.Command("/bin/bash", args...)
+	cmdReader, err := cmd.StdoutPipe()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	logChan := make(chan string)
+	scanner := bufio.NewScanner(cmdReader)
+	go func() {
+		for scanner.Scan() {
+			chunk := scanner.Text()
+			logChan <- chunk
+		}
+
+		close(logChan)
+	}()
+
+	err = cmd.Start()
+	if err != nil {
+		return nil, err
+	}
+
+	return logChan, nil
 }
 
-func handleReagentSetup() error {
+func handleReagentSetup() (chan string, error) {
 	_, err := exec.Command("systemctl", "enable", "reagent.service").Output()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = exec.Command("systemctl", "enable", "reagent-manager.service").Output()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return nil, nil
 }
 
-func handleREUserRemoval() error {
-	return runScript(ReuserRemoval, true)
+func stopDockerDaemon() (chan string, error) {
+	_, err := exec.Command("systemctl", "stop", "docker.service").Output()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = exec.Command("systemctl", "stop", "docker.socket").Output()
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 }
 
-func handleREUserSetup() error {
+func startDockerDaemon() (chan string, error) {
+	_, err := exec.Command("systemctl", "start", "docker.service").Output()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = exec.Command("systemctl", "start", "docker.socket").Output()
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+func handleREUserRemoval() (chan string, error) {
+	logChan, err := runScript(ReuserRemoval, true)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for log := range logChan {
+			fmt.Println(log)
+		}
+	}()
+
+	return logChan, nil
+}
+
+func handleREUserSetup() (chan string, error) {
 	return runScript(ReuserSetup, true)
 }
 
-func handleWifiSetup() error {
+func handleWifiSetup() (chan string, error) {
 	return runScript(ReWifi, true)
 }
 
-func handleWifiRemoval() error {
-	return runScript(ReWifiRemoval, true)
+func handleWifiRemoval() (chan string, error) {
+	logChan, err := runScript(ReWifiRemoval, true)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for log := range logChan {
+			fmt.Println(log)
+		}
+	}()
+
+	return logChan, nil
 }
 
-func handleAgentRemoval() error {
-	return os.RemoveAll("/opt/reagent")
+func handleAgentRemoval() (chan string, error) {
+	fmt.Println("Removing REAgent directory..")
+
+	err := os.RemoveAll("/opt/reagent")
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("REAgent files have been removed")
+
+	return nil, nil
 }
 
-func handleNvidiaSetup() error {
-	return utils.Copy("/etc/docker/daemon-nvidia.json", "/etc/docker/daemon.json")
+func handleNvidiaSetup() (chan string, error) {
+	return nil, utils.Copy("/etc/docker/daemon-nvidia.json", "/etc/docker/daemon.json")
 }
 
-func handleNvidiaRemoval() error {
+func handleNvidiaRemoval() (chan string, error) {
 	// Don't need to remove it
-	return nil
+	return nil, nil
 }
 
-func handleDisableServices() error {
-	return runScript(DisableServices, false)
+func handleDisableServices() (chan string, error) {
+	logChan, err := runScript(DisableServices, false)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for log := range logChan {
+			fmt.Println(log)
+		}
+	}()
+
+	return logChan, nil
 }
 
-func handleOverlayCleanup() error {
-	return runScript(CleanupOverlay, false)
+func handleOverlayCleanup() (chan string, error) {
+	logChan, err := runScript(CleanupOverlay, false)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for log := range logChan {
+			fmt.Println(log)
+		}
+	}()
+
+	return logChan, nil
 }
 
-func HandleReswarmModeSetup() error {
+func HandleReswarmModeSetup() (chan string, error) {
 	return runScript(Reswarm, false)
 }
 
-func handlePostReagentSetup() error {
+func handlePostReagentSetup() (chan string, error) {
 	_, err := exec.Command("systemctl", "start", "reagent.service").Output()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = exec.Command("systemctl", "start", "reagent-manager.service").Output()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return nil, nil
 }
 
 func Reboot() error {
@@ -125,7 +225,9 @@ var removalFunc = map[int]SetupFunc{
 	2: handleNvidiaRemoval,
 	3: handleDisableServices,
 	4: handleOverlayCleanup,
-	5: handleAgentRemoval,
+	5: stopDockerDaemon,
+	6: handleAgentRemoval,
+	7: startDockerDaemon,
 }
 
 var postSetupFunc = map[int]SetupFunc{
@@ -151,17 +253,20 @@ func Unreswarmify() error {
 }
 
 func HandleRemoval(index int) error {
-	return removalFunc[index]()
+	_, err := removalFunc[index]()
+	return err
 }
 
 func HandleSetup(index int) error {
-	return setupFunc[index]()
+	_, err := setupFunc[index]()
+	return err
 }
 
 func HandlePostSetup(index int) error {
 	fun := postSetupFunc[index]
 	if fun != nil {
-		return fun()
+		_, err := fun()
+		return err
 	}
 
 	return nil

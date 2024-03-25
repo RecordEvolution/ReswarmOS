@@ -24,17 +24,16 @@ nmconnsexst=$(echo "${nmconns}" | grep "${ssid}")
 
 # No SSID found
 if [ -z "${ssid}" ]; then
-  echo "No SSID was found, skipping..."
+  echo "No networking configuration was found, skipping..."
   exit 0
 fi
 
 if [ -z "${nmconnsexst}" ]; then
-
-  echo "wifi connection does not exist, skipping..."
+  echo "Network connection does not exist, skipping..."
 else
   nmconnid=$(nmcli -t -f NAME,UUID con | grep "${ssid}" | cut -d ":" -f2)
 
   nmcli connection delete "${nmconnid}"
 
-  echo "deleted connection with ID: ${nmconnid}"
+  echo "Deleted network connection with SSID: ${ssid}"
 fi

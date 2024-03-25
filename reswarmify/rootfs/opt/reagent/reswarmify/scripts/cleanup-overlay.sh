@@ -1,3 +1,5 @@
+echo "Cleaning leftover systen files..."
+
 # Remove Docker related files
 rm /etc/docker/daemon-nvidia.json
 rm /etc/docker/daemon.json

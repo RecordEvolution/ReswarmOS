@@ -21,15 +21,18 @@ var remove = &cobra.Command{
 }
 
 func removeCommand(cmd *cobra.Command, args []string) {
+
 	if !utils.ReswarmifiedAlready() {
 		fmt.Println("The system has not been reswarmified. Cannot remove existing installation")
 		os.Exit(1)
 		return
 	}
 
+	fmt.Println("Intializing unreswarmify process...")
+
 	// Download the latest files in case the device is a legacy reswarmified device
 	if utils.IsLegacyReswarmifiedDevice() {
-		err := fs.ReswarmifyRootfs(true)
+		err := fs.ReswarmifyRootfs(false)
 		if err != nil {
 			fmt.Println("An error occurred while trying to overlay the rootfs: ", err.Error())
 			os.Exit(1)
@@ -44,5 +47,5 @@ func removeCommand(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	fmt.Println("The device was successfully unreswarmified.")
+	fmt.Println("The device was successfully unreswarmified")
 }

@@ -29,19 +29,20 @@ fi
 
 # cleaning up username to agree with NAME_REGEX (/etc/adduser.conf)
 usernm=$(echo "${usernm}" | sed -e 's/\(.*\)/\L\1/g' | sed -e 's/^[^a-z]//g' | grep -oP "[a-z0-9-]" | tr -d '\n' | sed 's/$/\n/g')
-echo "using cleaned username '${usernm}' agreeing with NAME_REGEX"
 
 # check for existing user
 userExst=$(cat /etc/shadow | grep ${usernm})
 if [ -z "${userExst}" ]; then
-  echo "user does not exist, skipping..."
+  echo "Record Evolution user not found, skipping user removal..."
 else
   homedir="/home/${usernm}/"
+
+  echo "Removing the Record Evolution user: ${username}"
 
   userdel ${usernm}
   rm -rf ${homedir}
 
-  echo "cleaning up sshd config"
+  echo "Restoring SSH configuration"
 
   cp /etc/ssh/sshd_config /etc/ssh/sshd_config.tmp
 
