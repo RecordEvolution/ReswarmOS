@@ -34,6 +34,8 @@ func runScript(scriptName string, passConfig bool) (chan string, error) {
 		return nil, err
 	}
 
+	cmd.Stderr = cmd.Stdout
+
 	logChan := make(chan string)
 	scanner := bufio.NewScanner(cmdReader)
 	go func() {

@@ -32,7 +32,7 @@ func Continue(message string) (bool, error) {
 
 func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	// Need to setup device.ini and other to do other setup
-	err := setup.HandleReswarmModeSetup()
+	_, err := setup.HandleReswarmModeSetup()
 	if err != nil {
 		fmt.Println("Failed to handle reswarm mode setup: ", err.Error())
 		return nil, nil, err
