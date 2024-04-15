@@ -56,12 +56,12 @@ func runScript(scriptName string, passConfig bool) (chan string, error) {
 }
 
 func handleReagentSetup() (chan string, error) {
-	_, err := exec.Command("systemctl", "enable", "reagent.service").Output()
+	_, err := exec.Command("systemctl", "enable", "/opt/reagent/reswarmify/services/reagent.service").Output()
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = exec.Command("systemctl", "enable", "reagent-manager.service").Output()
+	_, err = exec.Command("systemctl", "enable", "/opt/reagent/reswarmify/services/reagent-manager.service").Output()
 	if err != nil {
 		return nil, err
 	}
