@@ -58,9 +58,7 @@ In the kernel tab, for the Ubuntu 20.04.3 installer ISO, only one kernel can be 
 
 ![kernel settings](image-3.png)
 
-The preseed folder contains several configuration files that can be used to 'preseed' the ISO installer. None of these default files will be used; instead, we will use our own custom `autoinstall` configuration file.
-
-The autoinstall configuration is an officially supported feature of both Ubuntu Desktop and Server installers. 
+The preseed folder contains several configuration files that can be used to 'preseed' the ISO installer. None of these default files will be used; instead, we will use our own custom `autoinstall` configuration file. The autoinstall configuration is an officially supported feature of both Ubuntu Desktop and Server installers. 
 
 Our `autoinstall` configuration handles everything from setting up partitions (important for our AB partitions) to post-installation commands (such as switching the boot order post-install) and more. A reference to the autoinstall configuration can be found [here](https://canonical-subiquity.readthedocs-hosted.com/en/latest/reference/autoinstall-reference.html).
 
