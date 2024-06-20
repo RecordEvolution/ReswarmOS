@@ -39,6 +39,12 @@ The `build-it.sh` script will copy the configuration file specified in the `setu
 
 Once the `.config` file has been copied to the `output-build/buildroot` directory, you can use the `make menuconfig` command in that directory to open the interactive Buildroot configuration screen. (Read more about the Buildroot toolchain [here](https://buildroot.org/downloads/manual/manual.html))
 
+## Rootfs
+
+The rootfs folder is used to overlay the installed root filesystem of the image. This is configured through the BR2_ROOTFS_OVERLAY key in the `.config` file.
+
+You can easily update the rootfs by modifying the files in the folders before building the final image.
+
 ## Building the ReswarmOS Image
 
 You can start building the image by running the `make build` command.
