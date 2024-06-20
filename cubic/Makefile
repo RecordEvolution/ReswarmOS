@@ -47,19 +47,22 @@ setup-efi-arm64:
 	sudo cp ${HOME}/git/ReswarmOS/cubic/config/autoinstall/efi.yaml ${HOME}/git/ReswarmOS/cubic/project/arm64/custom-disk/preseed/nocloud/user-data
 
 create-img:
-	qemu-img create target/reswarm.img 16G
+	qemu-img create target/reswarm.img 8G
 
 install-bios: create-img
-	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -cdrom target/ReswarmOS-0.0.1-installer-amd64.iso -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
+	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 8G -display gtk,zoom-to-fit=on -vga virtio -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -cdrom target/ubuntu-20.04.3-live-server-amd64.iso -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 
 install-efi: create-img
-	qemu-system-x86_64 --name "ReswarmOS" -bios /usr/share/ovmf/OVMF.fd -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -cdrom target/ReswarmOS-0.0.1-installer-amd64.iso -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
+	qemu-system-x86_64 --name "ReswarmOS" -bios /usr/share/ovmf/OVMF.fd -M pc -enable-kvm -cpu host -vga virtio -m 8G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -cdrom target/ubuntu-20.04.3-live-server-amd64.iso -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 
 run-efi:
-	qemu-system-x86_64 --name "ReswarmOS" -bios /usr/share/ovmf/OVMF.fd -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
+	qemu-system-x86_64 --name "ReswarmOS" -bios /usr/share/ovmf/OVMF.fd -M pc -enable-kvm -cpu host -m 8G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 
 run-bios:
-	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 16G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
+	qemu-system-x86_64 --name "ReswarmOS" -M pc -enable-kvm -cpu host -m 8G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=target/reswarm.img -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
+
+copy-to-host:
+	sudo cp ${HOME}/git/ReswarmOS/cubic/target/ReswarmOS* /home/ruben/Desktop/VM
 
 build-agent:
 	cd ${HOME}/git/DeviceManagementAgent/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X 'reagent/release.BuildArch=amd64'" -v -a -o ${HOME}/git/ReswarmOS/cubic/project/rootfs-overlay/opt/reagent/reagent-latest
@@ -69,7 +72,6 @@ overlay-fs-amd64:
 
 overlay-fs-arm64:
 	sudo rsync -av --mkpath --info=progress2 project/rootfs-overlay/ project/arm64/custom-root/
-
 
 archive-project:
 	sudo rm archives/installerfs-v$(shell cat $(CURDIR)/versions.json | jq -r '.target').tar.gz
@@ -98,7 +100,7 @@ release-efi:
 	gsutil cp target/ReswarmOS-0.0.1-installer-amd64.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-efi.iso.gz
 
 download-source:
-	wget http://mirror.sov.uk.goscomb.net/ubuntu-releases/20.04/ubuntu-$(shell cat $(CURDIR)/versions.json | jq -r '.source')-live-server-amd64.iso -P source/
+	wget http://lt.releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso -P source/
 
 clean-project:
 	sudo rm -rf project/custom-disk/ project/custom-root
