@@ -34,7 +34,7 @@ echo "current user: $(whoami)"
 echo "working directory: $(pwd)"
 
 # clone agent repository
-AGNTREP=https://DewitteRuben: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@github.com/RecordEvolution/DeviceManagementAgent.git
+AGNTREP=https://github.com/RecordEvolution/DeviceManagementAgent.git
 git config --global credentials.helper store
 
 if [ ! -d ${BASE_DIR}/build/DeviceManagementAgent ]; then

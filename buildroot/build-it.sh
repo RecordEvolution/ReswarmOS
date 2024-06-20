@@ -135,27 +135,6 @@ cat "${raucsysconfg}"
 
 # --------------------------------------------------------------------------- #
 
-logging_message "github credentials configuration (to access Reagent repo)"
-
-# ask for any (github) credentials if ~/.git-credentials does not exist
-#if [ ! -f ~/.git-credentials ]; then
-#  if [[ -t 0 && -t 1 ]]; then
-#    read -p "please enter your username:       " gitusername
-#    read -p "please enter your password/token: " gitpassword
-#    echo "https://${gitusername}:${gitpassword}@github.com" > ~/.git-credentials
-#  else
-#    echo "either provide git-credentials in Dockerfile or run the container interactively!" >&2
-#    exit 1
-#  fi
-#fi
-
-# adjust git-config
-git config --global credential.helper store
-git config --global --list
-ls -lha ~/.git-credentials
-
-# --------------------------------------------------------------------------- #
-
 logging_message "extracting required buildroot commit from buildroot configuration"
 
 # extract buildroot commit required by particular configuration

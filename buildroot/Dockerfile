@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------------------#
 # Dockerfile
 
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 # set up non-root user
 RUN groupadd buildroot && \
@@ -19,7 +19,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     jq
 
 # add pip packages
-RUN python3 -m pip install yq
+RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+chmod +x /usr/bin/yq
 
 # clone buildroot repository (at certain commit)
 #RUN git clone https://github.com/buildroot/buildroot --single-branch --depth=1 /home/buildroot
@@ -46,9 +47,6 @@ COPY boot/ ./boot/
 # be mounted as volume and transfer ownership
 RUN mkdir -v ./reswarmos-build
 RUN chown buildroot:buildroot ./reswarmos-build
-
-# (TODO prelimminary) copy git-credentials to clone private repositories during build
-COPY git-credentials ./.git-credentials
 
 # set ownership/permissions and switch to non-root user for build process
 RUN chown buildroot:buildroot -R ./
