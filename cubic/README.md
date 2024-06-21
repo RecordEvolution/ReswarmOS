@@ -102,20 +102,7 @@ qemu-img create reswarm.img 16G
 
 **For Linux**
 ```bash
-qemu-system-x86_64 \
---name "ReswarmOS" \
--bios PATH_TO_OVMF_BIOS/OVMF.fd \ 
--M pc \
--enable-kvm \ 
--cpu host \
--m 8G \ 
--display gtk,zoom-to-fit=on \
--device intel-hda \
--device hda-duplex \
--drive format=raw,file=PATH_TO_IMAGE_FILE.img \
--cdrom PATH_TO_ISO_INSTALLER.iso \
--net nic,model=virtio \
--net user,hostfwd=tcp::2222-:22
+qemu-system-x86_64 --name "ReswarmOS" -bios PATH_TO_OVMF/OVMF.fd -M pc -enable-kvm -cpu host -vga virtio -m 8G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=PATH_TO_IMG_FILE.img -cdrom PATH_TO_ISO_INSTALLER.iso -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 ```
 
 ## Release
