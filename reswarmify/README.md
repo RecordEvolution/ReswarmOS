@@ -1,45 +1,85 @@
 # Reswarmify CLI
-Make use of the Reswarmify CLI in order to connect a device with Unix based operating system to the Record Evolution platform.
-If your device cannot be setup with the SD card installation or USB stick installer, you can perform a manual installation by executing a setup.sh script.
-We assume that you have follwed the instructions of your device and already installed an operating system or the device has already a pre-installed system on it.
 
-## 1. Download the CLI tool
-Your device needs to have an internet connection to proceed.
-Connect to your device via SSH and download the following device setup binary `reswarmify-cli`
-Do not forget to replace $ARCH in the URL below with the architecture of your choice.
+Reswarmify CLI is a command-line tool designed to configure your device for connection to the Record Evolution platform. 
 
-### Possible architecture values:
+It sets up essential services, scripts, and binaries, allowing you to establish a connection using a configuration file from a virtual device created on Record Evolution.
 
-- arm64
-- amd64
-- armv7
-- armv6
-- armv5
-  
-### The download URL:
-`wget https://storage.googleapis.com/reswarmos/reswarmify/linux/$ARCH/1.0.2/reswarmify-cli`
+## Requirements for Reswarmification
 
-## 2. Usage of the CLI tool
+- Debian or Ubuntu-based operating system
+- Systemd initialization system
+- Docker<sup>*</sup> 
 
-Make sure the script is executable: `chmod +x reswarmify-cli`. <br>
+<small>* Installed by the CLI tool if not already present.</small>
 
-On the local computer/laptop that you used to create the device in the Record Evolution platform you have the downloaded device configuration `.reswarm` file `(<your device config file>)`.<br>
+## Installation
 
-This file needs to be copied to your device with `scp <local path to your device config file> <username on your device>@<ip-address-of-your-device:/home/<username on your device>`
+To install Reswarmify CLI, use one of the following commands:
 
-On the device execute the `reswarmify-cli` to register the device with the Record Evolution platform:<br>
-`sudo ./reswarmify-cli -c <your device config file>`.<br>
-As soon as the script finishes, your device should be connected.
+Using curl:
+```
+curl -sSL https://storage.googleapis.com/reswarmos/reswarmify/setup.sh | bash
+```
 
-### Interface
+Using wget:
+```
+wget -qO- https://storage.googleapis.com/reswarmos/reswarmify/setup.sh | bash
+```
+
+## Usage
 
 ```
 CLI tool to help reswarmify your device
 
 Usage:
   reswarmify-cli [flags]
+  reswarmify-cli [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  remove      Removes the current reswarmify installation
+  version     Displays the current version of the Reswarmify binary
 
 Flags:
   -c, --config string   Path to .reswarm config file
   -h, --help            help for reswarmify-cli
 ```
+
+## Development
+
+### Architecture
+
+The Reswarmify CLI overlays the root filesystem of the runner and executes `.sh` scripts, enabling customization of the reswarmification setup process.
+
+Reswarmify CLI utilizes the [Cobra](https://github.com/spf13/cobra) Go package, facilitating the addition of new commands and features to the CLI, including help output commands. Additionally, it uses the popular [prompt](https://github.com/cqroot/prompt) package to provide user options for reswarmification.
+
+### Rootfs
+
+A crucial step in reswarmifying a system involves overlaying the existing root filesystem with required files and services to connect to the Record Evolution platform. Reswarmify CLI downloads these necessary files from Google Cloud and overlays them onto the runner's root filesystem.
+
+#### Updating the Rootfs Overlay
+
+After updating the contents of the rootfs folder in this repository, use the `make rollout-rootfs` command to update the remote rootfs files.
+
+Reswarmify CLI redownloads the overlay filesystem each time it reswarmifies a device.
+
+## Setup.sh
+
+The setup shell script automatically detects the system's architecture and downloads the latest `reswarmify-cli` tool with a matching architecture.
+
+The remote setup.sh file can be found here: 
+https://storage.googleapis.com/reswarmos/reswarmify/setup.sh
+
+## Versioning and Rollout
+
+### Reswarmify CLI
+
+First, we need to update the version embedded in the `reswarmify-cli` binary by modifying the `cli/release/version.txt` file. Next, we must update the remote version of the binary in the `availableVersions.json` file.
+
+After committing and pushing these changes, the build and publish process can be completed with a single command: make rollout.
+
+
+### Setup.sh
+
+Upload the updated `setup.sh` file to the `reswarmos/reswarmify` directory on the Record Evolution cloud.
