@@ -138,6 +138,8 @@ autoinstall:
     - apt-get install -y efibootmgr || true
     - /target/usr/sbin/update-boot-order.sh || true
     - /target/usr/sbin/update-device-names.sh
+    - curtin in-target --target=/target -- netplan generate
+    - curtin in-target --target=/target -- netplan apply
     - curtin in-target --target=/target -- update-grub
   user-data:
     disable_root: false

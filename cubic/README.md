@@ -36,13 +36,15 @@ Project directory: `/home/ruben/git/ReswarmOS/cubic/project/amd64`
 
 **Virtual Environment**
 
-The Cubic tool will extract the root filesystem contents of the installer image into the `project/amd64/custom-root` directory. This directory is then mounted into a virtual shell environment that allows you to run commands within it.
+The Cubic tool will extract the contents of the root filesystem from the installer image into the `project/amd64/custom-root` directory. This directory is then mounted into a virtual shell environment, allowing you to run commands within it.
 
-To overlay the root filesystem of the installer image, we can use the `make overlay-fs-amd64` command. This command will copy all the files from the `cubic/project/rootfs-overlay` directory into the `project/amd64/custom-root` directory.
+To overlay the root filesystem of the installer image, use the `make overlay-fs-amd64` command. This command copies all the files from the `cubic/project/rootfs-overlay` directory into the `project/amd64/custom-root` directory.
 
 The `custom-root` directory, as mentioned above, represents the final root filesystem that will be flashed onto the installer.
 
-(Unless you are doing this step from a fresh installer image or VM, this is technically not necessary as the filesystem has already been overlaid. If a change to the filesystem is made, then, of course, overlaying is required.)
+For a fresh VM or installer image, you must also execute the commands found in the `cubic/scripts/setup-rootfs.sh` file. This will set up Docker, enable the necessary systemd services, and more.
+
+Unless you are working from a fresh installer image or VM, this step is generally not necessary, as the filesystem has already been overlaid. However, if you make changes to the filesystem, reapplying the overlay will be required.
 
 ![Virtual environment](image-2.png)
 
