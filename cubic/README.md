@@ -95,14 +95,14 @@ The VirtualBox VM will, by default, mount the `/home/ruben/Desktop/VM` folder to
 The following commands can be used to create a disk image and to run the ISO using `qemu`:
 
 ```bash
-qemu-img create target/reswarm.img 16G
+qemu-img create reswarm.img 16G
 ```
 
 **For Linux**
 ```bash
 qemu-system-x86_64 \
 --name "ReswarmOS" \
--bios PATH_TO_BIOS.vmdf \ 
+-bios PATH_TO_OVMF_BIOS/OVMF.fd \ 
 -M pc \
 -enable-kvm \ 
 -cpu host \
