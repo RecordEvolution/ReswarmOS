@@ -8,21 +8,21 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"ironflock-init/agent"
+	"ironflock-init/docker"
+	"ironflock-init/fs"
+	"ironflock-init/packagemanager"
+	"ironflock-init/prompts"
+	"ironflock-init/setup"
+	"ironflock-init/utils"
 	"os"
-	"reswarmify-cli/agent"
-	"reswarmify-cli/docker"
-	"reswarmify-cli/fs"
-	"reswarmify-cli/packagemanager"
-	"reswarmify-cli/prompts"
-	"reswarmify-cli/setup"
-	"reswarmify-cli/utils"
 
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "reswarmify-cli",
-	Short: "CLI tool to help reswarmify your device",
+	Use:   "ironflock-init",
+	Short: "CLI tool to initialize your IronFlock device",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		root(cmd, args)
@@ -77,12 +77,12 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	if utils.ReswarmifiedAlready() {
-		fmt.Println("The system has already been reswarmified. Please unreswarmify your system and try again")
+		fmt.Println("The system has already been reswarmified. Please remove your previous IronFlock installation and try again")
 		os.Exit(1)
 		return
 	}
 
-	fmt.Printf("Intialising Reswarmify process with config file: %s\n", reswarmFilePath)
+	fmt.Printf("Starting IronFlock initialization process with config file: %s\n", reswarmFilePath)
 	fmt.Println()
 
 	utils.Copy(configPath, "/boot")
@@ -100,7 +100,7 @@ func root(cmd *cobra.Command, args []string) {
 		"openssh-server",
 	}
 
-	fmt.Println("Reswarmify will install the following packages: ")
+	fmt.Println("The IronFlock initialization will install the following packages: ")
 	fmt.Println(packages)
 	fmt.Println()
 
@@ -112,7 +112,7 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	if !cont {
-		fmt.Println("The above mentioned packages are required in order to Reswarmify your system")
+		fmt.Println("The above mentioned packages are required in order to initialize your system")
 		os.Exit(1)
 		return
 	}
@@ -189,10 +189,10 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	fmt.Println("Reswarmify will now install the REAgent")
-	fmt.Println("With the REAgent, your device gains access to the RecordEvolution platform. This allows you to remotely manage your device and apps.")
+	fmt.Println("The FlockAgent will now be installed")
+	fmt.Println("With the FlockAgent, your device gains access to the IronFlock platform. This allows you to remotely manage your device and apps.")
 
-	cont, err = prompts.Continue("Install the REagent?")
+	cont, err = prompts.Continue("Install the FlockAgent?")
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 		os.Exit(1)
@@ -207,7 +207,7 @@ func root(cmd *cobra.Command, args []string) {
 
 	err = agent.DownloadAgent()
 	if err != nil {
-		fmt.Println("Failed to download the REAgent: ", err.Error())
+		fmt.Println("Failed to download the FlockAgent: ", err.Error())
 		os.Exit(1)
 		return
 	}

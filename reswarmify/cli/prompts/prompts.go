@@ -3,10 +3,10 @@ package prompts
 import (
 	"errors"
 	"fmt"
+	"ironflock-init/setup"
+	"ironflock-init/utils"
 	"os"
 	"os/exec"
-	"reswarmify-cli/setup"
-	"reswarmify-cli/utils"
 	"strings"
 
 	"github.com/cqroot/prompt"
@@ -92,7 +92,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 		}
 	}
 
-	services, err := prompt.New().Ask("Customize your Reswarmify process:").MultiChoose(options,
+	services, err := prompt.New().Ask("Customize your IronFlock initialization process:").MultiChoose(options,
 		multichoose.WithDefaultIndexes(0, defaultIndexes),
 		multichoose.WithHelp(true),
 	)
