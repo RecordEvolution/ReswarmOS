@@ -45,9 +45,9 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	}
 
 	allOptions := []string{
-		"Automatically start the REAgent on boot and keep it running in the background",
+		"Automatically start the FlockAgent on boot and keep it running in the background",
 		"Create a RecordEvolution user for your device",
-		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .reswarm file",
+		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .flock file",
 		"Configure Docker to use Nvidia Runtime",
 	}
 
@@ -64,7 +64,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	noWifi := wifipasswd != nil && wifissid != nil
 
 	if wifipasswd == nil && wifissid == nil {
-		fmt.Println("WiFi SSID and Password were not provided. If this was not intentional, please provide the WiFi credentials in the .reswarm file")
+		fmt.Println("WiFi SSID and Password were not provided. If this was not intentional, please provide the WiFi credentials in the .flock file")
 		fmt.Println()
 	}
 

@@ -40,7 +40,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&reswarmFilePath, "config", "c", "", "Path to .reswarm config file")
+	rootCmd.Flags().StringVarP(&reswarmFilePath, "config", "c", "", "Path to .flock config file")
 	rootCmd.MarkFlagRequired("config")
 }
 
