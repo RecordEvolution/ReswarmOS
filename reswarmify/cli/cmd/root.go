@@ -149,7 +149,7 @@ func root(cmd *cobra.Command, args []string) {
 
 	if !dockerInstalled {
 		fmt.Println("Docker was not found on this system")
-		fmt.Println("In order for you to access the Record Evolution Platform you'll need to have Docker installed")
+		fmt.Println("In order for you to access the IronFlock Platform you'll need to have Docker installed")
 
 		cont, err := prompts.Continue("")
 		if err != nil {

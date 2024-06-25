@@ -1,8 +1,8 @@
 # IronFlock Init
 
-IronFlock Init is a command-line tool designed to configure your device for connection to the Record Evolution platform. 
+IronFlock Init is a command-line tool designed to configure your device for connection to the IronFlock platform. 
 
-It sets up essential services, scripts, and binaries, allowing you to establish a connection using a configuration file from a virtual device created on Record Evolution.
+It sets up essential services, scripts, and binaries, allowing you to establish a connection using a configuration file from a virtual device created on IronFlock.
 
 ## Requirements for Reswarmification
 
@@ -56,7 +56,7 @@ IronFlock Init utilizes the [Cobra](https://github.com/spf13/cobra) Go package, 
 
 ### Rootfs
 
-A crucial step in reswarmifying a system involves overlaying the existing root filesystem with required files and services to connect to the Record Evolution platform. IronFlock Init downloads these necessary files from Google Cloud and overlays them onto the runner's root filesystem.
+A crucial step in reswarmifying a system involves overlaying the existing root filesystem with required files and services to connect to the IronFlock platform. IronFlock Init downloads these necessary files from Google Cloud and overlays them onto the runner's root filesystem.
 
 #### Updating the Rootfs Overlay
 
@@ -82,4 +82,4 @@ After committing and pushing these changes, the build and publish process can be
 
 ### Setup.sh
 
-Upload the updated `setup.sh` file to the `reswarmos/reswarmify` directory on the Record Evolution cloud.
+Upload the updated `setup.sh` file to the `reswarmos/reswarmify` directory on the IronFlock cloud.

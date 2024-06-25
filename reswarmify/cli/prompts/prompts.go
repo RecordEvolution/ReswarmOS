@@ -46,7 +46,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 
 	allOptions := []string{
 		"Automatically start the FlockAgent on boot and keep it running in the background",
-		"Create a RecordEvolution user for your device",
+		"Create an IronFlock user for your device",
 		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .flock file",
 		"Configure Docker to use Nvidia Runtime",
 	}
