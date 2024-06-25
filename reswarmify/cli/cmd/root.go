@@ -55,7 +55,7 @@ func root(cmd *cobra.Command, args []string) {
 
 	reswarmFileObj, err := os.Open(configPath)
 	if err != nil {
-		fmt.Println("Failed to open Reswarm file: " + err.Error())
+		fmt.Println("Failed to open .flock file: " + err.Error())
 		os.Exit(1)
 		return
 	}
@@ -64,7 +64,7 @@ func root(cmd *cobra.Command, args []string) {
 
 	reswarmFileByte, err := io.ReadAll(reswarmFileObj)
 	if err != nil {
-		fmt.Println("Failed to open Reswarm file: " + err.Error())
+		fmt.Println("Failed to open .flock file: " + err.Error())
 		os.Exit(1)
 		return
 	}
@@ -77,7 +77,7 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	if utils.ReswarmifiedAlready() {
-		fmt.Println("The system has already been reswarmified. Please remove your previous IronFlock installation and try again")
+		fmt.Println("The system has already been initialized. Please remove your previous IronFlock installation and try again")
 		os.Exit(1)
 		return
 	}
@@ -200,7 +200,7 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	if !cont {
-		fmt.Println("The RecordEvolution agent is required!")
+		fmt.Println("The FlockAgent is required!")
 		os.Exit(1)
 		return
 	}
@@ -214,12 +214,12 @@ func root(cmd *cobra.Command, args []string) {
 
 	utils.Clear()
 
-	fmt.Println("The REAgent was successfully installed in /opt/reagent")
+	fmt.Println("The FlockAgent was successfully installed!")
 
 	fmt.Println()
 
-	fmt.Println("Reswarmify will set up the necessary configuration and services to ensure your experience with the Record Evolution platform is flawless")
-	fmt.Println("You can customize what Reswarmify will do exactly. However, in most cases, the default settings will suffice for your needs")
+	fmt.Println("IronFlock initialization process will set up the necessary configuration and services to ensure your experience with the IronFlock platform is flawless")
+	fmt.Println("You can customize what IronFlock initialization process will do exactly. However, in most cases, the default settings will suffice for your needs")
 	fmt.Println()
 
 	_, indexes, err := prompts.SetupOptions(reswarmFile)
@@ -241,7 +241,7 @@ func root(cmd *cobra.Command, args []string) {
 
 	utils.Clear()
 
-	fmt.Println("The Reswarmification process is complete.")
+	fmt.Println("The IronFlock initialization process is complete.")
 	fmt.Println()
 
 	cont, err = prompts.Continue("Reboot now?")
