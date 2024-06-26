@@ -23,7 +23,7 @@ var remove = &cobra.Command{
 func removeCommand(cmd *cobra.Command, args []string) {
 
 	if !utils.ReswarmifiedAlready() {
-		fmt.Println("The system has not been reswarmified. Cannot remove existing installation")
+		fmt.Println("The system has not been initialized for IronFlock. Cannot remove existing installation")
 		os.Exit(1)
 		return
 	}

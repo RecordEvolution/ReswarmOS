@@ -50,7 +50,7 @@ Flags:
 
 ### Architecture
 
-The IronFlock Init overlays the root filesystem of the runner and executes `.sh` scripts, enabling customization of the reswarmification setup process.
+The IronFlock Init overlays the root filesystem of the runner and executes `.sh` scripts, enabling customization of the IronFlock initialization process.
 
 IronFlock Init utilizes the [Cobra](https://github.com/spf13/cobra) Go package, facilitating the addition of new commands and features to the CLI, including help output commands. Additionally, it uses the popular [prompt](https://github.com/cqroot/prompt) package to provide user options for reswarmification.
 
@@ -64,12 +64,12 @@ After updating the contents of the rootfs folder in this repository, use the `ma
 
 IronFlock Init redownloads the overlay filesystem each time it reswarmifies a device.
 
-## Setup.sh
+## Install.sh
 
 The setup shell script automatically detects the system's architecture and downloads the latest `ironflock-init` tool with a matching architecture.
 
-The remote setup.sh file can be found here: 
-https://storage.googleapis.com/reswarmos/reswarmify/setup.sh
+The remote install.sh file can be found here: 
+https://storage.googleapis.com/reswarmos/reswarmify/install.sh
 
 ## Versioning and Rollout
 
@@ -77,9 +77,9 @@ https://storage.googleapis.com/reswarmos/reswarmify/setup.sh
 
 First, we need to update the version embedded in the `ironflock-init` binary by modifying the `cli/release/version.txt` file. Next, we must update the remote version of the binary in the `availableVersions.json` file.
 
-After committing and pushing these changes, the build and publish process can be completed with a single command: make rollout.
+After committing and pushing these changes, the build and publish process can be completed with a single command: `make rollout`.
 
 
-### Setup.sh
+### Install.sh
 
-Upload the updated `setup.sh` file to the `reswarmos/reswarmify` directory on the IronFlock cloud.
+Upload the updated `install.sh` file to the `reswarmos/reswarmify` directory on the IronFlock cloud.
