@@ -102,20 +102,7 @@ qemu-img create reswarm.img 16G
 
 **For Linux**
 ```bash
-qemu-system-x86_64 \
---name "ReswarmOS" \
--bios PATH_TO_OVMF_BIOS/OVMF.fd \ 
--M pc \
--enable-kvm \ 
--cpu host \
--m 8G \ 
--display gtk,zoom-to-fit=on \
--device intel-hda \
--device hda-duplex \
--drive format=raw,file=PATH_TO_IMAGE_FILE.img \
--cdrom PATH_TO_ISO_INSTALLER.iso \
--net nic,model=virtio \
--net user,hostfwd=tcp::2222-:22
+qemu-system-x86_64 --name "ReswarmOS" -bios PATH_TO_OVMF/OVMF.fd -M pc -enable-kvm -cpu host -vga virtio -m 8G -display gtk,zoom-to-fit=on -device intel-hda -device hda-duplex -drive format=raw,file=PATH_TO_IMG_FILE.img -cdrom PATH_TO_ISO_INSTALLER.iso -net nic,model=virtio -net user,hostfwd=tcp::2222-:22
 ```
 
 ## Release
@@ -127,3 +114,11 @@ Afterward, you can archive your local Cubic project files and push them to the G
 ```bash
 $ make release
 ```
+
+## Development VM
+
+A development virtual machine (VM) has been set up for developing and compiling the operating system.
+
+The Ubuntu 23 VM is stored in the Google Cloud bucket [flockos-vm](https://storage.cloud.google.com/flockos-vm/Ubuntu23.ova?authuser=1).
+
+The VM can be run in Google Cloud. For more information, check [here](https://aroque.medium.com/how-to-run-your-virtualbox-applications-on-the-google-cloud-362905e077e9#:~:text=Depending%20on%20the%20OVA%20set,instance%20with%20a%20GUI%20interface.).
