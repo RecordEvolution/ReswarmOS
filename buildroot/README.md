@@ -41,7 +41,7 @@ Once the `.config` file has been copied to the `output-build/buildroot` director
 
 ## Rootfs
 
-The rootfs folder is used to overlay the installed root filesystem of the image. This is configured through the BR2_ROOTFS_OVERLAY key in the `.config` file.
+The rootfs folder is used to overlay the installed root filesystem of the image. This is configured through the BR2_ROOTFS_OVERLAY key in the `.config` file. The `BR2_ROOTFS_OVERLAY` key is set by the `build-it.sh` [entrypoint script](https://github.com/RecordEvolution/ReswarmOS/blob/c2941c67beec4046bb5c56fd3a7c3d6096394b32/buildroot/build-it.sh#L105) upon building the disk image. 
 
 You can easily update the rootfs by modifying the files in the folders before building the final image.
 
@@ -50,3 +50,7 @@ You can easily update the rootfs by modifying the files in the folders before bu
 You can start building the image by running the `make build` command.
 
 The Buildroot build process can take a long time (around 30 minutes to 1 hour) as it downloads all dependencies and builds them step by step.
+
+## Release
+
+To release the final disk image, run the `make release` command. This will utilize the current board information configured in `setup.yaml` to update the remote `supportedBoards.json`, gzip the final image, and upload it to the `reswarmos` gecloud bucket. 
