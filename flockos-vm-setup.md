@@ -6,7 +6,7 @@
 
 2. Install using VMware Workstation (needed due to [Compute Engine](https://cloud.google.com/compute/docs/import/import-ovf-files#source_vm_requirements) requirements).
 
-3. Mount a `VM` folder from host to guest.
+3. Mount a `$HOME/Desktop/VM` folder from host to guest.
 
 4. Update packages to the latest versions using `sudo apt update && sudo apt upgrade`.
 
