@@ -88,19 +88,20 @@ This will set up Docker and all required binaries for the installer ISO. When fi
 
 ## Linux VMware Setup
 
-1. Load the kernel modules:
+- Load the kernel modules:
 
 ```bash
 sudo modprobe -a vmw_vmci vmmon
 ```
 
-2. Start the network:
+- Start the network:
 
 ```bash
 sudo modprobe vmnet && sudo vmware-networks --start
+sudo systemctl enable --now vmware-networks.service
 ```
 
-3. Install VMware tools on Ubuntu:
+- Install VMware tools on Ubuntu:
 
 ```bash
 sudo apt install open-vm-tools open-vm-tools-desktop
