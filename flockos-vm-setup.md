@@ -86,6 +86,16 @@ This will set up Docker and all required binaries for the installer ISO. When fi
 
 2. Run `make setup && make build`.
 
+## Google Cloud
+
+1. Install the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install#installation_instructions)
+
+2. Initialize Gcloud:
+
+`gcloud init`
+
+3. Import the [VMWare OVF using Gcloud](https://cloud.google.com/compute/docs/import/import-ovf-files#import_ovf_file)
+
 ## Linux VMware Setup
 
 - Load the kernel modules:
