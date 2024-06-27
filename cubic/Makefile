@@ -100,7 +100,7 @@ release-efi:
 	gsutil cp target/ReswarmOS-0.0.1-installer-amd64.iso.gz gs://reswarmos/ipc/ReswarmOS-installer-$(shell cat $(CURDIR)/versions.json | jq -r '.target')-efi.iso.gz
 
 download-source:
-	wget http://lt.releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso -P source/
+	wget https://old-releases.ubuntu.com/releases/20.04.3/ubuntu-20.04.3-live-server-amd64.iso -P source/
 
 clean-project:
 	sudo rm -rf project/custom-disk/ project/custom-root
