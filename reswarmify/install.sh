@@ -41,26 +41,26 @@ case $uname_result in
         ;;
 esac
 
-echo -e "Downloading reswarmify binary... ($architecture)\n"
+echo -e "Downloading IronFlock initialization binary... ($architecture)\n"
 
 latest_version=$(wget -qO- https://storage.googleapis.com/reswarmos/reswarmify/version.txt)
 
 # Define the base URL
-reswarmify_download_url="https://storage.googleapis.com/reswarmos/reswarmify/linux/$architecture/$latest_version/reswarmify-cli"
+ironflock_init_download_url="https://storage.googleapis.com/reswarmos/reswarmify/linux/$architecture/$latest_version/ironflock-init"
 
-wget -qO reswarmify-cli $reswarmify_download_url --show-progress
+wget -qO ironflock-init $ironflock_init_download_url --show-progress
 
 echo
 
-chmod +x reswarmify-cli
+chmod +x ironflock-init
 
 binaryPath=$(realpath .)
 echo "Download complete!"
 echo
 
-echo "To reswarmify your device, use the following example command:"
-echo "$binaryPath/reswarmify-cli -c /path/to/device-config.reswarm"
+echo "To initialize your device use the following example command:"
+echo "$binaryPath/ironflock-init -c /path/to/device-config.reswarm"
 echo
 
 echo "For other usage and more information, run the following help command:"
-echo "$binaryPath/reswarmify-cli -h"
+echo "$binaryPath/ironflock-init -h"

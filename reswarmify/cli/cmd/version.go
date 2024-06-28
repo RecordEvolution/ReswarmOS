@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"reswarmify-cli/release"
+	"ironflock-init/release"
 
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,7 @@ func init() {
 
 var version = &cobra.Command{
 	Use:   "version",
-	Short: "Displays the current version of the Reswarmify binary",
+	Short: "Displays the current version of the IronFlock init binary",
 	Run:   versionCommand,
 }
 

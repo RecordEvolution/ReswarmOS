@@ -33,11 +33,11 @@ usernm=$(echo "${usernm}" | sed -e 's/\(.*\)/\L\1/g' | sed -e 's/^[^a-z]//g' | g
 # check for existing user
 userExst=$(cat /etc/shadow | grep ${usernm})
 if [ -z "${userExst}" ]; then
-  echo "Record Evolution user not found, skipping user removal..."
+  echo "IronFlock user not found, skipping user removal..."
 else
   homedir="/home/${usernm}/"
 
-  echo "Removing the Record Evolution user: ${username}"
+  echo "Removing the IronFlock user: ${username}"
 
   killall -u ${usernm}
   userdel -f ${usernm}

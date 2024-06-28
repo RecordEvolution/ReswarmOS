@@ -6,7 +6,7 @@ VERSION=`cat cli/release/version.txt`
 for element in "${array[@]}"; do
     OS=$(echo "$element" | cut -d "-" -f 2)
     ARCH=$(echo "$element" | cut -d "-" -f 3)
-    BINARY_NAME="reswarmify-cli"
+    BINARY_NAME="ironflock-init"
 
     GCLOUD="gs://reswarmos/reswarmify/${OS}/${ARCH}/${VERSION}/${BINARY_NAME}"
     gsutil cp "build/$element" $GCLOUD

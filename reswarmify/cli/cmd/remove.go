@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"ironflock-init/fs"
+	"ironflock-init/setup"
+	"ironflock-init/utils"
 	"os"
-	"reswarmify-cli/fs"
-	"reswarmify-cli/setup"
-	"reswarmify-cli/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -16,19 +16,19 @@ func init() {
 
 var remove = &cobra.Command{
 	Use:   "remove",
-	Short: "Removes the current reswarmify installation",
+	Short: "Removes the current IronFlock installation",
 	Run:   removeCommand,
 }
 
 func removeCommand(cmd *cobra.Command, args []string) {
 
 	if !utils.ReswarmifiedAlready() {
-		fmt.Println("The system has not been reswarmified. Cannot remove existing installation")
+		fmt.Println("The system has not been initialized for IronFlock. Cannot remove existing installation")
 		os.Exit(1)
 		return
 	}
 
-	fmt.Println("Intializing unreswarmify process...")
+	fmt.Println("Intializing removal process...")
 
 	// Download the latest files in case the device is a legacy reswarmified device
 	if utils.IsLegacyReswarmifiedDevice() {
@@ -42,7 +42,7 @@ func removeCommand(cmd *cobra.Command, args []string) {
 
 	err := setup.Unreswarmify()
 	if err != nil {
-		fmt.Println("An error occurred while unreswarmifying the device: ", err.Error())
+		fmt.Println("An error occurred while uninstalling the device: ", err.Error())
 		os.Exit(1)
 		return
 	}

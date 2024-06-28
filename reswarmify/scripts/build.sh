@@ -57,4 +57,4 @@ if [ -n "$target_arch_variant" ]; then
     binary_name="$prefix-$target_os-${target_arch}v${target_arch_variant}"
 fi
 
-cd $src_path && go build -v -a -ldflags "-X 'reswarmify-cli/release.BuildArch=$build_arch'" -o "$target_path/$binary_name"
+cd $src_path && go build -v -a -ldflags "-X 'ironflock-init/release.BuildArch=$build_arch'" -o "$target_path/$binary_name"

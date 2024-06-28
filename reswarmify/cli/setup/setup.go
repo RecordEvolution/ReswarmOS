@@ -3,9 +3,9 @@ package setup
 import (
 	"bufio"
 	"fmt"
+	"ironflock-init/utils"
 	"os"
 	"os/exec"
-	"reswarmify-cli/utils"
 	"sort"
 )
 

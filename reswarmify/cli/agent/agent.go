@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"ironflock-init/fs"
+	"ironflock-init/release"
 	"net/http"
 	"os"
-	"reswarmify-cli/fs"
-	"reswarmify-cli/release"
 )
 
 const AGENT_DIR = "/opt/reagent"
