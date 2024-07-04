@@ -109,7 +109,7 @@ qemu-system-x86_64 --name "ReswarmOS" -bios PATH_TO_OVMF/OVMF.fd -M pc -enable-k
 
 To release and update the remote Cubic project files, first bump the target version in the `versions.json`.
 
-Afterward, you can archive your local Cubic project files and push them to the GCloud repository using:
+Afterwards, you can archive your local Cubic project files and push them to the GCloud repository using:
 
 ```bash
 $ make release
@@ -119,6 +119,27 @@ $ make release
 
 A development virtual machine (VM) has been set up for developing and compiling the operating system.
 
-The Ubuntu 23 VM is stored in the Google Cloud bucket [flockos-vm](https://storage.cloud.google.com/flockos-vm/Ubuntu23.ova?authuser=1).
+The Ubuntu 22.04 VM is stored in the Google Cloud bucket [flockos-vm](https://storage.cloud.google.com/flockos-vm/FlockOS-VM.ova). The image has to be based on Ubuntu 22.04 for being able to be used as machine image in google cloud.
 
-The VM can be run in Google Cloud. For more information, check [here](https://aroque.medium.com/how-to-run-your-virtualbox-applications-on-the-google-cloud-362905e077e9#:~:text=Depending%20on%20the%20OVA%20set,instance%20with%20a%20GUI%20interface.).
+To create a machine image in the gcloud from the ova:
+
+```shell
+gcloud beta compute machine-images import flock-os-builder \
+    --source-uri=gs://flockos-vm/FlockOS-VM.ova \
+    --os=ubuntu-2204
+```
+
+If there is not already an instance in gcloud, you can start one with the new VM image:
+
+```shell
+gcloud compute instances create flock-os-builder --project=record-1283 --zone=europe-west1-b --machine-type=n1-highcpu-32 --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default-ae4b938b63ed3474 --no-restart-on-failure --maintenance-policy=TERMINATE --provisioning-model=SPOT --instance-termination-action=STOP --service-account=615643915869-compute@developer.gserviceaccount.com  --min-cpu-platform=Automatic --enable-display-device --tags=http-server,https-server --labels=gce-ovf-import-tmp=true,gce-ovf-import-build-id=hwz0y,goog-ec-src=vm_add-gcloud --source-machine-image=flock-os-builder
+```
+
+You can also do this in the google cloud console.
+
+After this you can use [google remote desktop](https://remotedesktop.google.com/access?hl=de) to create a screen session on this machine. 
+Open an ssh terminal on the machine and switch to the ironflock user `sudo su ironflock`. The password is `recevo2base`.
+In google remote desktop you need to use the ssh option and execute the snippet you get there in the ssh terminal. Then the machine should pop up in the google remote desktop machine list.
+
+For more information, check [here](https://aroque.medium.com/how-to-run-your-virtualbox-applications-on-the-google-cloud-362905e077e9#:~:text=Depending%20on%20the%20OVA%20set,instance%20with%20a%20GUI%20interface.).
+
