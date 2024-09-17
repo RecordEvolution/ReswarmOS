@@ -59,7 +59,7 @@ echo "Download complete!"
 echo
 
 echo "To initialize your device use the following example command:"
-echo "$binaryPath/ironflock-init -c /path/to/device-config.reswarm"
+echo "$binaryPath/ironflock-init -c /path/to/device-config.flock"
 echo
 
 echo "For other usage and more information, run the following help command:"

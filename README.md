@@ -1,8 +1,8 @@
 
 <p align="center">
-  <a href="https://record-evolution.de/reswarm">
+  <a href="https://www.ironflock.com">
     <img
-      alt="Record Evolution GmbH"
+      alt="IronFlock"
       src="https://res.cloudinary.com/dotw7ar1m/image/upload/v1708079370/vli89gsgy2siqcrmvzfm.png"
       width="400"
     />
@@ -13,8 +13,8 @@
 
 _ReswarmOS_ represents a lightweight, customizable and efficient host operating
 system for embedded devices in the IoT context and is specifically designed to
-meet the requirements of the IoT Development Studio by
-_[Record Evolution](https://www.record-evolution.de/reswarm/)_. It was designed with the 
+meet the requirements of the IoT Development Studio
+_[IronFlock](https://www.ironflock.com/)_. It was designed with the 
 following objectives in mind: _minimal footprint/size_ of the root-filesystem
 to ensure quick flashing and easy setup for a myriad of devices, _container support_
 for having a robust solution to dynamically run a huge variety of apps on the 
@@ -65,14 +65,14 @@ ssh <your-username>@<device-hostname/local-ip>
 Any devices created within the framework of the IoT Development Studio
 _Reswarm_ are by default equipped with the latest version of _ReswarmOS_
 and automatically configured to securely connect and communicate with
-the Record Evolution server cloud instance. Since this setup is coupled to your
-individual Record Evolution user account the _ssh login_ is more customized and
+the IronFlock server cloud instance. Since this setup is coupled to your
+individual IronFlock user account the _ssh login_ is more customized and
 secure. During the initial boot process ReswarmOS will set up a personalized
 user account on the device using the fields `swarm_owner_name` and `secret`
 of the _.reswarm_ configuration file as username and associated password.
 Note, that this username may be modified in order to comply to the
 `NAME_REGEX` rule `^[a-z][-a-z0-9]*$`. The device will show up in the local
-network with its _hostname_ according to the Record Evolution device name. To ensure
+network with its _hostname_ according to the IronFlock device name. To ensure
 maximal security, by default, this user is the only one able to access the
 device directly using public key authentication. The required identity is
 consequently provided by the _.reswarm_ file of the device and may,
@@ -83,7 +83,7 @@ echo -e $(cat /path/to/mydevice/config.reswarm | jq .authentication.key) | tr -d
 chmod 600 id_rsa
 ```
 
-Henceforth, performing an _ssh login_ on the Reswarm device looks like this:
+Henceforth, performing an _ssh login_ on the IronFlock device looks like this:
 
 ```
 ssh -i id_rsa <swarm_owner_name>@<device-name/corresponding local ip>
@@ -223,7 +223,7 @@ $ diff config/raspberrypi/raspberrypi3/config output-build/buildroot/.config
 
 ### TODO Preliminary PKI for RAUC
 
-The _preliminary_ (without using a Reswarm Platform Root CA) setup requires the `cert.pem` and
+The _preliminary_ (without using a IronFlock Platform Root CA) setup requires the `cert.pem` and
 `key.pem` for validating RAUC update bundles. Currently, the validity of the certificate is
 extended to one year (see make targets `$(OUT)key.pem $(OUT)cert.pem`). The current certificate
 and key are located in a restricted access google-cloud bucket, i.e.

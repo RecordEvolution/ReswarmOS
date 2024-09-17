@@ -29,7 +29,7 @@ fi
 
 set -e
 
-echo "Intialising Reswarmify process with config file: $filePath"
+echo "Intialising ironflock-init process with config file: $filePath"
 
 cp $filePath /boot
 
@@ -56,7 +56,7 @@ apt-get update && apt-get install -y \
 
 # Overlay filesystem
 
-echo "Reswarmifying the root filesystem...."
+echo "Preparing the root filesystem...."
 
 wget https://storage.googleapis.com/reswarmos/reswarmify/rootfs.tar.gz -O /tmp/rootfs.tar.gz && tar -xvzf /tmp/rootfs.tar.gz -C /tmp
 

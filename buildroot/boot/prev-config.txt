@@ -29,7 +29,7 @@ gpu_mem_1024=100
 #dtoverlay=miniuart-bt
 
 #-----------------------------------------------------------------------------#
-# Reswarm required config
+# IronFlock required config
 
 hdmi_force_hotplug=1
 enable_uart=1

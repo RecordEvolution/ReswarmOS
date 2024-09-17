@@ -9,7 +9,7 @@ Requires=network-online.target
 [Service]
 Type=simple
 ExecStartPre=/opt/reagent/reswarmify/scripts/reagent-setup.sh
-ExecStart=/opt/reagent/Reagent-active -config /opt/reagent/device-config.reswarm -appsDir /apps -debug
+ExecStart=/opt/reagent/Reagent-active -config /opt/reagent/device-config.flock -appsDir /apps -debug
 # RestartSec=30
 Restart=no
 # Restart=always

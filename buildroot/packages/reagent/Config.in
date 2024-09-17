@@ -1,6 +1,6 @@
 config BR2_PACKAGE_REAGENT
         bool "reagent"
         help
-          A daemon running on edge devices to establish a connection to the Reswarm router and manage apps and containers.
+          A daemon running on edge devices to establish a connection to the IronFlock router and manage apps and containers.
           
           https://github.com/RecordEvolution/DeviceManagementAgent

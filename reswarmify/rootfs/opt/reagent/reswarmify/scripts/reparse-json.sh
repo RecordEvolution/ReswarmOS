@@ -9,7 +9,7 @@ parsejsonclean()
   redarg="$2"
 
   if [ -z ${cfg} ]; then
-    echo "parsejsonclean -> missing argument: please provide a .reswarm file" >&2
+    echo "parsejsonclean -> missing argument: please provide a .flock file" >&2
     echo 1
     return 1
   fi
@@ -37,7 +37,7 @@ parsejsonvalid()
   redarg="$2"
 
   if [ -z ${cfg} ]; then
-    echo "parsejsonvalid -> missing argument: please provide a .reswarm file" >&2
+    echo "parsejsonvalid -> missing argument: please provide a .flock file" >&2
     echo 1
     return 1
   fi
@@ -173,7 +173,7 @@ parsejsonlistkeys()
   redarg="$2"
 
   if [ -z ${cfg} ]; then
-    echo "parsejsonlistkeys -> missing argument: please provide a .reswarm file" >&2
+    echo "parsejsonlistkeys -> missing argument: please provide a .flock file" >&2
     return 1
   fi
 
@@ -214,7 +214,7 @@ parsejsongetkey()
   redarg="$3"
 
   if [ -z ${cfg} ]; then
-    echo "parejsongetkey -> missing argument: please provide a .reswarm file" >&2
+    echo "parejsongetkey -> missing argument: please provide a .flock file" >&2
     return 1
   fi
   

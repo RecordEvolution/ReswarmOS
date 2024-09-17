@@ -11,13 +11,13 @@ JQ=/usr/bin/jq
 # symlink pointing to mount point of vfat partition keeping device configuration
 bootDir="/boot"
 
-# check for (latest) *.reswarm device configuration file on vfat partition
-reswarmfile=$(ls -t ${bootDir} | grep ".reswarm" | head -n1)
+# check for (latest) *.flock device configuration file on vfat partition
+reswarmfile=$(ls -t ${bootDir} | grep ".flock" | head -n1)
 reswarmcfg="${bootDir}/${reswarmfile}"
 
-# define reswarm mode file and soft link to .reswarm configuration
+# define reswarm mode file and soft link to .flock configuration
 remode=/opt/reagent/reswarm-mode
-relink=/opt/reagent/device-config.reswarm
+relink=/opt/reagent/device-config.flock
 
 # check reagent binary as well (get latest only)
 reagentdir=/opt/reagent/
@@ -29,7 +29,7 @@ ln -svf ${bootDir}/device.ini /opt/reagent/device-config.ini
 # reswarm mode
 if [ ! -z ${reswarmfile} ]; then
 
-  echo "latest *.reswarm configuration ${reswarmcfg}"
+  echo "latest *.flock configuration ${reswarmcfg}"
 
   if [ ! -z ${reagentbin} ]; then
 
@@ -48,7 +48,7 @@ if [ ! -z ${reswarmfile} ]; then
   # set up symbolic link targeting latest reswarm configuration
   ln -svf ${reswarmcfg} ${relink}
 
-  # extract host configuration parameters from *.reswarm configuration file
+  # extract host configuration parameters from *.flock configuration file
   #hostname=$(parsejsongetkey ${reswarmcfg} name)
   #username=$(parsejsongetkey ${reswarmcfg} swarm_owner_name)
   #userpasswd=$(parsejsongetkey ${reswarmcfg} secret)
@@ -110,7 +110,7 @@ EOF
 # standalone/free mode
 else
 
-  echo "no *.reswarm configuration found in ${bootDir}"
+  echo "no *.flock configuration found in ${bootDir}"
 
   # make sure reswarm mode is deactivated and config link removed
   rm -vf ${remode}
