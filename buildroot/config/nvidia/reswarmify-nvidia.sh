@@ -57,7 +57,7 @@ WantedBy=multi-user.target
 EOF
 )
 
-# activate Reswarm mode
+# activate IronFlock mode
 touch /opt/reagent/reswarm-mode
 
 # set up the service

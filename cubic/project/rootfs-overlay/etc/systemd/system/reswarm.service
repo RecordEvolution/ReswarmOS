@@ -1,5 +1,5 @@
 [Unit]
-Description=Reswarm mode configuration
+Description=IronFlock mode configuration
 # Before=rehost.service
 
 [Service]

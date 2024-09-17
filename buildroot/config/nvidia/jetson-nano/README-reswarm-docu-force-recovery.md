@@ -11,7 +11,7 @@ providing all the technical details and specifications of the board.
 
 Unfortunately the setup of an NVIDIA Jetson is not as simple and straightforward as for 
 a Raspberry Pi. The setup includes multiple manual steps to be completed before you can
-successfully connect the device to Reswarm.
+successfully connect the device to IronFlock.
 
 ### Host device with Ubuntu 18.04 or Ubuntu 16.04
 
@@ -23,7 +23,7 @@ the corresponding iso-image for
 [Ubuntu 16.04](https://releases.ubuntu.com/16.04/ubuntu-16.04.7-desktop-amd64.iso)
 ) and write it to a USB flash memory or an SD card. This can be conveniently done with
 the 
-[Record Evolution Reflasher](https://www.record-evolution.de/en/introducing-the-record-evolution-reflasher-or-how-we-built-the-worlds-best-flashing-app-for-iot-devices/).
+[FlockFlasher](https://www.ironflock.com/devices).
 After successfully writing the iso-image to the flash memory, insert the flash memory 
 into your host machine, restart the machine and enter the boot menu to boot from the 
 flash memory. Just follow along the steps during the initial setup process of Ubuntu.
@@ -143,24 +143,24 @@ reboot and start to show the initial user setup on the connected HDMI screen.
   />
 </p>
 
-## Reswarm Connection
+## IronFlock Connection
 
 After successfully finishing the basic board setup and completing the initial
 user setup, make sure to connect the board to a working ethernet connection,
 reboot it and log in either directly via the graphical user interface and keyboard
 or via ssh on the local network. Proceed with the following steps in order
-to connect your NVIDIA device to Reswarm Platform:
+to connect your NVIDIA device to IronFlock Platform:
 
 1. make sure the system is up-to-date by executing 
 	`sudo apt-get update && sudo apt-get upgrade` 
-1. download the Reswarm device setup shell script
+1. download the IronFlock device setup shell script
 	`wget https://storage.googleapi.com/reswarmos/`
 1. make sure the script is executable:
 	`chmod +x setup-reswarm-device.sh`
 1. copy your confidential `.reswarm` configuration file to the device, e.g. by
 	`scp <your-reswarm-device-config>.reswarm <user-name>@<local-ip-of-board>:
-1. execute the (idempotent) Reswarm-script to transform the board into a Reswarm device
+1. execute the (idempotent) IronFlock-script to transform the board into a IronFlock device
 	`sudo ./setup-reswarm-device.sh <your-reswarm-device-config>.reswarm`
 
-Log in to your Record-Evolution account and check for the connected device.
+Log in to your IronFlock account and check for the connected device.
 

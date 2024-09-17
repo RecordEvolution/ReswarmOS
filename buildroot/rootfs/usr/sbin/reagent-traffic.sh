@@ -172,7 +172,7 @@ setup_filters()
   # cgroup based filter
   #$TC filter add dev $IF parent f010: handle 7: protocol ip cgroup
 
-  # Reswarm device endpoint filter
+  # IronFlock device endpoint filter
   devendpoint=$(get_device_endpoint)
   if [ ! -z "${devendpoint}" ]; then
 
@@ -246,7 +246,7 @@ fi
 # check prerequisites
 echo -e "current (default/active) interfaces: $IF"
 
-# determine 'device_endpoint_url' pointing to Reswarm instance
+# determine 'device_endpoint_url' pointing to IronFlock instance
 devendpoint=$(get_device_endpoint)
 if [ ! -z "${devendpoint}" ]; then
   devendipdm=$(echo ${devendpoint} | awk -F ':' '{print $1}')

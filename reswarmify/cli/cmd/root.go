@@ -77,7 +77,7 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	if utils.ReswarmifiedAlready() {
-		fmt.Println("The system has already been initialized. Please remove your previous IronFlock installation and try again")
+		fmt.Println("The system has already been initialized. Please remove your previous IronFlock installation with 'ironflock-init remove' and try again")
 		os.Exit(1)
 		return
 	}

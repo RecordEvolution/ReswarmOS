@@ -1,5 +1,5 @@
 [Unit]
-Description=Docker customization for Reswarm
+Description=Docker customization for IronFlock
 ConditionPathExists=/opt/reagent/reswarm-mode
 After=reswarm.service
 # Wants=network-online.target

@@ -38,11 +38,11 @@ Usage:
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
-  remove      Removes the current reswarmify installation
-  version     Displays the current version of the Reswarmify binary
+  remove      Removes the currently installed ironflock setup
+  version     Displays the current version of the ironflock-init binary
 
 Flags:
-  -c, --config string   Path to .reswarm config file
+  -c, --config string   Path to .flock config file
   -h, --help            help for ironflock-init
 ```
 
@@ -56,7 +56,7 @@ IronFlock Init utilizes the [Cobra](https://github.com/spf13/cobra) Go package, 
 
 ### Rootfs
 
-A crucial step in reswarmifying a system involves overlaying the existing root filesystem with required files and services to connect to the IronFlock platform. IronFlock Init downloads these necessary files from Google Cloud and overlays them onto the runner's root filesystem.
+A crucial step in setting up ironflock on your system involves overlaying the existing root filesystem with required files and services to connect to the IronFlock platform. ironflock-init downloads these necessary files and overlays them onto the runner's root filesystem.
 
 #### Updating the Rootfs Overlay
 
@@ -73,13 +73,16 @@ https://storage.googleapis.com/reswarmos/reswarmify/install.sh
 
 ## Versioning and Rollout
 
-### IronFlock Init
+### Rollout ironflock-init
 
 First, we need to update the version embedded in the `ironflock-init` binary by modifying the `cli/release/version.txt` file. Next, we must update the remote version of the binary in the `availableVersions.json` file.
 
 After committing and pushing these changes, the build and publish process can be completed with a single command: `make rollout`.
 
+### Rollout rootfs
 
-### Install.sh
+If you changed something in the rootfs folder you also need to `make rollout-rootfs`.
+
+### Rollout Install.sh
 
 Upload the updated `install.sh` file to the `reswarmos/reswarmify` directory on the IronFlock cloud.
