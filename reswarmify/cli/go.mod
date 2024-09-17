@@ -1,4 +1,4 @@
-module reswarmify-cli
+module ironflock-init
 
 go 1.21.3
 

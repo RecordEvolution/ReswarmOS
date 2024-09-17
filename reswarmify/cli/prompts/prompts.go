@@ -3,10 +3,10 @@ package prompts
 import (
 	"errors"
 	"fmt"
+	"ironflock-init/setup"
+	"ironflock-init/utils"
 	"os"
 	"os/exec"
-	"reswarmify-cli/setup"
-	"reswarmify-cli/utils"
 	"strings"
 
 	"github.com/cqroot/prompt"
@@ -45,9 +45,9 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	}
 
 	allOptions := []string{
-		"Automatically start the REAgent on boot and keep it running in the background",
-		"Create a RecordEvolution user for your device",
-		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .reswarm file",
+		"Automatically start the FlockAgent on boot and keep it running in the background",
+		"Create an IronFlock user for your device",
+		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .flock file",
 		"Configure Docker to use Nvidia Runtime",
 	}
 
@@ -64,7 +64,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 	noWifi := wifipasswd != nil && wifissid != nil
 
 	if wifipasswd == nil && wifissid == nil {
-		fmt.Println("WiFi SSID and Password were not provided. If this was not intentional, please provide the WiFi credentials in the .reswarm file")
+		fmt.Println("WiFi SSID and Password were not provided. If this was not intentional, please provide the WiFi credentials in the .flock file")
 		fmt.Println()
 	}
 
@@ -92,7 +92,7 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 		}
 	}
 
-	services, err := prompt.New().Ask("Customize your Reswarmify process:").MultiChoose(options,
+	services, err := prompt.New().Ask("Customize your IronFlock initialization process:").MultiChoose(options,
 		multichoose.WithDefaultIndexes(0, defaultIndexes),
 		multichoose.WithHelp(true),
 	)
