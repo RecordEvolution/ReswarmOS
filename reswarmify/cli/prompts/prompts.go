@@ -13,7 +13,10 @@ import (
 	"github.com/cqroot/prompt/multichoose"
 )
 
-func Continue(message string) (bool, error) {
+func Continue(message string, autoconfirm bool) (bool, error) {
+	if autoconfirm {
+		return true, nil
+	}
 	if message == "" {
 		message = "Continue?"
 	}
@@ -30,7 +33,7 @@ func Continue(message string) (bool, error) {
 	return false, nil
 }
 
-func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
+func SetupOptions(reswarmFile map[string]interface{}, autoconfirm bool) ([]string, []int, error) {
 	// Need to setup device.ini and other to do other setup
 	_, err := setup.HandleReswarmModeSetup()
 	if err != nil {
@@ -90,6 +93,10 @@ func SetupOptions(reswarmFile map[string]interface{}) ([]string, []int, error) {
 		} else {
 			defaultIndexes = append(defaultIndexes, 2)
 		}
+	}
+
+	if autoconfirm {
+		return options, defaultIndexes, nil
 	}
 
 	services, err := prompt.New().Ask("Customize your IronFlock initialization process:").MultiChoose(options,

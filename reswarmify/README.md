@@ -44,6 +44,7 @@ Available Commands:
 Flags:
   -c, --config string   Path to .flock config file
   -h, --help            help for ironflock-init
+  -a, --autoconfirm     execute the installation without user interaction choosing all defaults
 ```
 
 ## Development

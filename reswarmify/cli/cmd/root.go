@@ -30,6 +30,7 @@ var rootCmd = &cobra.Command{
 }
 
 var reswarmFilePath string
+var autoconfirm bool
 
 func Execute() {
 	err := rootCmd.Execute()
@@ -41,6 +42,7 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringVarP(&reswarmFilePath, "config", "c", "", "Path to .flock config file")
+	rootCmd.Flags().BoolVarP(&autoconfirm, "autoconfirm", "a", false, "Skip user confirmations")
 	rootCmd.MarkFlagRequired("config")
 }
 
@@ -104,7 +106,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println(packages)
 	fmt.Println()
 
-	cont, err := prompts.Continue("")
+	cont, err := prompts.Continue("", autoconfirm)
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 		os.Exit(1)
@@ -151,7 +153,7 @@ func root(cmd *cobra.Command, args []string) {
 		fmt.Println("Docker was not found on this system")
 		fmt.Println("In order for you to access the IronFlock Platform you'll need to have Docker installed")
 
-		cont, err := prompts.Continue("")
+		cont, err := prompts.Continue("", autoconfirm)
 		if err != nil {
 			fmt.Println("Failed to prompt user: ", err.Error())
 			os.Exit(1)
@@ -192,7 +194,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println("The FlockAgent will now be installed")
 	fmt.Println("With the FlockAgent, your device gains access to the IronFlock platform. This allows you to remotely manage your device and apps.")
 
-	cont, err = prompts.Continue("Install the FlockAgent?")
+	cont, err = prompts.Continue("Install the FlockAgent?", autoconfirm)
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 		os.Exit(1)
@@ -222,7 +224,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println("You can customize what IronFlock initialization process will do exactly. However, in most cases, the default settings will suffice for your needs")
 	fmt.Println()
 
-	_, indexes, err := prompts.SetupOptions(reswarmFile)
+	_, indexes, err := prompts.SetupOptions(reswarmFile, autoconfirm)
 	if err != nil {
 		os.Exit(1)
 		return
@@ -244,7 +246,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println("The IronFlock initialization process is complete.")
 	fmt.Println()
 
-	cont, err = prompts.Continue("Reboot now?")
+	cont, err = prompts.Continue("Reboot now?", autoconfirm)
 	if err != nil {
 		fmt.Println("Failed to prompt user: ", err.Error())
 	}
