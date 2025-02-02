@@ -28,8 +28,8 @@ if [ -z "${passwd}" ]; then
 fi
 
 # cleaning up username to agree with NAME_REGEX (/etc/adduser.conf)
-usernm=$(echo "${usernm}" | sed -e 's/\(.*\)/\L\1/g' | sed -e 's/^[^a-z]//g' | grep -oP "[a-z0-9-]" | tr -d '\n' | sed 's/$/\n/g')
-echo "using cleaned username '${usernm}' agreeing with NAME_REGEX"
+# usernm=$(echo "${usernm}" | sed -e 's/\(.*\)/\L\1/g' | sed -e 's/^[^a-z]//g' | grep -oP "[a-z0-9-]" | tr -d '\n' | sed 's/$/\n/g')
+echo "using username '${usernm}' "
 
 # check for existing user
 userExst=$(cat /etc/shadow | grep ${usernm})
