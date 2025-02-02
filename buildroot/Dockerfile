@@ -16,7 +16,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     rauc u-boot-tools dosfstools mtools \
     genext2fs \
     xsltproc \
-    jq
+    jq \
+    curl
 
 # add pip packages
 RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
