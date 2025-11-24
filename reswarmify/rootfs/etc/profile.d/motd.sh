@@ -5,11 +5,14 @@
 # define login banner
 bannerA=$(cat << 'EOF'
         Welcome to
-  ____  _____ ______        ___    ____  __  __  ___  ____
- |  _ \| ____/ ___\ \      / / \  |  _ \|  \/  |/ _ \/ ___|
- | |_) |  _| \___ \\ \ /\ / / _ \ | |_) | |\/| | | | \___ \ 
- |  _ <| |___ ___) |\ V  V / ___ \|  _ <| |  | | |_| |___) |
- |_| \_\_____|____/  \_/\_/_/   \_\_| \_\_|  |_|\___/|____/
+
+  ______ _      ____   _____ _  ______   _____ 
+ |  ____| |    / __ \ / ____| |/ / __ \ / ____|
+ | |__  | |   | |  | | |    | ' / |  | | (___  
+ |  __| | |   | |  | | |    |  <| |  | |\___ \ 
+ | |    | |___| |__| | |____| . \ |__| |____) |
+ |_|    |______\____/ \_____|_|\_\____/|_____/ 
+                                               
 
 EOF
 )
@@ -47,13 +50,9 @@ osupdates()
 # IronFlock vs. standalone mode
 reswarmmode()
 {
-  if [ -f /opt/reagent/reswarm-mode ]; then
 	  devEndpoint=$(cat /opt/reagent/device-config.flock |  jq '.|."device_endpoint_url"' | tr -d '"')
 	  reagentState=$(systemctl show reagent | grep ActiveState | awk -F '=' '{print $2}')
 	  echo "IronFlock (device-endpoint: ${devEndpoint} , Reagent: ${reagentState})"
-  else
-    echo "standalone"
-  fi
 }
 
 # shell and its version

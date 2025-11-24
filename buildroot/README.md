@@ -53,4 +53,4 @@ The Buildroot build process can take a long time (around 30 minutes to 1 hour) a
 
 ## Release
 
-To release the final disk image, run the `make release` command. This will utilize the current board information configured in `setup.yaml` to update the remote `supportedBoards.json`, gzip the final image, and upload it to the `reswarmos` gecloud bucket. 
+To release the final disk image, run the `make release` command. This will utilize the current board information configured in `setup.yaml` to update the remote `supportedBoards.json`, gzip the final image, and upload it to the `reswarmos` gcloud bucket. 

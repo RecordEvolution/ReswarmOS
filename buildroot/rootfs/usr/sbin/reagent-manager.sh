@@ -75,10 +75,12 @@ do
       if [ "$(readlink -f ${reagentLatest})" != "$(readlink -f ${reagentPrevious})" ]; then
         if [ $countcycles -lt $numcycleout ]; then
           echo "revert upgrade to latest failed reagent ${reagentLatest} (cycle: $countcycles / $numcycleout)"
+          # Store the previous version before rollback
+          old_previous=$(readlink -f ${reagentPrevious})
           rm -f ${reagentActive}
           ln -s $(readlink -f ${reagentPrevious}) ${reagentActive}
-          rm -f ${reagentPrevious}
-          ln -s $(readlink -f ${reagentLatest}) ${reagentPrevious}
+          # Keep Previous pointing to the old working version, not the failed Latest
+          # (Previous should already be correct, so no need to change it)
         fi
       fi
     fi

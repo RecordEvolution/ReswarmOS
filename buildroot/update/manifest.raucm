@@ -1,6 +1,6 @@
 [update]
 compatible=ReswarmOS
-version=
+version=0.5.7
 description=RAUC update bundle for ReswarmOS
 
 [image.rootfs]

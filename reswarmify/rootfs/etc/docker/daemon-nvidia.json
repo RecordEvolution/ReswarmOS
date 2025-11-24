@@ -1,9 +1,15 @@
 {
   "data-root": "/opt/reagent/docker-apps",
+  "features": { "buildkit": true },
   "runtimes": {
     "nvidia": {
       "path": "/usr/bin/nvidia-container-runtime",
       "runtimeArgs": []
     }
+  },
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
   }
 }
