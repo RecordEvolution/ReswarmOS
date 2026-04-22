@@ -1,4 +1,4 @@
-FROM golang:1.21.3-alpine
+FROM golang:1.26.2-alpine
 
 RUN apk add --no-cache git findutils build-base
 

@@ -31,6 +31,7 @@ var rootCmd = &cobra.Command{
 
 var reswarmFilePath string
 var autoconfirm bool
+var updateConfig bool
 
 func Execute() {
 	err := rootCmd.Execute()
@@ -43,6 +44,7 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringVarP(&reswarmFilePath, "config", "c", "", "Path to .flock config file")
 	rootCmd.Flags().BoolVarP(&autoconfirm, "autoconfirm", "a", false, "Skip user confirmations")
+	rootCmd.Flags().BoolVarP(&updateConfig, "update-config", "u", false, "Replace the active .flock on an already-reswarmified host and restart reagent. On a fresh host falls back to a full install.")
 	rootCmd.MarkFlagRequired("config")
 }
 
@@ -79,8 +81,20 @@ func root(cmd *cobra.Command, args []string) {
 	}
 
 	if utils.ReswarmifiedAlready() {
-		fmt.Println("The system has already been initialized. Please remove your previous IronFlock installation with 'ironflock-init remove' and try again")
-		os.Exit(1)
+		if !updateConfig {
+			fmt.Println("The system has already been initialized. Please remove your previous IronFlock installation with 'ironflock-init remove' and try again, or pass --update-config to only swap the .flock configuration.")
+			os.Exit(1)
+			return
+		}
+
+		fmt.Printf("Updating device configuration from: %s\n", configPath)
+		if err := setup.UpdateDeviceConfig(configPath); err != nil {
+			fmt.Println("Failed to update device configuration: ", err.Error())
+			os.Exit(1)
+			return
+		}
+		fmt.Println("Device configuration updated successfully.")
+		os.Exit(0)
 		return
 	}
 
