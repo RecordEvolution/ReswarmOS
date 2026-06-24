@@ -8,13 +8,13 @@
             "latestImages": [
                 {
                     "buildtime": "20220628T112125",
-                    "download": "https://storage.googleapis.com/reswarmos/ipc/ReswarmOS-installer-0.0.7-efi.iso.gz",
+                    "download": "https://instance-registry.ironflock.com/dl/reswarmos/ipc/ReswarmOS-installer-0.0.7-efi.iso.gz",
                     "file": "ReswarmOS-installer-0.0.7-efi.iso.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "installer",
                     "sha256": "276d8a7fa7b0e9c861a02546d7d979a5a9ea03c35edb563a4f7fee027254de96",
                     "size": 1460797064,
-                    "update": "https://storage.googleapis.com/reswarmos/ipc/ReswarmOS-installer-0.0.7-efi.raucb",
+                    "update": "https://instance-registry.ironflock.com/dl/reswarmos/ipc/ReswarmOS-installer-0.0.7-efi.raucb",
                     "version": "0.0.7"
                 }
             ],
@@ -29,13 +29,13 @@
             "latestImages": [
                 {
                     "buildtime": "20220614T150235",
-                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi3.img.gz",
+                    "download": "https://instance-registry.ironflock.com/dl/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi3.img.gz",
                     "file": "ReswarmOS-image-0.5.6-raspberrypi3.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "image",
                     "sha256": "aa858aca708cd1c0b0de01f6f5c74fb221ebee0b9e50af16d5234b0c0f39bc31",
                     "size": 166360753,
-                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi3.raucb",
+                    "update": "https://instance-registry.ironflock.com/dl/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi3.raucb",
                     "version": "0.5.6"
                 }
             ],
@@ -50,13 +50,13 @@
             "latestImages": [
                 {
                     "buildtime": "20220614T150235",
-                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi4.img.gz",
+                    "download": "https://instance-registry.ironflock.com/dl/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi4.img.gz",
                     "file": "ReswarmOS-image-0.5.6-raspberrypi4.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "image",
                     "sha256": "0c3ef3ac02c60f7d9f2a03aa5e149c9c1ba1c0fbe2e06fd8536337e855102a7b",
                     "size": 166861618,
-                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi4.raucb",
+                    "update": "https://instance-registry.ironflock.com/dl/reswarmos/raspberrypi/ReswarmOS-image-0.5.6-raspberrypi4.raucb",
                     "version": "0.5.6"
                 }
             ],
@@ -71,13 +71,13 @@
             "latestImages": [
                 {
                     "buildtime": "20220124T195314",
-                    "download": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi0w.img.gz",
+                    "download": "https://instance-registry.ironflock.com/dl/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi0w.img.gz",
                     "file": "ReswarmOS-heavy-0.5.3-raspberrypi0w.img.gz",
                     "osname": "ReswarmOS",
                     "osvariant": "image",
                     "sha256": "8e3574d360a4f5b6297c70f9a2b3c525e950433ae9425ce8730a6f91801968c6",
                     "size": 164755696,
-                    "update": "https://storage.googleapis.com/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi0w.raucb",
+                    "update": "https://instance-registry.ironflock.com/dl/reswarmos/raspberrypi/ReswarmOS-heavy-0.5.3-raspberrypi0w.raucb",
                     "version": "0.5.3"
                 }
             ],

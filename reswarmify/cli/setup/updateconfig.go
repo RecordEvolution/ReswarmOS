@@ -1,4 +1,3 @@
-package main
 package setup
 
 import (

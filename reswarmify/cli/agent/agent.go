@@ -12,7 +12,7 @@ import (
 
 const AGENT_DIR = "/opt/reagent"
 const AGENT_PATH = "/opt/reagent/reagent-latest"
-const AGENT_CLOUD_URL = "https://storage.googleapis.com/re-agent/linux/%s/%s/reagent"
+const AGENT_CLOUD_URL = "https://instance-registry.ironflock.com/dl/re-agent/linux/%s/%s/reagent"
 
 type VersionInfo struct {
 	Production string `json:"production"`
@@ -22,13 +22,17 @@ type VersionInfo struct {
 }
 
 func GetLatestVersionInfo() (VersionInfo, error) {
-	url := "https://storage.googleapis.com/re-agent/availableVersions.json"
+	url := "https://instance-registry.ironflock.com/dl/re-agent/availableVersions.json"
 
 	response, err := http.Get(url)
 	if err != nil {
 		return VersionInfo{}, err
 	}
 	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return VersionInfo{}, fmt.Errorf("failed to fetch agent version info: %s returned status %s", url, response.Status)
+	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {

@@ -13,6 +13,7 @@ import (
 	"ironflock-init/fs"
 	"ironflock-init/packagemanager"
 	"ironflock-init/prompts"
+	"ironflock-init/proxy"
 	"ironflock-init/setup"
 	"ironflock-init/utils"
 	"os"
@@ -32,6 +33,9 @@ var rootCmd = &cobra.Command{
 var reswarmFilePath string
 var autoconfirm bool
 var updateConfig bool
+var httpProxy string
+var httpsProxy string
+var noProxy string
 
 func Execute() {
 	err := rootCmd.Execute()
@@ -45,6 +49,9 @@ func init() {
 	rootCmd.Flags().StringVarP(&reswarmFilePath, "config", "c", "", "Path to .flock config file")
 	rootCmd.Flags().BoolVarP(&autoconfirm, "autoconfirm", "a", false, "Skip user confirmations")
 	rootCmd.Flags().BoolVarP(&updateConfig, "update-config", "u", false, "Replace the active .flock on an already-reswarmified host and restart reagent. On a fresh host falls back to a full install.")
+	rootCmd.Flags().StringVar(&httpProxy, "http-proxy", "", "Corporate HTTP proxy for downloads and the Docker daemon")
+	rootCmd.Flags().StringVar(&httpsProxy, "https-proxy", "", "Corporate HTTPS proxy for downloads and the Docker daemon")
+	rootCmd.Flags().StringVar(&noProxy, "no-proxy", "", "Comma-separated hosts that bypass the proxy (localhost is always added)")
 	rootCmd.MarkFlagRequired("config")
 }
 
@@ -78,6 +85,17 @@ func root(cmd *cobra.Command, args []string) {
 		fmt.Println("The configuration file is invalid")
 		os.Exit(1)
 		return
+	}
+
+	// Corporate proxy: route this tool's downloads (apt, the Docker install
+	// script, the agent) through the proxy by exporting it into the process
+	// environment. Resolved from flags or the standard proxy env vars; a no-op
+	// when none is configured. The Docker daemon is pointed at it separately,
+	// after Docker is installed below.
+	px := proxy.Resolve(httpProxy, httpsProxy, noProxy)
+	px.Apply()
+	if px.Enabled() {
+		fmt.Println("Corporate proxy configured — downloads and the Docker daemon will use it.")
 	}
 
 	if utils.ReswarmifiedAlready() {
@@ -198,9 +216,25 @@ func root(cmd *cobra.Command, args []string) {
 		// fmt.Println("Found a working Docker installation, skipping installation step...")
 	}
 
+	// With Docker present, point its daemon at the proxy so it can pull images.
+	// No-op (and no restart) when no proxy is configured.
+	if err := px.ConfigureDockerDaemon(); err != nil {
+		fmt.Println("Failed to configure Docker daemon proxy: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
 	err = fs.ReswarmifyRootfs(false)
 	if err != nil {
 		fmt.Println("Failed to overlay Rootfs: ", err.Error())
+		os.Exit(1)
+		return
+	}
+
+	// The reagent service overlaid above downloads its own OTA agent updates, so
+	// give it the proxy in its environment too. No-op when no proxy is configured.
+	if err := px.ConfigureReagentService(); err != nil {
+		fmt.Println("Failed to configure reagent service proxy: ", err.Error())
 		os.Exit(1)
 		return
 	}

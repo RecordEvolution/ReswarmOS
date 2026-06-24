@@ -15,7 +15,7 @@ parser.add_argument('--outputDir',type=str,default='output-build',help='output d
 parser.add_argument('--compressionExt',type=str,default='.img.gz',help='file extension of compressed image')
 parser.add_argument('--timeFormat',type=str,default='%Y-%m-%dT%H:%M:%S',help='timestamp format')
 parser.add_argument('--boardSchema',type=str,default='{"latestUpdate":"","boards":[{"board":"","boardname":"","model":"","modelname":"","architecture":"","cpu":"","latestImages":[{"osname":"","osvariant":"","version":"","file":"","size":0,"sha256":"","buildtime":""}]}]}',help='JSON schema of board/image release file')
-parser.add_argument('--baseURL',type=str,default='https://storage.googleapis.com/reswarmos/',help='public base URL of images')
+parser.add_argument('--baseURL',type=str,default='https://instance-registry.ironflock.com/dl/reswarmos/',help='public base URL of images')
 parser.add_argument('--osReleasePath',type=str,default='rootfs/etc/os-release',help='path to os-release file')
 parser.add_argument('--newFile',type=str,default=None,help='different output file')
 

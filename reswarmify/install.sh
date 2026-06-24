@@ -43,10 +43,10 @@ esac
 
 echo -e "Downloading IronFlock initialization binary... ($architecture)\n"
 
-latest_version=$(wget -qO- https://storage.googleapis.com/reswarmos/reswarmify/version.txt)
+latest_version=$(wget -qO- https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/version.txt)
 
 # Define the base URL
-ironflock_init_download_url="https://storage.googleapis.com/reswarmos/reswarmify/linux/$architecture/$latest_version/ironflock-init"
+ironflock_init_download_url="https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/linux/$architecture/$latest_version/ironflock-init"
 
 wget -qO ironflock-init $ironflock_init_download_url --show-progress
 

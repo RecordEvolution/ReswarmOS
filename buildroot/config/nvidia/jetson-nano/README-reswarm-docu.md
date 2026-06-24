@@ -111,7 +111,7 @@ to connect your NVIDIA device to the IronFlock Platform:
 1. make sure the system is up-to-date by executing
 	`sudo apt-get update && sudo apt-get upgrade`
 1. download the IronFlock device setup shell script
-	`wget https://storage.googleapis.com/reswarmos/nvidia/reswarmify-nvidia.sh`
+	`wget https://instance-registry.ironflock.com/dl/reswarmos/nvidia/reswarmify-nvidia.sh`
 1. make sure the script is executable:
 	`chmod +x reswarmify-nvidia.sh`
 1. copy your confidential `.reswarm` configuration file to the device:

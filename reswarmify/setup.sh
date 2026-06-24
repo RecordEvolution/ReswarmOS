@@ -58,7 +58,7 @@ apt-get update && apt-get install -y \
 
 echo "Preparing the root filesystem...."
 
-wget https://storage.googleapis.com/reswarmos/reswarmify/rootfs.tar.gz -O /tmp/rootfs.tar.gz && tar -xvzf /tmp/rootfs.tar.gz -C /tmp
+wget https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/rootfs.tar.gz -O /tmp/rootfs.tar.gz && tar -xvzf /tmp/rootfs.tar.gz -C /tmp
 
 cp -R /tmp/rootfs/* /
 
@@ -76,7 +76,7 @@ fi
 
 echo "Downloading and Installing the REagent...."
 
-curl "https://storage.googleapis.com/re-agent/linux/$arch/$(curl https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent-latest
+curl "https://instance-registry.ironflock.com/dl/re-agent/linux/$arch/$(curl https://instance-registry.ironflock.com/dl/re-agent/availableVersions.json | jq -r '.production')/reagent" -o /opt/reagent/reagent-latest
 chmod +x /opt/reagent/reagent-latest
 
 # Install Docker

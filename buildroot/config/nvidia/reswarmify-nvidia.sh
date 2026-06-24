@@ -24,7 +24,7 @@ apt-get update && apt-get install -y jq
 sleep 2
 
 # download Reagent for aarch64 architecture
-wget https://storage.googleapis.com/re-agent/linux/arm64/0.6.3.1/reagent -P ./
+wget https://instance-registry.ironflock.com/dl/re-agent/linux/arm64/0.6.3.1/reagent -P ./
 
 # create Reagent directory
 mkdir -pv /opt/reagent/

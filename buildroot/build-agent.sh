@@ -27,7 +27,7 @@ echo -e "Downloading Agent binary... ($BUILD_ARCH)\n"
 
 mkdir -pv ${BASE_DIR}/build/DeviceManagementAgent/src/
 
-wget -O ${BASE_DIR}/build/DeviceManagementAgent/src/reagent "https://storage.googleapis.com/re-agent/linux/$BUILD_ARCH/$(curl -s https://storage.googleapis.com/re-agent/availableVersions.json | jq -r '.production')/reagent"
+wget -O ${BASE_DIR}/build/DeviceManagementAgent/src/reagent "https://instance-registry.ironflock.com/dl/re-agent/linux/$BUILD_ARCH/$(curl -s https://instance-registry.ironflock.com/dl/re-agent/availableVersions.json | jq -r '.production')/reagent"
 
 echo -e "Downloaded Agent binary to ${BASE_DIR}/build/DeviceManagementAgent/src/reagent\n"
 # copy binary to rootfs as 'reagent-latest'

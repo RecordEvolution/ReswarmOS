@@ -17,12 +17,12 @@ Download and install the binary for your architecture with a single command:
 
 Using curl:
 ```bash
-curl -sSL https://storage.googleapis.com/reswarmos/reswarmify/install.sh | bash
+curl -sSL https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/install.sh | bash
 ```
 
 Using wget:
 ```bash
-wget -qO- https://storage.googleapis.com/reswarmos/reswarmify/install.sh | bash
+wget -qO- https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/install.sh | bash
 ```
 
 `install.sh` auto-detects your CPU architecture (`uname -m`), fetches the latest version number from GCS, and downloads the matching `ironflock-init` binary.
