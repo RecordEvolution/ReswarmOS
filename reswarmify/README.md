@@ -91,12 +91,12 @@ When `ironflock-init -c device.flock` runs, it performs these steps in order:
 
 1. **Validates** the `.flock` JSON config and checks the device is not already reswarmified.
 2. **Copies** the `.flock` config to `/boot` for persistence across reboots.
-3. **Installs system packages**: `jq`, `ca-certificates`, `curl`, `gnupg`, `net-tools`, `iproute2`, `dnsutils`, `network-manager`, `openssh-server`.
+3. **Installs system packages**: `jq`, `ca-certificates`, `curl`, `gnupg`, `net-tools`, `iproute2`, `dnsutils`, `network-manager`, `earlyoom`, `openssh-server`. (`earlyoom` is a userspace OOM killer that prevents low-memory hangs from taking the device offline; its service is enabled below.)
 4. **Downloads and extracts** `rootfs.tar.gz` from GCS, overlaying it onto `/`. This installs all IronFlock-specific configs, scripts, and systemd units.
 5. **Downloads the `reagent` binary** from `gs://re-agent` and places it in `/opt/reagent/`.
 6. **Installs Docker** if not already present.
 7. **Runs setup scripts** from `/opt/reagent/reswarmify/scripts/` (user creation, WiFi config, service configuration, etc.).
-8. **Enables systemd services**: `reagent.service` and `reagent-manager.service`.
+8. **Enables systemd services**: `reagent.service`, `reagent-manager.service`, and `earlyoom.service`.
 
 After completion the device connects to the IronFlock platform and is visible in the dashboard.
 

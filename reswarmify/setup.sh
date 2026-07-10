@@ -51,6 +51,7 @@ apt-get update && apt-get install -y \
     dnsutils \
     network-manager \
     jq \
+    earlyoom \
     openssh-server \
     && rm -rf /var/lib/apt/lists/*
 
@@ -130,3 +131,8 @@ systemctl start rehost.service
 systemctl start reswarm.service
 systemctl start reuser.service
 systemctl start rewifi.service
+
+# earlyoom: userspace OOM killer to prevent low-memory hangs that take the device
+# offline. The apt package enables it on install; ensure it's active explicitly.
+systemctl enable earlyoom.service || true
+systemctl start earlyoom.service || true
