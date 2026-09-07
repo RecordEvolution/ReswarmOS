@@ -48,6 +48,9 @@ Flags:
   -u, --update-config   Replace the active .flock on an already-reswarmified host
                         and restart reagent. On a fresh host this falls back to
                         a full install, making the flag idempotent.
+  -s, --disable-suspend Prevent the host from auto-suspending by masking the
+                        systemd sleep targets. Recommended for always-on devices;
+                        desktop installs may otherwise drop offline every ~15 min.
   -h, --help            Help for ironflock-init
 ```
 
@@ -74,6 +77,29 @@ sudo ironflock-init -c /path/to/new-device.flock --update-config --autoconfirm
 On a host that has NOT been reswarmified yet, the same command performs a
 full reswarmification — so the flag is safe to use in installer scripts that
 run on both fresh and already-provisioned hosts.
+
+### Prevent the host from auto-suspending
+
+Desktop installs (Ubuntu/Debian with GDM/GNOME) ship an idle-suspend timer that
+fires even at the login screen; on the sleep signal NetworkManager tears the
+NIC down, so the device drops offline for ~40s every ~15 minutes and every
+platform connection is cut. For always-on devices, mask the systemd sleep
+targets at install time:
+
+```bash
+sudo ironflock-init -c /path/to/device.flock --disable-suspend
+```
+
+Interactive installs also offer this as an (unselected) option in the setup
+menu; `--disable-suspend` preselects it and is what enables it under
+`--autoconfirm`. It is opt-in because a reswarmified host may double as a
+workstation whose owner wants suspend to keep working.
+
+The mask persists after `ironflock-init remove`. To undo it manually:
+
+```bash
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+```
 
 ### Remove IronFlock from a device
 
@@ -139,7 +165,7 @@ reswarmify/
 ├── install.sh              # Arch-detecting installer script (hosted on GCS)
 ├── setup.sh                # Legacy Bash-only reswarmification script
 ├── Dockerfile              # Build container for reproducible cross-compilation
-├── makefile
+├── Justfile                # Build, publish and release recipes
 └── archive/                # Legacy Bash scripts (pre-CLI, for reference)
 ```
 
@@ -182,13 +208,13 @@ reswarmify/
 Build all architecture binaries inside a Docker container (recommended for reproducible output):
 
 ```bash
-make build-all-docker
+just build-all-docker
 ```
 
 Or build locally if you have a Go toolchain:
 
 ```bash
-make build-all
+just build-all
 # or for a single target:
 bash scripts/build.sh cli/ build/reswarmify-linux-amd64 linux/amd64
 ```
@@ -207,22 +233,29 @@ Supported targets (defined in `targets`):
 
 #### Binary
 
-1. Bump `cli/release/version.txt`.
-2. Update `availableVersions.json` for the relevant channels (`production`, `test`).
-3. Commit and push, then:
+Releases follow the IronFlock release standard (see
+`REDeployments/docs/RELEASE.md`). Commit your work first — the release runs
+off a clean tree — then:
 
 ```bash
-make rollout
+just release-patch    # or release-minor
 ```
 
-This builds all binaries in Docker, uploads them to `gs://reswarmos/reswarmify/<os>/<arch>/<version>/ironflock-init`, and uploads `version.txt` and `availableVersions.json`.
+This bumps `cli/release/version.txt` and every channel in
+`availableVersions.json`, builds all binaries in Docker, uploads them to
+`gs://reswarmos/reswarmify/<os>/<arch>/<version>/ironflock-init`, uploads
+`version.txt` and `availableVersions.json`, and finishes with a release
+commit tagged `reswarmify-v<version>` that carries the version bump alone.
+
+To build and publish without releasing (e.g. re-publishing the current
+version), use `just rollout`.
 
 #### Rootfs Overlay
 
 After changing any file under `rootfs/`:
 
 ```bash
-make rollout-rootfs
+just rollout-rootfs
 ```
 
 This tars the `rootfs/` directory and uploads it as `rootfs.tar.gz` to GCS (with `Cache-Control: no-cache` so devices always fetch the latest).

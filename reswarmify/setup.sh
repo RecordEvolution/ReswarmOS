@@ -1,9 +1,10 @@
 #!/bin/bash
 
-while getopts "f:" flag
+while getopts "f:s" flag
 do
     case "${flag}" in
         f) file=${OPTARG};;
+        s) disable_suspend=1;;
     esac
 done
 
@@ -136,3 +137,14 @@ systemctl start rewifi.service
 # offline. The apt package enables it on install; ensure it's active explicitly.
 systemctl enable earlyoom.service || true
 systemctl start earlyoom.service || true
+
+# Opt-in (-s): prevent the host from auto-suspending. Desktop installs
+# (Ubuntu/Debian with GDM/GNOME) ship an idle-suspend timer that fires even at
+# the login screen; on the sleep signal NetworkManager tears the NIC down, so
+# the host drops offline every ~15 minutes, killing every WAMP session.
+# Masking the sleep targets makes logind report CanSuspend=no, so desktop
+# sessions stop even trying. Undo with `systemctl unmask <targets>`.
+if [ -n "$disable_suspend" ]; then
+    echo "Disabling host suspend (masking systemd sleep targets)...."
+    systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target || true
+fi

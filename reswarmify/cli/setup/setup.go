@@ -152,6 +152,23 @@ func handleNvidiaSetup() (chan string, error) {
 	return nil, utils.Copy("/etc/docker/daemon-nvidia.json", "/etc/docker/daemon.json")
 }
 
+// An always-on device must never suspend. Desktop installs (Ubuntu/Debian with
+// GDM/GNOME) ship an idle-suspend timer that fires even at the login screen;
+// on the sleep signal NetworkManager tears the NIC down, so even a suspend
+// that aborts within milliseconds costs the host its IP for the full
+// re-activation + DHCP round trip. Observed in the field: a short network
+// outage every ~15 minutes, dropping every WAMP session on the box and
+// flapping the device OFFLINE. Masking the systemd sleep targets makes
+// suspend impossible at the lowest level: logind then reports CanSuspend=no,
+// so desktop sessions stop even trying. Opt-in because reswarmified hosts may
+// double as workstations whose owners want suspend to keep working; undo with
+// `systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target`.
+func handleDisableHostSuspend() (chan string, error) {
+	_, err := exec.Command("systemctl", "mask",
+		"sleep.target", "suspend.target", "hibernate.target", "hybrid-sleep.target").Output()
+	return nil, err
+}
+
 func handleNvidiaRemoval() (chan string, error) {
 	// Don't need to remove it
 	return nil, nil
@@ -219,6 +236,7 @@ var setupFunc = map[int]SetupFunc{
 	1: handleREUserSetup,
 	2: handleWifiSetup,
 	3: handleNvidiaSetup,
+	4: handleDisableHostSuspend,
 }
 
 var removalFunc = map[int]SetupFunc{

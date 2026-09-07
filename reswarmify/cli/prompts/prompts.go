@@ -33,7 +33,7 @@ func Continue(message string, autoconfirm bool) (bool, error) {
 	return false, nil
 }
 
-func SetupOptions(reswarmFile map[string]interface{}, autoconfirm bool) ([]string, []int, error) {
+func SetupOptions(reswarmFile map[string]interface{}, autoconfirm bool, disableSuspend bool) ([]string, []int, error) {
 	// Need to setup device.ini and other to do other setup
 	_, err := setup.HandleReswarmModeSetup()
 	if err != nil {
@@ -52,14 +52,22 @@ func SetupOptions(reswarmFile map[string]interface{}, autoconfirm bool) ([]strin
 		"Create an IronFlock user for your device",
 		"(NetworkManager Only) Add and connect to the WiFi connection provided in the .flock file",
 		"Configure Docker to use Nvidia Runtime",
+		"Prevent the host from auto-suspending (masks systemd sleep targets; recommended for always-on devices)",
 	}
 
-	options := []string{
-		allOptions[0],
-		allOptions[1],
+	var options []string
+	var defaultDisplayIndexes []int // positions in options, preselected in the prompt
+	var defaultSetupIndexes []int   // matching indexes into allOptions / the setup handlers
+	addOption := func(setupIndex int, preselected bool) {
+		options = append(options, allOptions[setupIndex])
+		if preselected {
+			defaultDisplayIndexes = append(defaultDisplayIndexes, len(options)-1)
+			defaultSetupIndexes = append(defaultSetupIndexes, setupIndex)
+		}
 	}
 
-	defaultIndexes := []int{0, 1}
+	addOption(0, true)
+	addOption(1, true)
 
 	wifissid := reswarmFile["wlanssid"]
 	wifipasswd := reswarmFile["password"]
@@ -72,8 +80,7 @@ func SetupOptions(reswarmFile map[string]interface{}, autoconfirm bool) ([]strin
 	}
 
 	if usingNetworkManager && noWifi {
-		options = append(options, allOptions[2])
-		defaultIndexes = append(defaultIndexes, 2)
+		addOption(2, true)
 	}
 
 	nvidiaRuntimeFound := true
@@ -87,30 +94,29 @@ func SetupOptions(reswarmFile map[string]interface{}, autoconfirm bool) ([]strin
 	}
 
 	if nvidiaRuntimeFound {
-		options = append(options, allOptions[3])
-		if usingNetworkManager && noWifi {
-			defaultIndexes = append(defaultIndexes, 3)
-		} else {
-			defaultIndexes = append(defaultIndexes, 2)
-		}
+		addOption(3, true)
 	}
 
+	// Opt-in: desktop hosts auto-suspend and drop offline every ~15 minutes.
+	// Preselected only via --disable-suspend, which is also what enables it
+	// under --autoconfirm.
+	addOption(4, disableSuspend)
+
 	if autoconfirm {
-		return options, defaultIndexes, nil
+		return options, defaultSetupIndexes, nil
 	}
 
 	services, err := prompt.New().Ask("Customize your IronFlock initialization process:").MultiChoose(options,
-		multichoose.WithDefaultIndexes(0, defaultIndexes),
+		multichoose.WithDefaultIndexes(0, defaultDisplayIndexes),
 		multichoose.WithHelp(true),
 	)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	var indexes []int
 	for _, service := range services {
 		indexes = append(indexes, utils.FindIndex(allOptions, service))
-	}
-
-	if err != nil {
-		return nil, nil, err
 	}
 
 	return options, indexes, nil

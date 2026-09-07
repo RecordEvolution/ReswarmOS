@@ -23,8 +23,9 @@ apt-get update && apt-get install -y jq
 
 sleep 2
 
-# download Reagent for aarch64 architecture
-wget https://instance-registry.ironflock.com/dl/re-agent/linux/arm64/0.6.3.1/reagent -P ./
+# download Reagent for aarch64 architecture (the `latest` alias tracks the production
+# channel of availableVersions.json, republished by the agent's `just promote`)
+wget https://instance-registry.ironflock.com/dl/re-agent/linux/arm64/latest/reagent -P ./
 
 # create Reagent directory
 mkdir -pv /opt/reagent/

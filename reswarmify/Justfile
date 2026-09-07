@@ -1,5 +1,19 @@
 ROOT_DIR := justfile_directory()
 
+# Release contract — see REDeployments/docs/RELEASE.md. ReswarmOS also holds
+# buildroot and cubic, so the tag is namespaced. reswarmify builds no docker
+# images: step 3 of the release is `rollout`, which cross-compiles the
+# ironflock-init binaries in Docker and publishes them + version metadata
+# to GCS.
+VERSION := `cat cli/release/version.txt | tr -d '[:space:]'`
+RELEASE_NAME := "reswarmify"
+VERSION_FILES := "cli/release/version.txt availableVersions.json"
+RELEASE_TAG := RELEASE_NAME + "-v" + VERSION
+
+# Default: show available commands
+default:
+    @just --list
+
 rollout-dev-rootfs:
     tar -czvf rootfs-dev.tar.gz rootfs/
     gsutil cp "rootfs-dev.tar.gz" gs://reswarmos/reswarmify
@@ -23,7 +37,8 @@ build-all-docker: clean
     echo {{ROOT_DIR}}
     docker run --name reswarmify-builder -v {{ROOT_DIR}}/build:/app/reswarmify/build reswarmify-builder
 
-# Do everything in one step
+# Build + publish everything: binaries first, version metadata last, so
+# devices never see a version.txt that points at binaries not yet uploaded.
 rollout: build-all-docker publish publish-version publish-latestVersions
 
 # Publish the metadata and binaries from the build folder
@@ -39,3 +54,76 @@ publish-version:
 publish-latestVersions:
     gsutil cp "availableVersions.json" gs://reswarmos/reswarmify
     gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/reswarmify/availableVersions.json
+
+# ------------------------------------------------------------------ release --
+# Release contract — see REDeployments/docs/RELEASE.md
+#
+#   just release-patch = _require-clean -> bump-patch -> rollout -> _release-commit
+#
+# The steps run as sub-`just` processes, never as Just dependencies: just
+# evaluates variables once at parse time, so VERSION/RELEASE_TAG would still
+# hold the PRE-bump version if these ran as deps — the binaries would publish
+# under the old version while version.txt already said the new one.
+
+# Releases come off a clean tree: the release commit must carry the version
+# bump and nothing else, and a tag whose content is unprovable is worse than
+# no tag at all. Commit your work first, with a message that describes it.
+_require-clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    dirty=$(git status --porcelain -- . 2>/dev/null || true)
+    if [ -n "$dirty" ]; then
+        echo "release: uncommitted changes here — commit them first, with a" >&2
+        echo "         message describing the work. The release commit that" >&2
+        echo "         follows carries the version bump alone." >&2
+        echo >&2
+        printf '%s\n' "$dirty" >&2
+        exit 1
+    fi
+
+# Writes the version file(s). Nothing else. Every availableVersions.json
+# channel (production/test/local/all) tracks the released version today, so
+# the bump sets them all.
+_write-version NEW:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    printf '%s\n' "{{NEW}}" > cli/release/version.txt
+    jq --arg v "{{NEW}}" 'with_entries(.value = $v)' availableVersions.json > availableVersions.json.tmp
+    mv availableVersions.json.tmp availableVersions.json
+    echo "version {{VERSION}} -> {{NEW}}"
+
+bump-patch:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    IFS='.' read -r major minor patch <<< "{{VERSION}}"
+    just _write-version "$major.$minor.$((patch + 1))"
+
+bump-minor:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    IFS='.' read -r major minor patch <<< "{{VERSION}}"
+    just _write-version "$major.$((minor + 1)).0"
+
+# Explicit file list, never `git add -A`: the tree was clean before bump-patch
+# ran, so the version files are the only legitimate change — and ReswarmOS
+# holds buildroot and cubic too, which must not be swept into this commit.
+_release-commit:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    git add -- {{VERSION_FILES}}
+    git commit -m "release {{RELEASE_NAME}} v{{VERSION}}"
+    git tag -a "{{RELEASE_TAG}}" -m "release {{RELEASE_NAME}} v{{VERSION}}"
+    git push
+    git push origin "{{RELEASE_TAG}}"
+
+release-patch:
+    just _require-clean
+    just bump-patch
+    just rollout
+    just _release-commit
+
+release-minor:
+    just _require-clean
+    just bump-minor
+    just rollout
+    just _release-commit

@@ -33,6 +33,7 @@ var rootCmd = &cobra.Command{
 var reswarmFilePath string
 var autoconfirm bool
 var updateConfig bool
+var disableSuspend bool
 var httpProxy string
 var httpsProxy string
 var noProxy string
@@ -49,6 +50,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&reswarmFilePath, "config", "c", "", "Path to .flock config file")
 	rootCmd.Flags().BoolVarP(&autoconfirm, "autoconfirm", "a", false, "Skip user confirmations")
 	rootCmd.Flags().BoolVarP(&updateConfig, "update-config", "u", false, "Replace the active .flock on an already-reswarmified host and restart reagent. On a fresh host falls back to a full install.")
+	rootCmd.Flags().BoolVarP(&disableSuspend, "disable-suspend", "s", false, "Prevent the host from auto-suspending by masking the systemd sleep targets. Recommended for always-on devices; desktop installs may otherwise drop offline every ~15 minutes.")
 	rootCmd.Flags().StringVar(&httpProxy, "http-proxy", "", "Corporate HTTP proxy for downloads and the Docker daemon")
 	rootCmd.Flags().StringVar(&httpsProxy, "https-proxy", "", "Corporate HTTPS proxy for downloads and the Docker daemon")
 	rootCmd.Flags().StringVar(&noProxy, "no-proxy", "", "Comma-separated hosts that bypass the proxy (localhost is always added)")
@@ -272,7 +274,7 @@ func root(cmd *cobra.Command, args []string) {
 	fmt.Println("You can customize what IronFlock initialization process will do exactly. However, in most cases, the default settings will suffice for your needs")
 	fmt.Println()
 
-	_, indexes, err := prompts.SetupOptions(reswarmFile, autoconfirm)
+	_, indexes, err := prompts.SetupOptions(reswarmFile, autoconfirm, disableSuspend)
 	if err != nil {
 		os.Exit(1)
 		return
