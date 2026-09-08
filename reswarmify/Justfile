@@ -104,6 +104,12 @@ bump-minor:
     IFS='.' read -r major minor patch <<< "{{VERSION}}"
     just _write-version "$major.$((minor + 1)).0"
 
+bump-major:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    IFS='.' read -r major minor patch <<< "{{VERSION}}"
+    just _write-version "$((major + 1)).0.0"
+
 # Explicit file list, never `git add -A`: the tree was clean before bump-patch
 # ran, so the version files are the only legitimate change — and ReswarmOS
 # holds buildroot and cubic too, which must not be swept into this commit.
@@ -125,5 +131,11 @@ release-patch:
 release-minor:
     just _require-clean
     just bump-minor
+    just rollout
+    just _release-commit
+
+release-major:
+    just _require-clean
+    just bump-major
     just rollout
     just _release-commit
