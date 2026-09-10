@@ -39,10 +39,10 @@ build-all-docker: clean
 
 # Build + publish everything: binaries first, version metadata last, so
 # devices never see a version.txt that points at binaries not yet uploaded.
-rollout: build-all-docker publish publish-version publish-latestVersions
+rollout: build-all-docker publish publish-install publish-version publish-latestVersions
 
 # Publish the metadata and binaries from the build folder
-publish-all: publish publish-version publish-latestVersions
+publish-all: publish publish-install publish-version publish-latestVersions
 
 publish:
     scripts/publish.sh
@@ -54,6 +54,13 @@ publish-version:
 publish-latestVersions:
     gsutil cp "availableVersions.json" gs://reswarmos/reswarmify
     gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/reswarmify/availableVersions.json
+
+# install.sh is what the public one-liner and an appliance's mirror fetch, so
+# every rollout republishes it and the bucket copy cannot lag the repo (the
+# copy uploaded by hand in 2024 still pointed at storage.googleapis.com).
+publish-install:
+    gsutil cp "install.sh" gs://reswarmos/reswarmify
+    gsutil setmeta -r -h "Cache-control:public, max-age=0" gs://reswarmos/reswarmify/install.sh
 
 # ------------------------------------------------------------------ release --
 # Release contract — see REDeployments/docs/RELEASE.md

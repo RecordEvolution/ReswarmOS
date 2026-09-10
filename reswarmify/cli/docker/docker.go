@@ -11,6 +11,11 @@ import (
 	"github.com/docker/docker/client"
 )
 
+// Docker is installed from get.docker.com, which still needs the internet: the
+// appliance download mirror carries only the IronFlock bootstrap artefacts, not
+// distro packages. On an offline OT device Docker (and the apt packages
+// ironflock-init installs) must be preinstalled — a running daemon skips this
+// step entirely.
 const GET_DOCKER = "https://get.docker.com"
 
 type Docker struct {

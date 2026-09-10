@@ -10,6 +10,7 @@ import (
 	"io"
 	"ironflock-init/agent"
 	"ironflock-init/docker"
+	"ironflock-init/download"
 	"ironflock-init/fs"
 	"ironflock-init/packagemanager"
 	"ironflock-init/prompts"
@@ -37,6 +38,7 @@ var disableSuspend bool
 var httpProxy string
 var httpsProxy string
 var noProxy string
+var downloadBase string
 
 func Execute() {
 	err := rootCmd.Execute()
@@ -54,6 +56,7 @@ func init() {
 	rootCmd.Flags().StringVar(&httpProxy, "http-proxy", "", "Corporate HTTP proxy for downloads and the Docker daemon")
 	rootCmd.Flags().StringVar(&httpsProxy, "https-proxy", "", "Corporate HTTPS proxy for downloads and the Docker daemon")
 	rootCmd.Flags().StringVar(&noProxy, "no-proxy", "", "Comma-separated hosts that bypass the proxy (localhost is always added)")
+	rootCmd.PersistentFlags().StringVar(&downloadBase, "download-base", "", "Base URL of the download mirror (appliance: http://<host>:15002/dl); default from the .flock update_url, else the IronFlock cloud")
 	rootCmd.MarkFlagRequired("config")
 }
 
@@ -89,12 +92,27 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
+	// Where the rootfs overlay and the agent are fetched from. An appliance
+	// stamps its mirror into the .flock as update_url so devices without
+	// internet access bootstrap through it; cloud .flock files carry no such
+	// field and fall back to the IronFlock cloud. --download-base and
+	// IRONFLOCK_DL_BASE override either. Resolved BEFORE the proxy so the
+	// mirror's host can be kept off the corporate proxy: an appliance is on
+	// the LAN, and a proxy cannot reach it.
+	dlBase, err := download.ResolveDownloadBase(downloadBase, configPath)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+		return
+	}
+	fmt.Println()
+
 	// Corporate proxy: route this tool's downloads (apt, the Docker install
 	// script, the agent) through the proxy by exporting it into the process
 	// environment. Resolved from flags or the standard proxy env vars; a no-op
 	// when none is configured. The Docker daemon is pointed at it separately,
 	// after Docker is installed below.
-	px := proxy.Resolve(httpProxy, httpsProxy, noProxy)
+	px := proxy.Resolve(httpProxy, httpsProxy, proxy.WithNoProxy(noProxy, download.Host(dlBase)))
 	px.Apply()
 	if px.Enabled() {
 		fmt.Println("Corporate proxy configured — downloads and the Docker daemon will use it.")
@@ -226,7 +244,7 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err = fs.ReswarmifyRootfs(false)
+	err = fs.ReswarmifyRootfs(dlBase, false)
 	if err != nil {
 		fmt.Println("Failed to overlay Rootfs: ", err.Error())
 		os.Exit(1)
@@ -257,7 +275,7 @@ func root(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err = agent.DownloadAgent()
+	err = agent.DownloadAgent(dlBase)
 	if err != nil {
 		fmt.Println("Failed to download the FlockAgent: ", err.Error())
 		os.Exit(1)

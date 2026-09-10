@@ -12,8 +12,12 @@ import (
 const ROOTFS_TEMP_DIR = "/tmp/rootfs"
 const AGENT_DIR = "/opt/reagent"
 const ROOTFS_TEMP_TAR_GZ = "/tmp/rootfs.tar.gz"
-const ROOTFS_REMOTE_URL = "https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/rootfs.tar.gz?new=1"
-const ROOTFS_DEV_REMOTE_URL = "https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/rootfs-dev.tar.gz?new=1"
+
+// Rootfs overlay tarballs relative to the download base (the IronFlock cloud
+// or an appliance mirror — see package download for the layout); the %s is
+// the base. The query string is a cache-buster.
+const ROOTFS_URL_FMT = "%s/reswarmify/rootfs.tar.gz?new=1"
+const ROOTFS_DEV_URL_FMT = "%s/reswarmify/rootfs-dev.tar.gz?new=1"
 
 func DownloadFile(URL string, resultPath string) error {
 	req, err := http.NewRequest("GET", URL, nil)
@@ -35,7 +39,9 @@ func DownloadFile(URL string, resultPath string) error {
 		return fmt.Errorf("download failed: %s returned status %s", URL, resp.Status)
 	}
 
-	f, err := os.OpenFile(resultPath, os.O_CREATE|os.O_WRONLY, 0755)
+	// O_TRUNC: a previous, longer download must not leave a stale tail behind
+	// the new content — a checksum over the file would reject it.
+	f, err := os.OpenFile(resultPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}
@@ -70,7 +76,9 @@ func DownloadFileWithProgress(URL string, resultPath string) error {
 		return fmt.Errorf("download failed: %s returned status %s", URL, resp.Status)
 	}
 
-	f, err := os.OpenFile(resultPath, os.O_CREATE|os.O_WRONLY, 0755)
+	// O_TRUNC: see DownloadFile — the agent binary is verified against its
+	// .sha256 sidecar right after this, so no stale tail may survive.
+	f, err := os.OpenFile(resultPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}

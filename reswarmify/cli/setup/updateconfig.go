@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	bootDir        = "/boot"
-	deviceCfgLink  = "/opt/reagent/device-config.flock"
-	reagentService = "reagent.service"
+	bootDir = "/boot"
+	// DeviceConfigLink is the symlink to the active .flock on a reswarmified host.
+	DeviceConfigLink = "/opt/reagent/device-config.flock"
+	reagentService   = "reagent.service"
 )
 
 // UpdateDeviceConfig replaces the active *.flock device configuration on an
@@ -69,11 +70,11 @@ func UpdateDeviceConfig(configPath string) error {
 	}
 
 	// Re-point the active-config symlink.
-	_ = os.Remove(deviceCfgLink)
-	if err := os.Symlink(dest, deviceCfgLink); err != nil {
-		return fmt.Errorf("symlink %s -> %s: %w", deviceCfgLink, dest, err)
+	_ = os.Remove(DeviceConfigLink)
+	if err := os.Symlink(dest, DeviceConfigLink); err != nil {
+		return fmt.Errorf("symlink %s -> %s: %w", DeviceConfigLink, dest, err)
 	}
-	fmt.Printf("symlink %s -> %s\n", deviceCfgLink, dest)
+	fmt.Printf("symlink %s -> %s\n", DeviceConfigLink, dest)
 
 	// Restart the agent so it picks up the new configuration.
 	out, err := exec.Command("systemctl", "restart", reagentService).CombinedOutput()

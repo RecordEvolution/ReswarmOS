@@ -9,7 +9,7 @@
 - Root / sudo access
 - Docker<sup>*</sup>
 
-<small>* Installed automatically by `ironflock-init` if not already present.</small>
+<small>* Installed automatically by `ironflock-init` if not already present — that step downloads from get.docker.com and needs internet access. Devices enrolled through an appliance without internet must have Docker preinstalled (see [Enrol through an appliance](#enrol-through-an-appliance-offline-devices)).</small>
 
 ## Installation
 
@@ -17,15 +17,24 @@ Download and install the binary for your architecture with a single command:
 
 Using curl:
 ```bash
-curl -sSL https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/install.sh | bash
+curl -sSL https://instance-registry.ironflock.com/dl/reswarmify/install.sh | bash
 ```
 
 Using wget:
 ```bash
-wget -qO- https://instance-registry.ironflock.com/dl/reswarmos/reswarmify/install.sh | bash
+wget -qO- https://instance-registry.ironflock.com/dl/reswarmify/install.sh | bash
 ```
 
-`install.sh` auto-detects your CPU architecture (`uname -m`), fetches the latest version number from GCS, and downloads the matching `ironflock-init` binary.
+`install.sh` auto-detects your CPU architecture (`uname -m`), fetches the
+latest version number from the download base, downloads the matching
+`ironflock-init` binary and verifies it against the `.sha256` sidecar
+published next to it (a missing sidecar — older releases — is reported as a
+warning; a mismatch or a failed download aborts).
+
+The download base defaults to the IronFlock cloud
+(`https://instance-registry.ironflock.com/dl`). Set `IRONFLOCK_DL_BASE` to
+fetch from an appliance mirror instead — see
+[Enrol through an appliance](#enrol-through-an-appliance-offline-devices).
 
 ## Usage
 
@@ -51,6 +60,11 @@ Flags:
   -s, --disable-suspend Prevent the host from auto-suspending by masking the
                         systemd sleep targets. Recommended for always-on devices;
                         desktop installs may otherwise drop offline every ~15 min.
+      --download-base string
+                        Base URL of the download mirror (appliance:
+                        http://<host>:15002/dl). Defaults to the .flock's
+                        update_url, else the IronFlock cloud. Also read from
+                        the IRONFLOCK_DL_BASE environment variable.
   -h, --help            Help for ironflock-init
 ```
 
@@ -101,6 +115,51 @@ The mask persists after `ironflock-init remove`. To undo it manually:
 sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
 ```
 
+### Enrol through an appliance (offline devices)
+
+An IronFlock appliance mirrors the bootstrap artefacts, so edge devices
+without internet access can be enrolled through it. The appliance serves the
+same layout as the cloud under its device-facing download base `<DL>`:
+`http://<appliance-host>:15002/dl` in plain mode,
+`https://registry.<appliance-domain>/dl` in domain mode. Every `.flock` the
+appliance issues carries that base as `update_url`, which the device agent
+also uses for its OTA updates.
+
+Prerequisites on the device — the mirror covers only IronFlock artefacts, not
+distro packages:
+
+- Docker installed and running (otherwise `ironflock-init` tries
+  get.docker.com, which needs the internet).
+- The apt packages `ironflock-init` installs already present: `jq`,
+  `ca-certificates`, `curl`, `gnupg`, `lsb-release`, `net-tools`, `iproute2`,
+  `dnsutils`, `network-manager`, `openssh-server`. A failing `apt-get update`
+  is tolerated; `apt-get install` of already-installed packages needs no
+  network.
+- `wget` or `curl`, plus `sha256sum` (coreutils) or `shasum`, for `install.sh`.
+
+Then, on the device:
+
+```bash
+curl -sSL <DL>/reswarmify/install.sh | IRONFLOCK_DL_BASE=<DL> bash
+scp user@workstation:/path/to/device.flock .
+sudo ./ironflock-init -c device.flock
+```
+
+`ironflock-init` resolves its download base in this order and prints the
+choice once: `--download-base` flag, `IRONFLOCK_DL_BASE` environment variable,
+the `.flock`'s `update_url`, then the IronFlock cloud. Note that `sudo` drops
+environment variables by default, so for the root invocations pass the flag
+(`sudo ./ironflock-init --download-base <DL> ...`) or
+`sudo IRONFLOCK_DL_BASE=<DL> ./ironflock-init ...`; the variable is mainly for
+`install.sh`. The mirror's host is added to `NO_PROXY` automatically when a
+corporate proxy is configured, so a LAN appliance is never dialled through it. Cloud-issued `.flock`
+files carry no `update_url`, so no flag is needed in either case; the flag and
+variable exist to override a `.flock` and for `ironflock-init remove`, which
+re-downloads the rootfs overlay on legacy hosts. The agent binary is verified
+against the `.sha256` sidecar the mirror publishes next to it; the cloud
+bucket lacks sidecars for older agent releases, which is reported as a
+warning rather than an error.
+
 ### Remove IronFlock from a device
 
 ```bash
@@ -117,12 +176,12 @@ When `ironflock-init -c device.flock` runs, it performs these steps in order:
 
 1. **Validates** the `.flock` JSON config and checks the device is not already reswarmified.
 2. **Copies** the `.flock` config to `/boot` for persistence across reboots.
-3. **Installs system packages**: `jq`, `ca-certificates`, `curl`, `gnupg`, `net-tools`, `iproute2`, `dnsutils`, `network-manager`, `earlyoom`, `openssh-server`. (`earlyoom` is a userspace OOM killer that prevents low-memory hangs from taking the device offline; its service is enabled below.)
-4. **Downloads and extracts** `rootfs.tar.gz` from GCS, overlaying it onto `/`. This installs all IronFlock-specific configs, scripts, and systemd units.
-5. **Downloads the `reagent` binary** from `gs://re-agent` and places it in `/opt/reagent/`.
+3. **Installs system packages**: `jq`, `ca-certificates`, `curl`, `gnupg`, `lsb-release`, `net-tools`, `iproute2`, `dnsutils`, `network-manager`, `openssh-server`. (The legacy `setup.sh` additionally installed `earlyoom`; the CLI does not.)
+4. **Downloads and extracts** `rootfs.tar.gz` from the download base (`<base>/reswarmify/rootfs.tar.gz`), overlaying it onto `/`. This installs all IronFlock-specific configs, scripts, and systemd units.
+5. **Downloads the `reagent` binary** from `<base>/re-agent/linux/<arch>/<version>/reagent`, verifies it against its `.sha256` sidecar and places it in `/opt/reagent/`.
 6. **Installs Docker** if not already present.
 7. **Runs setup scripts** from `/opt/reagent/reswarmify/scripts/` (user creation, WiFi config, service configuration, etc.).
-8. **Enables systemd services**: `reagent.service`, `reagent-manager.service`, and `earlyoom.service`.
+8. **Enables systemd services**: `reagent.service` and `reagent-manager.service`.
 
 After completion the device connects to the IronFlock platform and is visible in the dashboard.
 
@@ -138,6 +197,7 @@ reswarmify/
 │   ├── cmd/                # Cobra CLI commands (root, remove, version)
 │   ├── agent/              # reagent binary download/management
 │   ├── docker/             # Docker installation and configuration
+│   ├── download/           # Download base (cloud vs appliance mirror) + .sha256 verification
 │   ├── fs/                 # rootfs overlay download and extraction
 │   ├── packagemanager/     # apt package installation
 │   ├── prompts/            # Bubble Tea interactive TUI prompts
@@ -243,9 +303,10 @@ just release-patch    # or release-minor
 
 This bumps `cli/release/version.txt` and every channel in
 `availableVersions.json`, builds all binaries in Docker, uploads them to
-`gs://reswarmos/reswarmify/<os>/<arch>/<version>/ironflock-init`, uploads
-`version.txt` and `availableVersions.json`, and finishes with a release
-commit tagged `reswarmify-v<version>` that carries the version bump alone.
+`gs://reswarmos/reswarmify/<os>/<arch>/<version>/ironflock-init` (each with
+a `.sha256` sidecar), republishes `install.sh`, uploads `version.txt` and
+`availableVersions.json`, and finishes with a release commit tagged
+`reswarmify-v<version>` that carries the version bump alone.
 
 To build and publish without releasing (e.g. re-publishing the current
 version), use `just rollout`.
@@ -262,7 +323,17 @@ This tars the `rootfs/` directory and uploads it as `rootfs.tar.gz` to GCS (with
 
 #### install.sh
 
-If `install.sh` changes, upload it manually to `gs://reswarmos/reswarmify/install.sh`.
+`install.sh` is published by `just publish-install`, which `just rollout` (and
+therefore every `just release-*`) runs — so a release always republishes the
+script and the bucket copy cannot lag the repo. Run it on its own after
+changing only the script:
+
+```bash
+just publish-install
+```
+
+Note: the bucket copy that predates this recipe was uploaded by hand in 2024
+and still points at `storage.googleapis.com`; the next rollout replaces it.
 
 ---
 
@@ -277,5 +348,14 @@ gs://reswarmos/reswarmify/
 ├── availableVersions.json
 ├── rootfs.tar.gz
 ├── rootfs-dev.tar.gz
-└── linux/<arch>/<version>/ironflock-init
+├── linux/<arch>/<version>/ironflock-init
+└── linux/<arch>/<version>/ironflock-init.sha256   # written by publish.sh; older releases have none
 ```
+
+Clients never hit the bucket directly. The cloud serves it through the
+download proxy as `https://instance-registry.ironflock.com/dl/reswarmify/...`
+(`.../dl/reswarmos/reswarmify/...` is an alias kept for existing clients — use
+the short form), and an appliance mirrors the same bucket under
+`<DL>/reswarmify/...` next to the agent binaries at `<DL>/re-agent/...`, so
+devices without internet access bootstrap through it. On the appliance mirror
+every binary has its `.sha256` sidecar.

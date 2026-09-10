@@ -160,6 +160,21 @@ func (c Config) serviceEnvironmentBlock() string {
 	return b.String()
 }
 
+// WithNoProxy appends extra hosts (an appliance download mirror on the LAN)
+// to an operator-supplied NO_PROXY list; empty entries are skipped.
+func WithNoProxy(noProxy string, hosts ...string) string {
+	parts := []string{}
+	if strings.TrimSpace(noProxy) != "" {
+		parts = append(parts, noProxy)
+	}
+	for _, h := range hosts {
+		if h = strings.TrimSpace(h); h != "" {
+			parts = append(parts, h)
+		}
+	}
+	return strings.Join(parts, ",")
+}
+
 // noProxyWithDefaults keeps loopback off the proxy in addition to whatever the
 // operator supplied.
 func (c Config) noProxyWithDefaults() string {

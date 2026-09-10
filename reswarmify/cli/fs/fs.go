@@ -9,10 +9,13 @@ import (
 	"path/filepath"
 )
 
-func ReswarmifyRootfs(dev bool) error {
-	URL := ROOTFS_REMOTE_URL
+// ReswarmifyRootfs downloads the rootfs overlay tarball from base (the
+// IronFlock cloud or an appliance mirror — see package download) and overlays
+// it onto /.
+func ReswarmifyRootfs(base string, dev bool) error {
+	URL := fmt.Sprintf(ROOTFS_URL_FMT, base)
 	if dev {
-		URL = ROOTFS_DEV_REMOTE_URL
+		URL = fmt.Sprintf(ROOTFS_DEV_URL_FMT, base)
 	}
 
 	err := DownloadFile(URL, ROOTFS_TEMP_TAR_GZ)
