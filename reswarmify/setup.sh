@@ -98,6 +98,46 @@ else
     apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io || true
 fi
 
+# The reagent publishes apps with the legacy build+push API, which cannot push
+# images that live in containerd's content store: the push aborts with
+# "content digest sha256:<layer>: not found" and the release never appears.
+# Docker 29 makes the containerd image store the default on FRESH installs, so
+# the daemon.json shipped in the rootfs above turns it off again. A host that
+# already ran docker keeps its live configuration until the daemon restarts, so
+# apply the setting here too and restart only when the store is actually wrong.
+# (The graph driver is deprecated upstream — when it is removed the reagent's
+# publish path has to learn the containerd store instead.)
+
+echo "Making sure Docker uses the image store the reagent can publish from...."
+
+if command -v docker >/dev/null 2>&1; then
+    if [ -f /etc/docker/daemon.json ]; then
+        daemon_tmp=$(mktemp)
+        if jq '.features = ((.features // {}) + {"containerd-snapshotter": false})' \
+            /etc/docker/daemon.json >"$daemon_tmp" 2>/dev/null; then
+            install -m 0644 "$daemon_tmp" /etc/docker/daemon.json
+        else
+            echo "WARNING: could not update /etc/docker/daemon.json - publishing apps from this device may fail." >&2
+        fi
+        rm -f "$daemon_tmp"
+    fi
+
+    if docker info --format '{{json .DriverStatus}}' 2>/dev/null | grep -q 'io.containerd.snapshotter'; then
+        echo "Docker is running on the containerd image store; restarting it to pick up the new setting...."
+        echo "Note: images held in that store are no longer listed afterwards, so apps get pulled again."
+        systemctl restart docker || true
+
+        for _ in $(seq 1 30); do
+            docker info >/dev/null 2>&1 && break
+            sleep 1
+        done
+
+        if docker info --format '{{json .DriverStatus}}' 2>/dev/null | grep -q 'io.containerd.snapshotter'; then
+            echo "WARNING: Docker still uses the containerd image store - publishing apps from this device will fail." >&2
+        fi
+    fi
+fi
+
 echo "Setting up network configuration...."
 
 # Disable old network config

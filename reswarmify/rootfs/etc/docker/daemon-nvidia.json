@@ -1,6 +1,6 @@
 {
   "data-root": "/opt/reagent/docker-apps",
-  "features": { "buildkit": true },
+  "features": { "buildkit": true, "containerd-snapshotter": false },
   "runtimes": {
     "nvidia": {
       "path": "/usr/bin/nvidia-container-runtime",
