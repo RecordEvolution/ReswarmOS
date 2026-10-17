@@ -1,9 +1,0 @@
-{
-  "data-root": "/opt/reagent/docker-apps",
-  "features": { "buildkit": true, "containerd-snapshotter": false },
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "10m",
-    "max-file": "3"
-  }
-}

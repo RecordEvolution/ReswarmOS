@@ -1,17 +1,16 @@
 # ReswarmOS Copilot Instructions
 
-ReswarmOS is a lightweight Linux OS for IoT devices, built with Buildroot and designed for the IronFlock platform. The project has three main components with distinct build systems and purposes.
+ReswarmOS is a lightweight Linux OS for IoT devices, built with Buildroot and designed for the IronFlock platform. The project has two main components with distinct build systems and purposes. The device setup tool `ironflock-init` (formerly `reswarmify/`) is maintained in its own repository; its downloads stay under `gs://reswarmos/reswarmify/`.
 
 ## Architecture Overview
 
 ```
 ReswarmOS/
 ├── buildroot/     # Buildroot-based OS images for embedded devices (RPi, Jetson, x86)
-├── reswarmify/    # Go CLI tool (ironflock-init) to "reswarmify" existing Debian/Ubuntu systems
 └── cubic/         # Ubuntu-based installer ISOs for x86/IPC hardware using Cubic tool
 ```
 
-**Key Relationship**: All three produce systems that connect to IronFlock platform via the `reagent` agent. The `rootfs/` overlay directories in each component contain systemd services, configuration files, and scripts that make the OS "IronFlock-ready".
+**Key Relationship**: Both produce systems that connect to IronFlock platform via the `reagent` agent. The `rootfs/` overlay directories in each component contain systemd services, configuration files, and scripts that make the OS "IronFlock-ready".
 
 ## Build Commands
 
@@ -22,14 +21,6 @@ cd buildroot/
 make setup      # Build Docker container, prepare certificates
 make build      # Run Buildroot compilation (~30-60min)
 make release    # Compress, create RAUC bundle, upload to gs://reswarmos
-```
-
-### Reswarmify CLI Tool
-```bash
-cd reswarmify/
-make rollout              # Build all arch binaries + publish to GCS
-make rollout-rootfs       # Upload rootfs overlay changes only
-# Binaries built for: linux-amd64, linux-arm64, linux-armv5/v6/v7
 ```
 
 ### Cubic ISOs (x86 installers)
@@ -67,20 +58,6 @@ The `rootfs/` directories overlay the target filesystem. They follow Linux FHS:
 
 **Pattern**: Services chain via systemd dependencies. `reswarm.service` → `rehost.service` → `reagent.service`
 
-## CLI Tool (reswarmify/cli/)
-
-Go module using Cobra for CLI and Bubble Tea for TUI prompts:
-```
-cli/
-├── cmd/          # Cobra commands (root, version, remove)
-├── setup/        # Main reswarmification logic, runs scripts from rootfs overlay
-├── agent/        # Reagent binary management
-├── docker/       # Docker installation/configuration
-└── prompts/      # Interactive user prompts
-```
-
-Scripts executed during reswarmification are in `reswarmify/rootfs/opt/reagent/reswarmify/scripts/`.
-
 ## RAUC Update System
 
 OTA updates use RAUC with A/B partition scheme:
@@ -94,7 +71,6 @@ OTA updates use RAUC with A/B partition scheme:
 |---------|------|
 | OS version | `buildroot/setup.yaml` → `rootfs/etc/os-release` |
 | Buildroot config | `buildroot/config/<board>/<model>/config*` |
-| CLI version | `reswarmify/cli/release/version.txt` |
 | Supported boards list | `buildroot/supportedBoards.json` |
 | RAUC system config | `buildroot/rootfs/etc/rauc/system.conf` |
 
@@ -103,7 +79,7 @@ OTA updates use RAUC with A/B partition scheme:
 All releases go to `gs://reswarmos`:
 - Images: `gs://reswarmos/<board>/<image>.img.gz`
 - RAUC bundles: `gs://reswarmos/<board>/<bundle>.raucb`
-- Reswarmify: `gs://reswarmos/reswarmify/`
+- Device setup tool (`ironflock-init`, separate repository): `gs://reswarmos/reswarmify/`
 - Certificates: `gs://reswarmos-certs/` (restricted)
 
 Requires `gsutil` configured with appropriate GCP credentials.
